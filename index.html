@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skalette Bistro | Ristorante Elegante</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="preloader-content">
+            <img src="logo.png" alt="Skalette Bistro" class="preloader-icon">
+            <div class="preloader-logo">SKALETTE BISTRO</div>
+            <div class="preloader-bar"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <img src="logo.png" alt="Skalette" class="logo-icon">
+                <div class="logo-text-wrap">
+                    <span class="logo-text">SKALETTE</span>
+                    <span class="logo-sub">BISTRO</span>
+                </div>
+            </a>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">Chi Siamo</a></li>
+                <li><a href="#menu" class="nav-link">Menu</a></li>
+                <li><a href="#gallery" class="nav-link">Galleria</a></li>
+                <li><a href="#contact" class="nav-link">Contatti</a></li>
+                <li><a href="#reservation" class="nav-link btn-reserve">Prenota</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-line"></span>
+                <span>Esperienza Culinaria</span>
+                <span class="badge-line"></span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">SKALETTE</span>
+                <span class="title-accent">BISTRO</span>
+            </h1>
+            <p class="hero-subtitle">Dove l'eleganza incontra il gusto autentico</p>
+            <div class="hero-cta">
+                <a href="#menu" class="btn btn-primary">Scopri il Menu</a>
+                <a href="#reservation" class="btn btn-secondary">Prenota un Tavolo</a>
+            </div>
+            <div class="hero-scroll">
+                <span>Scorri</span>
+                <div class="scroll-indicator"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-images">
+                    <div class="image-main">
+                        <img src="ostriche.PNG" alt="Ostriche fresche">
+                        <div class="image-frame"></div>
+                    </div>
+                    <div class="image-secondary">
+                        <img src="locale.PNG" alt="Interno ristorante">
+                    </div>
+                    <div class="experience-badge">
+                        <span class="exp-number">15+</span>
+                        <span class="exp-text">Anni di Esperienza</span>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <div class="section-label">
+                        <span class="label-icon">✦</span>
+                        <span>La Nostra Storia</span>
+                    </div>
+                    <h2 class="section-title">Un Viaggio tra <span class="gold">Sapori</span> e <span class="gold">Tradizione</span></h2>
+                    <p class="about-text">
+                        Benvenuti a Skalette Bistro, dove ogni piatto racconta una storia di passione e dedizione. 
+                        Dal 2009, trasformiamo ingredienti selezionati in esperienze gastronomiche indimenticabili, 
+                        unendo la tradizione italiana con un tocco di innovazione contemporanea.
+                    </p>
+                    <p class="about-text">
+                        Il nostro chef executive, con oltre 20 anni di esperienza nelle cucine più prestigiose d'Europa, 
+                        crea composizioni che deliziano il palato e stupiscono la vista.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <div class="feature-icon">🍷</div>
+                            <div class="feature-text">
+                                <h4>Vini Selezionati</h4>
+                                <p>Oltre 200 etichette</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">🌿</div>
+                            <div class="feature-text">
+                                <h4>Ingredienti Freschi</h4>
+                                <p>Prodotti km zero</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">👨‍🍳</div>
+                            <div class="feature-text">
+                                <h4>Chef Stellato</h4>
+                                <p>Cucina d'autore</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#menu" class="btn btn-primary">Esplora il Menu</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Banner -->
+    <section class="features-banner">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon-large">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                    </div>
+                    <h3>Qualità Premium</h3>
+                    <p>Solo i migliori ingredienti per i nostri piatti</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-large">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6V12L16 14"/>
+                        </svg>
+                    </div>
+                    <h3>Servizio Impeccabile</h3>
+                    <p>Attenzione ad ogni dettaglio</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-large">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <h3>Passione Autentica</h3>
+                    <p>Amore per la cucina italiana</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-large">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>Eventi Privati</h3>
+                    <p>Sale riservate per occasioni speciali</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="menu">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">
+                    <span class="label-icon">✦</span>
+                    <span>Il Nostro Menu</span>
+                </div>
+                <h2 class="section-title">Capolavori <span class="gold">Culinari</span></h2>
+                <p class="section-subtitle">Prodotti freschi del giorno. Chiedere al personale per la disponibilità e per gli allergeni.</p>
+            </div>
+            
+            <div class="menu-tabs">
+                <button class="menu-tab active" data-tab="caffetteria">Caffetteria</button>
+                <button class="menu-tab" data-tab="gastronomia">Gastronomia</button>
+                <button class="menu-tab" data-tab="piatti">I Nostri Piatti</button>
+                <button class="menu-tab" data-tab="bevande">Bevande</button>
+                <button class="menu-tab" data-tab="aperitivi">Aperitivi & Birre</button>
+                <button class="menu-tab" data-tab="vini">Vini</button>
+            </div>
+
+            <div class="menu-content">
+                <!-- Caffetteria -->
+                <div class="menu-category active" id="caffetteria">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Espresso</h3>
+                                    <span class="menu-price">€2</span>
+                                </div>
+                                <p>L'autentico caffè italiano.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Macchiatone</h3>
+                                    <span class="menu-price">€2</span>
+                                </div>
+                                <p>Simile al cappuccino ma con meno latte.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Cappuccino</h3>
+                                    <span class="menu-price">€2.50</span>
+                                </div>
+                                <p>Caffè e latte montato con schiuma cremosa.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Caffè Americano</h3>
+                                    <span class="menu-price">€3</span>
+                                </div>
+                                <p>Caffè lungo con aggiunta di acqua calda.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Latte Macchiato</h3>
+                                    <span class="menu-price">€3</span>
+                                </div>
+                                <p>Latte caldo macchiato con un tocco di caffè.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Caffè Corretto</h3>
+                                    <span class="menu-price">€3</span>
+                                </div>
+                                <p>Espresso con l'aggiunta di un liquore a scelta.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Caffè Doppio</h3>
+                                    <span class="menu-price">€3</span>
+                                </div>
+                                <p>Doppio espresso in tazza grande.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Ginseng/Orzo</h3>
+                                    <span class="menu-price">€2.30</span>
+                                </div>
+                                <p>Bevanda calda alternativa al caffè.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Caffè Skalette</h3>
+                                    <span class="menu-price">€3</span>
+                                </div>
+                                <p>Doppio espresso versato su ghiaccio.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Signature</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Infuso</h3>
+                                    <span class="menu-price">€4</span>
+                                </div>
+                                <p>Selezione di erbe e frutta.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Croissant</h3>
+                                    <span class="menu-price">€2.50</span>
+                                </div>
+                                <p>Sfoglia fresca, semplice o farcito.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Biscotto</h3>
+                                    <span class="menu-price">€1.50</span>
+                                </div>
+                                <p>Biscotto singolo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gastronomia -->
+                <div class="menu-category" id="gastronomia">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Polpetta di Carne</h3>
+                                    <span class="menu-price">€2</span>
+                                </div>
+                                <p>Polpetta di carne mista.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Polpetta Vegetariana</h3>
+                                    <span class="menu-price">€2</span>
+                                </div>
+                                <p>Polpetta a base di verdure e ricotta.</p>
+                                <div class="menu-tags">
+                                    <span class="tag vegetarian">Vegetariano</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Arancino al Tastasal</h3>
+                                    <span class="menu-price">€2</span>
+                                </div>
+                                <p>Ripieno di riso e tastasal (impasto di salsiccia).</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Pizza Margherita</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Impasto fresco, pomodoro, mozzarella e basilico.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Pizza Farcita</h3>
+                                    <span class="menu-price">€7</span>
+                                </div>
+                                <p>Impasto fresco con ripieno del giorno (chiedere al personale).</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Toast</h3>
+                                    <span class="menu-price">€5</span>
+                                </div>
+                                <p>Con prosciutto e formaggio.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Focaccia</h3>
+                                    <span class="menu-price">€5</span>
+                                </div>
+                                <p>Chiedere al personale per i gusti disponibili.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Pizzetta</h3>
+                                    <span class="menu-price">€3.50</span>
+                                </div>
+                                <p>Piccola porzione ideale per un assaggio veloce.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Nachos</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Croccanti nachos serviti con guacamole fresco, cheddar fuso e panna acida.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- I Nostri Piatti -->
+                <div class="menu-category" id="piatti">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Tagliere di Salumi e Formaggi</h3>
+                                    <span class="menu-price">€25</span>
+                                </div>
+                                <p>Con giardiniera della casa e mostarda.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Premium</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Pata Negra de Bellota 100%</h3>
+                                    <span class="menu-price">€20</span>
+                                </div>
+                                <p>Con pan y tomate.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Premium</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Vellutata di Verdure</h3>
+                                    <span class="menu-price">€12</span>
+                                </div>
+                                <p>Con crostini e pecorino. Con bacon croccante (+3€) o gamberi (+3€).</p>
+                                <div class="menu-tags">
+                                    <span class="tag vegetarian">Vegetariano</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Battuta di Manzo alla Francese</h3>
+                                    <span class="menu-price">€15</span>
+                                </div>
+                                <p>Tagliata al coltello, con senape, scalogno, capperi e tuorlo d'uovo. Con tartufo nero (+5€).</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Chef's Choice</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Insalata Mista di Pollo</h3>
+                                    <span class="menu-price">€15</span>
+                                </div>
+                                <p>Con bacon croccante, avocado, salsa yogurt e ravanelli.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Acciuga del Cantabrico</h3>
+                                    <span class="menu-price">€15</span>
+                                </div>
+                                <p>Con pane tostato e burro.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Ovetto Poché</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Su fonduta di formaggio, con lamelle di tartufo nero della Lessinia.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Signature</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Tagliatelle al Ragù di Quaglia</h3>
+                                    <span class="menu-price">€18</span>
+                                </div>
+                                <p>Pasta fresca con ragù di quaglia, il suo uovo e lamelle di tartufo nero.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Signature</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Pad Thai</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Spaghetti di riso saltati con verdure croccanti, pollo, gamberi e salsa tamarindo.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Gyoza (6pz)</h3>
+                                    <span class="menu-price">€12</span>
+                                </div>
+                                <p>Ravioli giapponesi croccanti ripieni di maiale, con salsa teriyaki e semi di sesamo.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Gnocchi alla Zucca</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Gnocchi di patate con crema di zucca, gorgonzola e speck croccante.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Ravioli Artigianali alla Gricia</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Ravioli ripieni di cacio e pepe, serviti con guanciale croccante.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Tagliata di Manzo</h3>
+                                    <span class="menu-price">€22</span>
+                                </div>
+                                <p>Controfiletto di manzo scottato, con porcini e scaglie di Monte Veronese. Con tartufo nero (+5€).</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Premium</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Yakitori</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Spiedini di pollo glassati alla teriyaki, con riso basmati, edamame e semi di sesamo.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Guancetta di Maiale</h3>
+                                    <span class="menu-price">€20</span>
+                                </div>
+                                <p>Brasata all'Amarone, con purè di patate.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Signature</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-image">
+                                <img src="moscardini.PNG" alt="Moscardini">
+                            </div>
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Moscardini in Umido</h3>
+                                    <span class="menu-price">€14</span>
+                                </div>
+                                <p>Con crema di polenta.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Trancio di Salmone</h3>
+                                    <span class="menu-price">€18</span>
+                                </div>
+                                <p>Salmone scottato con salsa al tamarindo e pak choi saltato.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Burrito</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Farcito con manzo e maiale, fagioli neri, Monterrey Jack, guacamole, panna acida e riso basmati.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Bacon Cheeseburger</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Hamburger di manzo, cheddar, pomodoro, insalata, bacon croccante e salsa BBQ. Con patate spadellate.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Club Sandwich</h3>
+                                    <span class="menu-price">€15</span>
+                                </div>
+                                <p>Pollo, bacon croccante, uovo, pomodoro, insalata e maionese.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Avocado Toast</h3>
+                                    <span class="menu-price">€12</span>
+                                </div>
+                                <p>Pane tostato, crema alla robiola, avocado, uovo in camicia. Con bacon (+3€) o salmone (+3€).</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-image">
+                                <img src="veggie_burger.PNG" alt="Veggie Burger">
+                            </div>
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Veggie Burger</h3>
+                                    <span class="menu-price">€16</span>
+                                </div>
+                                <p>Pane bun nero, burger vegetale, maionese al tartufo, brie, spinacino, cipolla caramellata e patate.</p>
+                                <div class="menu-tags">
+                                    <span class="tag vegetarian">Vegetariano</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sottosezione Dolci -->
+                    <h3 class="menu-subcategory-title">Dolci</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Tiramisù della Casa</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Ricetta tradizionale con mascarpone e caffè.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Tradizione</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Panna Cotta</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Gusto a scelta: cioccolato o caramello.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Crema Catalana</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Classico dessert spagnolo con crosta caramellata.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Sbrisolona e Grappa</h3>
+                                    <span class="menu-price">€7</span>
+                                </div>
+                                <p>Torta secca mantovana con farina di mais e mandorle, servita con un bicchierino di grappa veneta.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Signature</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bevande Analcoliche -->
+                <div class="menu-category" id="bevande">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Acqua 0,5 L</h3>
+                                    <span class="menu-price">€1.50</span>
+                                </div>
+                                <p>Naturale o Frizzante.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Acqua 0,75 L</h3>
+                                    <span class="menu-price">€3</span>
+                                </div>
+                                <p>Naturale o Frizzante.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Crodino XL</h3>
+                                    <span class="menu-price">€4</span>
+                                </div>
+                                <p>Analcolico biondo in bottiglia grande.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Coca Cola</h3>
+                                    <span class="menu-price">€4.50</span>
+                                </div>
+                                <p>Classica bevanda gassata.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Coca Cola Zero</h3>
+                                    <span class="menu-price">€4.50</span>
+                                </div>
+                                <p>Senza zuccheri aggiunti.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Tonica</h3>
+                                    <span class="menu-price">€4</span>
+                                </div>
+                                <p>Bevanda frizzante e rinfrescante.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Succo di Frutta</h3>
+                                    <span class="menu-price">€4</span>
+                                </div>
+                                <p>Gusti assortiti disponibili.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Ginger Ale</h3>
+                                    <span class="menu-price">€4.50</span>
+                                </div>
+                                <p>Bevanda frizzante al gusto di zenzero.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Tè Limone/Pesca</h3>
+                                    <span class="menu-price">€4.50</span>
+                                </div>
+                                <p>Tè freddo in bottiglia.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Homemade Gingerbeer</h3>
+                                    <span class="menu-price">€4</span>
+                                </div>
+                                <p>Bevanda analcolica allo zenzero di nostra produzione.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Signature</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Pomodoro Condito</h3>
+                                    <span class="menu-price">€5</span>
+                                </div>
+                                <p>Succo di pomodoro con sale, pepe e spezie.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Soda al Pompelmo Rosa</h3>
+                                    <span class="menu-price">€4.50</span>
+                                </div>
+                                <p>Gassosa al gusto di pompelmo rosa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aperitivi & Birre -->
+                <div class="menu-category" id="aperitivi">
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Spritz Bianco</h3>
+                                    <span class="menu-price">€4</span>
+                                </div>
+                                <p>Vino bianco frizzante e seltz.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Spritz</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Scegli tra: Aperol, Campari, Hugo, Select, Cynar, Rabarbaro, Rosa, Sorbole, Misto.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Campari Soda</h3>
+                                    <span class="menu-price">€5</span>
+                                </div>
+                                <p>Classico aperitivo monoporzione, pronto da bere.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Americano</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Campari, Blend di Vermouth Rossi, Soda.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Negroni</h3>
+                                    <span class="menu-price">€9</span>
+                                </div>
+                                <p>Gin, Campari, Blend di Vermouth Rossi. Classico potente.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Classico</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Bloody Mary</h3>
+                                    <span class="menu-price">€9</span>
+                                </div>
+                                <p>Vodka, succo di pomodoro condito e spezie.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Cocktail</h3>
+                                    <span class="menu-price">€9</span>
+                                </div>
+                                <p>Richiedi il tuo cocktail preferito ai nostri barman.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Cocktail Premium</h3>
+                                    <span class="menu-price">€10</span>
+                                </div>
+                                <p>Cocktail preparati con distillati e ingredienti di alta gamma.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Premium</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Birra Pils "Maes" 0,25L</h3>
+                                    <span class="menu-price">€3.50</span>
+                                </div>
+                                <p>Lager belga leggera e rinfrescante con un tocco luppolato.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Birra Pils "Maes" 0,5L</h3>
+                                    <span class="menu-price">€6</span>
+                                </div>
+                                <p>Lager belga leggera e rinfrescante con un tocco luppolato.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vini -->
+                <div class="menu-category" id="vini">
+                    <!-- BIANCHI -->
+                    <h3 class="menu-subcategory-title">Bianchi</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Lugana "Tenuta Roveglia"</h3>
+                                    <span class="menu-price">€5 / €32</span>
+                                </div>
+                                <p>Fresco e sapido, con sentori di mandorla e fiori bianchi. Ideale per aperitivo.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Soave "Coffele"</h3>
+                                    <span class="menu-price">€5 / €32</span>
+                                </div>
+                                <p>Vino elegante e minerale del Veneto, profumo di biancospino e camomilla.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Chardonnay "Dolfo"</h3>
+                                    <span class="menu-price">€6 / €40</span>
+                                </div>
+                                <p>Vino dal gusto morbido con sentori di mela matura e vaniglia.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Ribolla Gialla "Dolfo"</h3>
+                                    <span class="menu-price">€6 / €40</span>
+                                </div>
+                                <p>Acidità vibrante, note floreali e minerali.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Falanghina "San Salvatore"</h3>
+                                    <span class="menu-price">€5 / €32</span>
+                                </div>
+                                <p>Bianco fresco e minerale della Campania, con note di agrumi e fiori bianchi.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Rosé "San Salvatore Vetere"</h3>
+                                    <span class="menu-price">€5 / €32</span>
+                                </div>
+                                <p>Rosato delicato e profumato con sentori di frutti rossi estivi. (Rosé DOC).</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Rosé</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROSSI -->
+                    <h3 class="menu-subcategory-title">Rossi</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Valpolicella Classico "Speri"</h3>
+                                    <span class="menu-price">€5 / €32</span>
+                                </div>
+                                <p>Rosso giovane e vivace del Veneto, note di ciliegia e pepe nero. Leggero.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Valpolicella Superiore "Speri"</h3>
+                                    <span class="menu-price">€6 / €40</span>
+                                </div>
+                                <p>Più strutturato e complesso del Classico, con note di frutta matura e spezie.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Pinot Nero "Ploner"</h3>
+                                    <span class="menu-price">€6 / €40</span>
+                                </div>
+                                <p>Elegante e vellutato, con sentori di sottobosco e lampone.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Cabernet Sauvignon "Dolfo"</h3>
+                                    <span class="menu-price">€6 / €40</span>
+                                </div>
+                                <p>Corposo e robusto, con note decise di ribes nero e peperone verde.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Jungano "San Salvatore"</h3>
+                                    <span class="menu-price">€6 / €40</span>
+                                </div>
+                                <p>Rosso decisivo e strutturato dalla Campania, con note di ciliegia scura, prugna e spezie.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BOLLICINE -->
+                    <h3 class="menu-subcategory-title">Bollicine</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Prosecco "Follador"</h3>
+                                    <span class="menu-price">€5 / €32</span>
+                                </div>
+                                <p>Frizzante e aromatico, con sentori di mela e pera. Perfetto per ogni brindisi.</p>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Franciacorta Rosé "Ricci Curbastro"</h3>
+                                    <span class="menu-price">€8 / €50</span>
+                                </div>
+                                <p>Bollicina rosé fresca e vivace. Sentori di fragoline di bosco e ribes rosso.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Rosé</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Champagne "Diebolt Vallois" Blanc de Blancs</h3>
+                                    <span class="menu-price">€10 / €65</span>
+                                </div>
+                                <p>Elegante Blanc de Blancs con note di agrumi freschi e mineralità.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Champagne</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Champagne "Drappier" Brut Nature</h3>
+                                    <span class="menu-price">€80</span>
+                                </div>
+                                <p>Champagne senza dosaggio, puro e autentico con carattere deciso.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Champagne</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Bollinger Special Cuvée</h3>
+                                    <span class="menu-price">€120</span>
+                                </div>
+                                <p>Champagne iconico, complesso e raffinato con note di frutta matura e spezie.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Champagne</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Bollinger La Grande Année</h3>
+                                    <span class="menu-price">€260</span>
+                                </div>
+                                <p>Cuvée prestigiosa millesimata, elegante e di grande finezza.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Champagne</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <div class="menu-item-header">
+                                    <h3>Dom Pérignon Vintage 2013</h3>
+                                    <span class="menu-price">€380</span>
+                                </div>
+                                <p>Champagne leggendario, sublime espressione di eleganza e complessità.</p>
+                                <div class="menu-tags">
+                                    <span class="tag">Luxury</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="menu-footer">
+                <a href="#" class="btn btn-secondary">Scarica Menu Completo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">
+                    <span class="label-icon">✦</span>
+                    <span>Galleria</span>
+                </div>
+                <h2 class="section-title">Momenti <span class="gold">Indimenticabili</span></h2>
+                <p class="section-subtitle">Un assaggio visivo della nostra esperienza culinaria</p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item large">
+                    <img src="locale.PNG" alt="Interno ristorante">
+                    <div class="gallery-overlay">
+                        <span>Il Nostro Ambiente</span>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="ostriche.PNG" alt="Ostriche">
+                    <div class="gallery-overlay">
+                        <span>Ostriche Fresche</span>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="brindisi.PNG" alt="Brindisi">
+                    <div class="gallery-overlay">
+                        <span>Momenti Speciali</span>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="moscardini.PNG" alt="Moscardini">
+                    <div class="gallery-overlay">
+                        <span>I Nostri Piatti</span>
+                    </div>
+                </div>
+                <div class="gallery-item tall">
+                    <img src="cocktail.PNG" alt="Cocktail">
+                    <div class="gallery-overlay">
+                        <span>Cocktail Bar</span>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="coppetta.PNG" alt="Coppetta">
+                    <div class="gallery-overlay">
+                        <span>Arte nel Piatto</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">
+                    <span class="label-icon">✦</span>
+                    <span>Recensioni</span>
+                </div>
+                <h2 class="section-title">Cosa Dicono i <span class="gold">Nostri Ospiti</span></h2>
+            </div>
+
+            <div class="testimonials-slider">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">★★★★★</div>
+                    <div class="testimonial-source">Google</div>
+                    <p class="testimonial-text">"Skalette Bistrò è un locale che conquista immediatamente grazie alla sua atmosfera giovane e accogliente. Il cibo è davvero delizioso; ogni piatto è preparato con cura e attenzione ai dettagli. Il personale merita una menzione speciale: sono estremamente cordiali e attenti. Se ti trovi a Verona, Skalette Bistrò è sicuramente il posto da visitare. Consigliatissimo!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div>
+                            <h4>Moreno Berterini</h4>
+                            <span>Recensione Google</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">★★★★★</div>
+                    <div class="testimonial-source">Google</div>
+                    <p class="testimonial-text">"Piacevole ritrovo adatto per passare un po' di tempo in compagnia sorseggiando un drink o un calice di ottimo vino. La musica, non troppo alta, non è invadente e permette di conversare. Personale cordiale, cortese e attento. Prezzi più che equi."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">E</div>
+                        <div>
+                            <h4>Emanuele Bignardi</h4>
+                            <span>Recensione Google</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">★★★★★</div>
+                    <div class="testimonial-source">Google</div>
+                    <p class="testimonial-text">"L'atmosfera è curata nei minimi dettagli, con la musica giusta. Il servizio è stato veloce e personalizzato. Il cibo era delizioso e appetitoso!!! Consiglio vivamente questa esperienza culinaria."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div>
+                            <h4>Maria Fynn</h4>
+                            <span>Recensione Google</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section id="reservation" class="reservation">
+        <div class="container">
+            <div class="section-header" style="text-align: center; margin-bottom: 50px;">
+                <div class="section-label">
+                    <span class="label-icon">✦</span>
+                    <span>Prenotazioni</span>
+                </div>
+                <h2 class="section-title">Prenota il Tuo <span class="gold">Tavolo</span></h2>
+                <p class="section-subtitle">Seleziona le tue preferenze e scegli il tavolo che preferisci</p>
+            </div>
+
+            <!-- Step 1: Selezione parametri -->
+            <div class="booking-steps">
+                <div class="booking-step active" id="booking-step-1">
+                    <h3 class="step-title">1. Scegli Data e Orario</h3>
+                    <div class="booking-form-grid">
+                        <div class="form-group">
+                            <label for="booking-guests">Numero Ospiti</label>
+                            <select id="booking-guests" required>
+                                <option value="2" selected>2 Persone</option>
+                                <option value="1">1 Persona</option>
+                                <option value="3">3 Persone</option>
+                                <option value="4">4 Persone</option>
+                                <option value="5">5 Persone</option>
+                                <option value="6">6 Persone</option>
+                                <option value="7">7 Persone</option>
+                                <option value="8">8 Persone</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-date">Data</label>
+                            <input type="date" id="booking-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-meal">Tipo</label>
+                            <select id="booking-meal" required>
+                                <option value="pranzo">☀️ Pranzo</option>
+                                <option value="aperitivo">🍹 Aperitivo</option>
+                                <option value="cena">🌙 Cena</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-time">Orario</label>
+                            <select id="booking-time" required>
+                                <option value="">Caricamento...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-view-tables">Vedi Tavoli Disponibili</button>
+                </div>
+
+                <!-- Step 2: Selezione tavolo -->
+                <div class="booking-step" id="booking-step-2" style="display: none;">
+                    <h3 class="step-title">2. Scegli il Tuo Tavolo</h3>
+                    <p class="step-subtitle">Clicca su un tavolo disponibile (dorato) per selezionarlo</p>
+                    <div id="floor-plan-container" class="floor-plan-container"></div>
+                    <div class="selected-table-info" id="selected-table-info" style="display: none;">
+                        <p>Tavolo selezionato: <strong id="selected-table-name"></strong></p>
+                    </div>
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-back-step1">← Indietro</button>
+                        <button type="button" class="btn btn-primary" id="btn-continue-step3" disabled>Continua →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Dati personali -->
+                <div class="booking-step" id="booking-step-3" style="display: none;">
+                    <h3 class="step-title">3. I Tuoi Dati</h3>
+                    <form id="booking-final-form" class="booking-final-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="booking-name">Nome Completo</label>
+                                <input type="text" id="booking-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-phone">Telefono</label>
+                                <input type="tel" id="booking-phone" required placeholder="es. 3401234567">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="booking-email">Email</label>
+                            <input type="email" id="booking-email" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="booking-notes">Note (opzionale)</label>
+                            <textarea id="booking-notes" rows="3" placeholder="Allergie, occasioni speciali, richieste particolari..."></textarea>
+                        </div>
+                        
+                        <div class="booking-summary">
+                            <h4>Riepilogo Prenotazione</h4>
+                            <div class="summary-grid">
+                                <div><span>📅</span> <span id="summary-date"></span></div>
+                                <div><span>⏰</span> <span id="summary-time"></span></div>
+                                <div><span>👥</span> <span id="summary-guests"></span></div>
+                                <div><span>🪑</span> <span id="summary-table"></span></div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-actions">
+                            <button type="button" class="btn btn-secondary" id="btn-back-step2">← Indietro</button>
+                            <button type="submit" class="btn btn-primary">Conferma Prenotazione</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Success -->
+                <div class="booking-step" id="booking-success" style="display: none;">
+                    <div class="booking-success">
+                        <div class="success-icon">✓</div>
+                        <h3>Prenotazione Inviata!</h3>
+                        <p>Riceverai conferma su WhatsApp al numero indicato.</p>
+                        <p class="success-id">ID: <span id="booking-id"></span></p>
+                        <button class="btn btn-primary" onclick="location.reload()">Nuova Prenotazione</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-map">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2797.5841!2d10.9916!3d45.4393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477f5f46f3c3b0e1%3A0x5c3f3c0f3c3b0e1!2sVia%20Pellicciai%2C%2012%2C%2037121%20Verona%20VR!5e0!3m2!1sit!2sit!4v1234567890" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+                <div class="contact-info">
+                    <h3>Vieni a Trovarci</h3>
+                    <p>Siamo nel cuore di Verona, a due passi da Piazza delle Erbe. Facilmente raggiungibile a piedi dal centro storico.</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/skalette_bistro/" target="_blank" class="social-link" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/393428691832" target="_blank" class="social-link" aria-label="WhatsApp">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                        </a>
+                        <a href="tel:+390458030500" class="social-link" aria-label="Telefono">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#home" class="footer-logo">
+                        <img src="logo.png" alt="Skalette" class="footer-logo-icon">
+                        <div class="logo-text-wrap">
+                            <span class="logo-text">SKALETTE</span>
+                            <span class="logo-sub">BISTRO</span>
+                        </div>
+                    </a>
+                    <p>Un'esperienza culinaria dove l'eleganza incontra la tradizione italiana.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Link Rapidi</h4>
+                    <ul>
+                        <li><a href="#about">Chi Siamo</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#gallery">Galleria</a></li>
+                        <li><a href="#reservation">Prenotazioni</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contatti</h4>
+                    <ul>
+                        <li>Via Pellicciai, 12</li>
+                        <li>37121 Verona, Italia</li>
+                        <li>+39 045 8030500</li>
+                        <li>skalettebistro@gmail.com</li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Newsletter</h4>
+                    <p>Iscriviti per ricevere novità ed eventi speciali</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="La tua email">
+                        <button type="submit">→</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Skalette Bistro. Tutti i diritti riservati.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Termini e Condizioni</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/393428691832" target="_blank" class="whatsapp-float" aria-label="Contattaci su WhatsApp">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+    </a>
+
+    <script src="script.js"></script>
+    <script type="module" src="reservation-firebase.js"></script>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Piantina - Skalette Bistro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #0a1628;
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .editor-header {
+            background: linear-gradient(135deg, #0f2042 0%, #1a3a5c 100%);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(201,169,97,0.3);
+        }
+        
+        .editor-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            color: #c9a961;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #c9a961 0%, #a8893e 100%);
+            color: #0a1628;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(201,169,97,0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #c9a961;
+            color: #c9a961;
+        }
+        
+        .editor-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            background: #0f2042;
+            padding: 25px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            overflow-y: auto;
+        }
+        
+        .sidebar h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #c9a961;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #8a8a8a;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #c9a961;
+        }
+        
+        .shape-selector {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .shape-btn {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .shape-btn:hover,
+        .shape-btn.active {
+            border-color: #c9a961;
+            background: rgba(201,169,97,0.1);
+        }
+        
+        .shape-btn .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .shape-btn span {
+            display: block;
+            font-size: 11px;
+            color: #8a8a8a;
+        }
+        
+        .canvas-container {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .canvas-info {
+            font-size: 13px;
+            color: #8a8a8a;
+        }
+        
+        #floor-canvas {
+            flex: 1;
+            background: linear-gradient(135deg, #0f2042 0%, #1a3a5c 100%);
+            border-radius: 12px;
+            border: 2px dashed rgba(201,169,97,0.3);
+            position: relative;
+            min-height: 500px;
+            cursor: crosshair;
+        }
+        
+        .fixed-element {
+            position: absolute;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+        }
+        
+        .table-element {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            transition: box-shadow 0.3s ease;
+            user-select: none;
+        }
+        
+        .table-element:hover {
+            box-shadow: 0 0 20px rgba(201,169,97,0.5);
+        }
+        
+        .table-element.selected {
+            box-shadow: 0 0 0 3px #c9a961;
+        }
+        
+        .table-element .table-name {
+            font-weight: 600;
+            font-size: 12px;
+            color: #0a1628;
+        }
+        
+        .table-element .table-capacity {
+            font-size: 10px;
+            color: #0a1628;
+            opacity: 0.8;
+        }
+        
+        .table-element .delete-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .table-element:hover .delete-btn,
+        .table-element.selected .delete-btn {
+            display: flex;
+        }
+        
+        .tables-list {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+        
+        .table-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .table-item-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .table-item-info span {
+            font-size: 11px;
+            color: #8a8a8a;
+        }
+        
+        .table-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: transparent;
+            color: #8a8a8a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-btn:hover {
+            border-color: #c9a961;
+            color: #c9a961;
+        }
+        
+        .icon-btn.delete:hover {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #27ae60;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .instructions {
+            background: rgba(201,169,97,0.1);
+            border: 1px solid rgba(201,169,97,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .instructions h4 {
+            color: #c9a961;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            font-size: 12px;
+            color: #b0b0b0;
+            padding-left: 18px;
+        }
+        
+        .instructions li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="editor-header">
+        <h1>🪑 Editor Piantina Locale</h1>
+        <div class="header-actions">
+            <a href="index.html" class="btn btn-secondary">← Torna al Sito</a>
+            <a href="admin.html" class="btn btn-secondary">Pannello Admin</a>
+            <button class="btn btn-primary" onclick="saveAll()">💾 Salva Piantina</button>
+        </div>
+    </header>
+    
+    <div class="editor-container">
+        <aside class="sidebar">
+            <div class="instructions">
+                <h4>📋 Istruzioni</h4>
+                <ul>
+                    <li>Clicca sulla piantina per aggiungere un tavolo</li>
+                    <li>Trascina i tavoli per posizionarli</li>
+                    <li>Clicca su un tavolo per modificarlo</li>
+                    <li>Salva quando hai finito</li>
+                </ul>
+            </div>
+            
+            <h3>➕ Nuovo Tavolo</h3>
+            
+            <div class="form-group">
+                <label>Nome Tavolo</label>
+                <input type="text" id="table-name" placeholder="es. T1, Tavolo VIP...">
+            </div>
+            
+            <div class="form-group">
+                <label>Forma</label>
+                <div class="shape-selector">
+                    <div class="shape-btn active" data-shape="square" onclick="selectShape('square')">
+                        <div class="icon">⬜</div>
+                        <span>Quadrato</span>
+                    </div>
+                    <div class="shape-btn" data-shape="round" onclick="selectShape('round')">
+                        <div class="icon">⚪</div>
+                        <span>Rotondo</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Min. Persone</label>
+                <input type="number" id="min-guests" value="2" min="1" max="20">
+            </div>
+            
+            <div class="form-group">
+                <label>Max. Persone</label>
+                <input type="number" id="max-guests" value="4" min="1" max="20">
+            </div>
+            
+            <div class="form-group">
+                <label>Dimensione (px)</label>
+                <input type="number" id="table-size" value="70" min="40" max="150">
+            </div>
+            
+            <div class="tables-list">
+                <h3>📋 Tavoli Creati</h3>
+                <div id="tables-list-content"></div>
+            </div>
+        </aside>
+        
+        <main class="canvas-container">
+            <div class="canvas-header">
+                <span class="canvas-info">Trascina i tavoli per riposizionarli • Clicca per aggiungere</span>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑️ Svuota Tutto</button>
+            </div>
+            <div id="floor-canvas">
+                <!-- BANCO -->
+                <div class="fixed-element" style="left:22%;top:35%;width:140px;height:50px;background:rgba(201,169,97,0.15);border:2px solid rgba(201,169,97,0.4);border-radius:8px;">
+                    <span style="color:rgba(201,169,97,0.7);font-size:13px;font-weight:600;letter-spacing:2px;">BANCO</span>
+                </div>
+                
+                <!-- DIVANI PICCOLI zona alta -->
+                <div class="fixed-element" style="left:52%;top:10%;width:70px;height:18px;background:rgba(139,90,43,0.4);border:1px solid rgba(139,90,43,0.6);border-radius:4px;">
+                    <span style="color:rgba(200,160,100,0.8);font-size:8px;">DIVANO</span>
+                </div>
+                <div class="fixed-element" style="left:68%;top:10%;width:60px;height:18px;background:rgba(139,90,43,0.4);border:1px solid rgba(139,90,43,0.6);border-radius:4px;">
+                    <span style="color:rgba(200,160,100,0.8);font-size:8px;">DIVANO</span>
+                </div>
+                <div class="fixed-element" style="left:84%;top:10%;width:70px;height:18px;background:rgba(139,90,43,0.4);border:1px solid rgba(139,90,43,0.6);border-radius:4px;">
+                    <span style="color:rgba(200,160,100,0.8);font-size:8px;">DIVANO</span>
+                </div>
+                
+                <!-- DIVANO GRANDE zona bassa (da S8 a S4) -->
+                <div class="fixed-element" style="left:73%;top:82%;width:320px;height:22px;background:rgba(139,90,43,0.5);border:2px solid rgba(139,90,43,0.7);border-radius:5px;">
+                    <span style="color:rgba(200,160,100,0.9);font-size:9px;font-weight:500;letter-spacing:1px;">DIVANO GRANDE</span>
+                </div>
+                
+                <!-- SCALA -->
+                <div class="fixed-element" style="left:44%;top:50%;width:40px;height:70px;background:repeating-linear-gradient(90deg,rgba(201,169,97,0.25),rgba(201,169,97,0.25) 4px,rgba(15,32,66,0.8) 4px,rgba(15,32,66,0.8) 8px);border:2px solid rgba(201,169,97,0.5);border-radius:6px;">
+                    <span style="color:rgba(201,169,97,0.9);font-size:11px;font-weight:600;writing-mode:vertical-rl;letter-spacing:2px;">SCALA</span>
+                </div>
+                
+                <!-- ENTRATA -->
+                <div class="fixed-element" style="left:5%;top:60%;width:30px;height:50px;border:2px dashed rgba(201,169,97,0.4);border-radius:4px;">
+                    <span style="color:rgba(201,169,97,0.5);font-size:7px;writing-mode:vertical-rl;">ENTRATA</span>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="toast" id="toast">Salvato con successo!</div>
+    
+    <script>
+        let tables = [];
+        let selectedShape = 'square';
+        let selectedTableId = null;
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
+        
+        // Carica dati salvati
+        function loadSavedData() {
+            const saved = localStorage.getItem('skalette_floorplan');
+            if (saved) {
+                const data = JSON.parse(saved);
+                tables = data.tables || [];
+            } else {
+                // Piantina predefinita Skalette Bistro
+                tables = [
+                    { id: 'S1', name: 'S1', shape: 'square', minGuests: 3, maxGuests: 5, width: 70, height: 70, x: 52, y: 22 },
+                    { id: 'S2', name: 'S2', shape: 'round', minGuests: 2, maxGuests: 3, width: 65, height: 65, x: 68, y: 22 },
+                    { id: 'S3', name: 'S3', shape: 'square', minGuests: 3, maxGuests: 5, width: 70, height: 70, x: 84, y: 22 },
+                    { id: 'B3', name: 'B3', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 12, y: 75 },
+                    { id: 'B2', name: 'B2', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 24, y: 75 },
+                    { id: 'B1', name: 'B1', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 36, y: 75 },
+                    { id: 'S8', name: 'S8', shape: 'square', minGuests: 3, maxGuests: 5, width: 65, height: 65, x: 52, y: 68 },
+                    { id: 'S7', name: 'S7', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 64, y: 68 },
+                    { id: 'S6', name: 'S6', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 74, y: 68 },
+                    { id: 'S5', name: 'S5', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 84, y: 68 },
+                    { id: 'S4', name: 'S4', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 94, y: 68 }
+                ];
+                saveAll();
+            }
+            renderAllTables();
+            updateTablesList();
+        }
+        
+        // Seleziona forma
+        function selectShape(shape) {
+            selectedShape = shape;
+            document.querySelectorAll('.shape-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.shape === shape);
+            });
+        }
+        
+        // Aggiungi tavolo
+        function addTable(x, y) {
+            const name = document.getElementById('table-name').value || `T${tables.length + 1}`;
+            const minGuests = parseInt(document.getElementById('min-guests').value) || 2;
+            const maxGuests = parseInt(document.getElementById('max-guests').value) || 4;
+            const size = parseInt(document.getElementById('table-size').value) || 70;
+            
+            const canvas = document.getElementById('floor-canvas');
+            const rect = canvas.getBoundingClientRect();
+            
+            const table = {
+                id: 'table_' + Date.now(),
+                name: name,
+                shape: selectedShape,
+                minGuests: minGuests,
+                maxGuests: maxGuests,
+                width: size,
+                height: size,
+                x: ((x - rect.left) / rect.width) * 100,
+                y: ((y - rect.top) / rect.height) * 100
+            };
+            
+            tables.push(table);
+            renderTable(table);
+            updateTablesList();
+            
+            document.getElementById('table-name').value = '';
+        }
+        
+        // Render singolo tavolo
+        function renderTable(table) {
+            const canvas = document.getElementById('floor-canvas');
+            
+            const el = document.createElement('div');
+            el.className = 'table-element';
+            el.id = table.id;
+            el.style.left = table.x + '%';
+            el.style.top = table.y + '%';
+            el.style.width = table.width + 'px';
+            el.style.height = table.height + 'px';
+            el.style.borderRadius = table.shape === 'round' ? '50%' : '8px';
+            el.style.background = 'linear-gradient(135deg, #c9a961 0%, #a8893e 100%)';
+            el.style.transform = 'translate(-50%, -50%)';
+            
+            el.innerHTML = `
+                <span class="table-name">${table.name}</span>
+                <span class="table-capacity">${table.minGuests}-${table.maxGuests}</span>
+                <button class="delete-btn" onclick="deleteTable('${table.id}')">×</button>
+            `;
+            
+            // Drag events
+            el.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('delete-btn')) return;
+                e.stopPropagation();
+                isDragging = true;
+                selectedTableId = table.id;
+                
+                const rect = el.getBoundingClientRect();
+                dragOffset.x = e.clientX - rect.left - rect.width/2;
+                dragOffset.y = e.clientY - rect.top - rect.height/2;
+                
+                document.querySelectorAll('.table-element').forEach(t => t.classList.remove('selected'));
+                el.classList.add('selected');
+            });
+            
+            canvas.appendChild(el);
+        }
+        
+        // Render tutti i tavoli
+        function renderAllTables() {
+            const canvas = document.getElementById('floor-canvas');
+            canvas.querySelectorAll('.table-element').forEach(el => el.remove());
+            tables.forEach(table => renderTable(table));
+        }
+        
+        // Elimina tavolo
+        function deleteTable(id) {
+            tables = tables.filter(t => t.id !== id);
+            const el = document.getElementById(id);
+            if (el) el.remove();
+            updateTablesList();
+        }
+        
+        // Aggiorna lista tavoli
+        function updateTablesList() {
+            const container = document.getElementById('tables-list-content');
+            if (tables.length === 0) {
+                container.innerHTML = '<p style="color:#8a8a8a;font-size:13px;text-align:center;padding:20px;">Nessun tavolo creato</p>';
+                return;
+            }
+            
+            container.innerHTML = tables.map(table => `
+                <div class="table-item">
+                    <div class="table-item-info">
+                        <h4>${table.name}</h4>
+                        <span>${table.shape === 'round' ? '⚪' : '⬜'} ${table.minGuests}-${table.maxGuests} persone</span>
+                    </div>
+                    <div class="table-item-actions">
+                        <button class="icon-btn delete" onclick="deleteTable('${table.id}')">🗑</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Salva tutto
+        function saveAll() {
+            const data = {
+                tables: tables,
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('skalette_floorplan', JSON.stringify(data));
+            showToast('Piantina salvata con successo!');
+        }
+        
+        // Svuota tutto
+        function clearAll() {
+            if (confirm('Sei sicuro di voler eliminare tutti i tavoli?')) {
+                tables = [];
+                renderAllTables();
+                updateTablesList();
+            }
+        }
+        
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        // Event listeners
+        document.getElementById('floor-canvas').addEventListener('click', (e) => {
+            if (e.target.id === 'floor-canvas') {
+                addTable(e.clientX, e.clientY);
+            }
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging || !selectedTableId) return;
+            
+            const canvas = document.getElementById('floor-canvas');
+            const rect = canvas.getBoundingClientRect();
+            const el = document.getElementById(selectedTableId);
+            
+            let x = ((e.clientX - dragOffset.x - rect.left) / rect.width) * 100;
+            let y = ((e.clientY - dragOffset.y - rect.top) / rect.height) * 100;
+            
+            x = Math.max(5, Math.min(95, x));
+            y = Math.max(5, Math.min(95, y));
+            
+            el.style.left = x + '%';
+            el.style.top = y + '%';
+            
+            const table = tables.find(t => t.id === selectedTableId);
+            if (table) {
+                table.x = x;
+                table.y = y;
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+        
+        // Inizializza
+        loadSavedData();
+    </script>
+</body>
+</html>
