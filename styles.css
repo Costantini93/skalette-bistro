@@ -882,12 +882,33 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--gold);
     text-transform: uppercase;
     letter-spacing: 1px;
+    border-radius: 3px;
 }
 
 .tag.vegetarian {
     background: rgba(76, 175, 80, 0.1);
     color: #81c784;
 }
+
+/* Allergeni */
+.tag.allergen {
+    font-size: 9px;
+    padding: 3px 8px;
+    background: rgba(239, 83, 80, 0.15);
+    color: #ef9a9a;
+    font-weight: 500;
+}
+
+.tag.allergen.glutine { background: rgba(255, 193, 7, 0.15); color: #ffd54f; }
+.tag.allergen.latticini { background: rgba(255, 255, 255, 0.1); color: #e0e0e0; }
+.tag.allergen.uova { background: rgba(255, 235, 59, 0.15); color: #fff176; }
+.tag.allergen.pesce { background: rgba(33, 150, 243, 0.15); color: #64b5f6; }
+.tag.allergen.crostacei { background: rgba(255, 87, 34, 0.15); color: #ff8a65; }
+.tag.allergen.molluschi { background: rgba(156, 39, 176, 0.15); color: #ba68c8; }
+.tag.allergen.frutta-guscio { background: rgba(121, 85, 72, 0.15); color: #a1887f; }
+.tag.allergen.sedano { background: rgba(139, 195, 74, 0.15); color: #aed581; }
+.tag.allergen.senape { background: rgba(255, 152, 0, 0.15); color: #ffb74d; }
+.tag.allergen.solfiti { background: rgba(233, 30, 99, 0.15); color: #f48fb1; }
 
 .menu-footer {
     text-align: center;
