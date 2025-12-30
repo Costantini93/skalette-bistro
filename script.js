@@ -734,6 +734,51 @@ const WHATSAPP_NUMBER = '393428691832';
 let selectedTable = null;
 let bookingData = {};
 
+// Firebase configuration
+const FIREBASE_PROJECT_ID = 'skalette-bistro';
+const FIREBASE_API_KEY = 'AIzaSyAbTQnt26Gca0sPa1RlhIyq2TIwLfKfl0s';
+
+// Save reservation to Firebase Firestore
+async function saveToFirebase(data, reservationId) {
+    try {
+        const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/reservations?key=${FIREBASE_API_KEY}`;
+        
+        const firestoreData = {
+            fields: {
+                name: { stringValue: data.name },
+                phone: { stringValue: data.phone },
+                email: { stringValue: data.email },
+                notes: { stringValue: data.notes || '' },
+                tableId: { stringValue: data.tableId },
+                tableName: { stringValue: data.tableName },
+                date: { stringValue: data.date },
+                time: { stringValue: data.time },
+                mealType: { stringValue: data.mealType },
+                guests: { integerValue: data.guests },
+                status: { stringValue: 'pending' },
+                createdAt: { stringValue: data.createdAt },
+                localId: { stringValue: reservationId }
+            }
+        };
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(firestoreData)
+        });
+        
+        if (response.ok) {
+            console.log('Reservation saved to Firebase successfully');
+        } else {
+            console.error('Firebase save failed:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error saving to Firebase:', error);
+    }
+}
+
 // Map browser language codes to country/nationality names
 function getCountryFromLanguage(langCode) {
     const languageToCountry = {
@@ -1214,26 +1259,31 @@ function handleBookingSubmit(e) {
     const email = document.getElementById('booking-email').value;
     const notes = document.getElementById('booking-notes').value;
     
-    // Create reservation
-    const reservation = {
-        id: 'RES' + Date.now().toString(36).toUpperCase(),
+    // Create reservation ID
+    const reservationId = 'RES' + Date.now().toString(36).toUpperCase();
+    
+    // Reservation data
+    const reservationData = {
         name,
         phone,
         email,
         notes,
-        ...bookingData,
+        tableId: bookingData.tableId,
+        tableName: bookingData.tableName,
+        date: bookingData.date,
+        time: bookingData.time,
+        mealType: bookingData.mealType,
+        guests: bookingData.guests,
         status: 'pending',
         createdAt: new Date().toISOString()
     };
     
-    // Save reservation
-    const reservations = getReservations();
-    reservations.push(reservation);
-    saveReservations(reservations);
+    // Save to Firebase
+    saveToFirebase(reservationData, reservationId);
     
     // Show success
     const bookingIdEl = document.getElementById('booking-id');
-    if (bookingIdEl) bookingIdEl.textContent = reservation.id;
+    if (bookingIdEl) bookingIdEl.textContent = reservationId;
     goToStep(4);
     
     // Detect site language and browser language/nationality
