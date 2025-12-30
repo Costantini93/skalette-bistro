@@ -35,6 +35,7 @@ const OPENING_HOURS = {
 // Durata prenotazioni in minuti
 const MEAL_DURATIONS = {
     aperitivo: 90,  // 1.5 ore
+    dopocena: 90,   // 1.5 ore
     pranzo: 120,    // 2 ore
     cena: 120       // 2 ore
 };

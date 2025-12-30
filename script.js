@@ -892,8 +892,8 @@ function getCountryFromLanguage(langCode) {
     return `🌍 ${langCode}`;
 }
 
-// Last aperitivo reservation by day of week (0 = Sunday)
-const APERITIVO_LAST_SLOT = {
+// Last dopocena reservation by day of week (0 = Sunday)
+const DOPOCENA_LAST_SLOT = {
     0: '22:30',  // Domenica
     1: '23:30',  // Lunedì
     2: '23:30',  // Martedì
@@ -917,8 +917,15 @@ function getTimeSlots(mealType, dateStr) {
             slots.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
         }
     } else if (mealType === 'aperitivo') {
-        // Aperitivo: 10:30 until last slot based on day
-        const lastSlot = APERITIVO_LAST_SLOT[dayOfWeek];
+        // Aperitivo: 10:30 - 21:00
+        for (let mins = 10 * 60 + 30; mins <= 21 * 60; mins += 30) {
+            const hours = Math.floor(mins / 60);
+            const minutes = mins % 60;
+            slots.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+        }
+    } else if (mealType === 'dopocena') {
+        // Dopocena: 21:30 until last slot based on day
+        const lastSlot = DOPOCENA_LAST_SLOT[dayOfWeek];
         let lastMinutes;
         if (lastSlot === '00:30') {
             lastMinutes = 24 * 60 + 30; // 00:30 next day = 1470 minutes
@@ -927,7 +934,7 @@ function getTimeSlots(mealType, dateStr) {
             lastMinutes = h * 60 + m;
         }
         
-        for (let mins = 10 * 60 + 30; mins <= lastMinutes; mins += 30) {
+        for (let mins = 21 * 60 + 30; mins <= lastMinutes; mins += 30) {
             const hours = Math.floor(mins / 60) % 24;
             const minutes = mins % 60;
             slots.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
@@ -1084,8 +1091,8 @@ function showLargeGroupWhatsApp() {
     });
     
     const mealLabels = siteLang === 'en' 
-        ? { pranzo: 'Lunch', aperitivo: 'Aperitivo', cena: 'Dinner' }
-        : { pranzo: 'Pranzo', aperitivo: 'Aperitivo', cena: 'Cena' };
+        ? { pranzo: 'Lunch', aperitivo: 'Aperitivo', dopocena: 'After Dinner', cena: 'Dinner' }
+        : { pranzo: 'Pranzo', aperitivo: 'Aperitivo', dopocena: 'Dopocena', cena: 'Cena' };
     
     const whatsappMessage = siteLang === 'en'
         ? `Hello! I would like to book for ${bookingData.guests}+ people on ${dateFormatted} at ${bookingData.time} (${mealLabels[bookingData.mealType]}). Thank you!`
@@ -1203,6 +1210,7 @@ async function getFirebaseReservations(date) {
 const MEAL_DURATIONS = {
     pranzo: 120,    // 2 ore
     aperitivo: 90,  // 1.5 ore
+    dopocena: 90,   // 1.5 ore
     cena: 120       // 2 ore
 };
 
@@ -1402,8 +1410,8 @@ function updateSummary() {
     });
     
     const mealLabels = siteLang === 'en'
-        ? { pranzo: '☀️ Lunch', aperitivo: '🍹 Aperitivo', cena: '🌙 Dinner' }
-        : { pranzo: '☀️ Pranzo', aperitivo: '🍹 Aperitivo', cena: '🌙 Cena' };
+        ? { pranzo: '☀️ Lunch', aperitivo: '🍹 Aperitivo', dopocena: '🌙 After Dinner', cena: '🍽️ Dinner' }
+        : { pranzo: '☀️ Pranzo', aperitivo: '🍹 Aperitivo', dopocena: '🌙 Dopocena', cena: '🍽️ Cena' };
     
     const guestText = siteLang === 'en'
         ? bookingData.guests + ' guest' + (bookingData.guests > 1 ? 's' : '')
@@ -1465,8 +1473,8 @@ function handleBookingSubmit(e) {
     });
     
     const mealLabels = siteLang === 'en' 
-        ? { pranzo: 'Lunch', aperitivo: 'Aperitivo', cena: 'Dinner' }
-        : { pranzo: 'Pranzo', aperitivo: 'Aperitivo', cena: 'Cena' };
+        ? { pranzo: 'Lunch', aperitivo: 'Aperitivo', dopocena: 'After Dinner', cena: 'Dinner' }
+        : { pranzo: 'Pranzo', aperitivo: 'Aperitivo', dopocena: 'Dopocena', cena: 'Cena' };
     
     // Message for the restaurant (always includes nationality)
     const message = siteLang === 'en' 
