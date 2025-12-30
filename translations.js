@@ -159,7 +159,36 @@ const translations = {
         'backToTop': 'Torna su',
         
         // Swipe indicator
-        'swipeIndicator': '← Scorri →'
+        'swipeIndicator': '← Scorri →',
+        
+        // Cookie Banner
+        'cookie.message': 'Questo sito utilizza cookie tecnici per migliorare la tua esperienza. Continuando a navigare, accetti la nostra <a href="privacy.html">Privacy Policy</a>.',
+        'cookie.accept': 'Accetto',
+        'cookie.reject': 'Rifiuto',
+        
+        // Private Events
+        'events.label': 'Eventi Privati',
+        'events.title': 'Organizza il Tuo <span class="gold">Evento Speciale</span>',
+        'events.description': 'Che sia un compleanno, un anniversario, una cena aziendale o qualsiasi altra occasione speciale, Skalette Bistro è il luogo perfetto per i tuoi momenti indimenticabili.',
+        'events.description2': 'Il nostro team è a disposizione per creare un menu personalizzato e un\'atmosfera su misura per le tue esigenze.',
+        'events.feature1': 'Fino a 30 ospiti',
+        'events.feature2': 'Menu personalizzato',
+        'events.feature3': 'Consulenza dedicata',
+        'events.feature4': 'Flessibilità orari',
+        'events.formTitle': 'Richiedi Informazioni',
+        'events.name': 'Nome *',
+        'events.phone': 'Telefono *',
+        'events.email': 'Email *',
+        'events.type': 'Tipo Evento',
+        'events.typeBirthday': 'Compleanno',
+        'events.typeAnniversary': 'Anniversario',
+        'events.typeCorporate': 'Evento Aziendale',
+        'events.typeGraduation': 'Laurea',
+        'events.typeOther': 'Altro',
+        'events.guests': 'N° Ospiti',
+        'events.preferredDate': 'Data Preferita',
+        'events.notes': 'Note e Richieste',
+        'events.submit': 'Invia Richiesta'
     },
     
     en: {
@@ -318,7 +347,36 @@ const translations = {
         'backToTop': 'Back to top',
         
         // Swipe indicator
-        'swipeIndicator': '← Swipe →'
+        'swipeIndicator': '← Swipe →',
+        
+        // Cookie Banner
+        'cookie.message': 'This site uses technical cookies to improve your experience. By continuing to browse, you accept our <a href="privacy.html">Privacy Policy</a>.',
+        'cookie.accept': 'Accept',
+        'cookie.reject': 'Reject',
+        
+        // Private Events
+        'events.label': 'Private Events',
+        'events.title': 'Organize Your <span class="gold">Special Event</span>',
+        'events.description': 'Whether it\'s a birthday, anniversary, corporate dinner or any other special occasion, Skalette Bistro is the perfect place for your unforgettable moments.',
+        'events.description2': 'Our team is available to create a personalized menu and atmosphere tailored to your needs.',
+        'events.feature1': 'Up to 30 guests',
+        'events.feature2': 'Custom menu',
+        'events.feature3': 'Dedicated consulting',
+        'events.feature4': 'Flexible hours',
+        'events.formTitle': 'Request Information',
+        'events.name': 'Name *',
+        'events.phone': 'Phone *',
+        'events.email': 'Email *',
+        'events.type': 'Event Type',
+        'events.typeBirthday': 'Birthday',
+        'events.typeAnniversary': 'Anniversary',
+        'events.typeCorporate': 'Corporate Event',
+        'events.typeGraduation': 'Graduation',
+        'events.typeOther': 'Other',
+        'events.guests': 'N° Guests',
+        'events.preferredDate': 'Preferred Date',
+        'events.notes': 'Notes and Requests',
+        'events.submit': 'Send Request'
     }
 };
 

@@ -6,7 +6,8 @@ import {
     getOpeningHours,
     createReservation,
     isTableAvailable,
-    subscribeToTableAvailability
+    subscribeToTableAvailability,
+    PROJECT_ID
 } from './firebase-config.js';
 
 let bookingData = {
@@ -19,6 +20,48 @@ let bookingData = {
 let selectedTable = null;
 let currentStep = 1;
 let unsubscribeAvailability = null;
+let closedDatesCache = null;
+let closedDatesCacheTime = 0;
+
+// ===================== CLOSED DATES CHECK =====================
+
+async function isDateClosed(date) {
+    // Check local storage first (synced from admin)
+    const localClosures = localStorage.getItem('skalette_closures');
+    if (localClosures) {
+        const closures = JSON.parse(localClosures);
+        const found = closures.find(c => c.date === date);
+        if (found) return found;
+    }
+    
+    // Also check Firebase (with caching)
+    const now = Date.now();
+    if (!closedDatesCache || now - closedDatesCacheTime > 300000) { // 5 min cache
+        try {
+            const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/closedDates/config`;
+            const response = await fetch(url);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.fields?.dates?.arrayValue?.values) {
+                    closedDatesCache = data.fields.dates.arrayValue.values.map(v => ({
+                        date: v.mapValue.fields.date.stringValue,
+                        reason: v.mapValue.fields.reason.stringValue
+                    }));
+                    closedDatesCacheTime = now;
+                }
+            }
+        } catch (e) {
+            console.log('Could not fetch closed dates from Firebase');
+        }
+    }
+    
+    if (closedDatesCache) {
+        const found = closedDatesCache.find(c => c.date === date);
+        if (found) return found;
+    }
+    
+    return null;
+}
 
 // ===================== INITIALIZATION =====================
 
@@ -44,8 +87,23 @@ function initBookingSystem() {
     updateTimeSlots();
     
     // Event listeners
-    dateInput.addEventListener('change', (e) => {
+    dateInput.addEventListener('change', async (e) => {
         bookingData.date = e.target.value;
+        
+        // Check if date is closed
+        const isClosed = await isDateClosed(bookingData.date);
+        if (isClosed) {
+            const currentLang = localStorage.getItem('skalette_language') || 'it';
+            const message = currentLang === 'en' 
+                ? `Sorry, we are closed on this date (${isClosed.reason || 'Closed'}). Please select another date.`
+                : `Siamo chiusi in questa data (${isClosed.reason || 'Chiuso'}). Seleziona un\'altra data.`;
+            alert(message);
+            // Reset to today
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+            bookingData.date = today;
+        }
+        
         updateTimeSlots();
     });
     

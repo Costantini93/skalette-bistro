@@ -1587,3 +1587,168 @@ function isTableAvailable(tableId, date, time, mealType) {
         res.status !== 'rejected'
     );
 }
+
+// ===================================
+// COOKIE BANNER
+// ===================================
+function showCookieBanner() {
+    const banner = document.getElementById('cookie-banner');
+    if (banner && !localStorage.getItem('skalette_cookies_accepted')) {
+        setTimeout(() => {
+            banner.classList.add('show');
+        }, 1500);
+    }
+}
+
+function acceptCookies() {
+    localStorage.setItem('skalette_cookies_accepted', 'true');
+    localStorage.setItem('skalette_cookies_date', new Date().toISOString());
+    const banner = document.getElementById('cookie-banner');
+    if (banner) banner.classList.remove('show');
+}
+
+function rejectCookies() {
+    localStorage.setItem('skalette_cookies_accepted', 'rejected');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) banner.classList.remove('show');
+}
+
+// Initialize cookie banner on load
+document.addEventListener('DOMContentLoaded', showCookieBanner);
+
+// ===================================
+// SCROLL ANIMATIONS (Intersection Observer)
+// ===================================
+function initScrollAnimations() {
+    // Add animation classes to elements
+    const animatableElements = [
+        { selector: '.section-header', class: 'fade-in-up' },
+        { selector: '.menu-item', class: 'fade-in-up' },
+        { selector: '.gallery-item', class: 'scale-in' },
+        { selector: '.about-image', class: 'fade-in-left' },
+        { selector: '.about-content', class: 'fade-in-right' },
+        { selector: '.testimonial-card', class: 'fade-in-up' },
+        { selector: '.contact-info', class: 'fade-in-left' },
+        { selector: '.hours-card', class: 'fade-in-right' },
+        { selector: '.events-content', class: 'fade-in-left' },
+        { selector: '.events-form-container', class: 'fade-in-right' },
+        { selector: '.footer-brand', class: 'fade-in-up' },
+        { selector: '.footer-links', class: 'fade-in-up' },
+        { selector: '.footer-newsletter', class: 'fade-in-up' }
+    ];
+    
+    animatableElements.forEach(item => {
+        document.querySelectorAll(item.selector).forEach(el => {
+            if (!el.classList.contains('fade-in-up') && 
+                !el.classList.contains('fade-in-left') && 
+                !el.classList.contains('fade-in-right') &&
+                !el.classList.contains('scale-in')) {
+                el.classList.add(item.class);
+            }
+        });
+    });
+    
+    // Create observer
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Optionally unobserve after animating
+                // observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all animated elements
+    document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right, .scale-in').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Initialize scroll animations
+document.addEventListener('DOMContentLoaded', initScrollAnimations);
+
+// ===================================
+// PRIVATE EVENTS FORM
+// ===================================
+function initEventsForm() {
+    const form = document.getElementById('events-form');
+    if (!form) return;
+    
+    // Set min date to today
+    const dateInput = document.getElementById('event-date');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+    }
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('event-name').value.trim();
+        const phone = document.getElementById('event-phone').value.trim();
+        const email = document.getElementById('event-email').value.trim();
+        const eventType = document.getElementById('event-type').value;
+        const guests = document.getElementById('event-guests').value;
+        const date = document.getElementById('event-date').value;
+        const notes = document.getElementById('event-notes').value.trim();
+        
+        // Prepare WhatsApp message
+        const currentLang = localStorage.getItem('skalette_language') || 'it';
+        
+        let message;
+        if (currentLang === 'en') {
+            message = `🎉 *PRIVATE EVENT REQUEST*\n\n`;
+            message += `*Name:* ${name}\n`;
+            message += `*Phone:* ${phone}\n`;
+            message += `*Email:* ${email}\n`;
+            message += `*Event Type:* ${eventType}\n`;
+            message += `*Guests:* ${guests}\n`;
+            if (date) message += `*Preferred Date:* ${formatDateDisplay(date)}\n`;
+            if (notes) message += `*Notes:* ${notes}\n`;
+        } else {
+            message = `🎉 *RICHIESTA EVENTO PRIVATO*\n\n`;
+            message += `*Nome:* ${name}\n`;
+            message += `*Telefono:* ${phone}\n`;
+            message += `*Email:* ${email}\n`;
+            message += `*Tipo Evento:* ${eventType}\n`;
+            message += `*Ospiti:* ${guests}\n`;
+            if (date) message += `*Data Preferita:* ${formatDateDisplay(date)}\n`;
+            if (notes) message += `*Note:* ${notes}\n`;
+        }
+        
+        // Open WhatsApp
+        const whatsappUrl = `https://wa.me/393428691832?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+        
+        // Show success feedback
+        const submitBtn = form.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = currentLang === 'en' ? '✓ Request Sent!' : '✓ Richiesta Inviata!';
+        submitBtn.disabled = true;
+        
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            form.reset();
+        }, 3000);
+    });
+}
+
+// Initialize events form
+document.addEventListener('DOMContentLoaded', initEventsForm);
+
+// Helper to format date for display
+function formatDateDisplay(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    const lang = localStorage.getItem('skalette_language') || 'it';
+    return date.toLocaleDateString(lang === 'en' ? 'en-US' : 'it-IT', options);
+}

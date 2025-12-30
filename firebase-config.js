@@ -12,6 +12,9 @@ const firebaseConfig = {
     appId: "1:692167914968:web:9929ed1d221825cbcceead"
 };
 
+// Export project ID for use in other modules
+export const PROJECT_ID = firebaseConfig.projectId;
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
