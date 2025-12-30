@@ -120,6 +120,47 @@ function generateTimeSlots(date) {
     return slots;
 }
 
+// Genera slot orari estesi per admin (include orari dopo chiusura per vedere fine prenotazioni)
+function generateAdminTimeSlots(date) {
+    const dayOfWeek = new Date(date).getDay();
+    const hours = OPENING_HOURS[dayOfWeek];
+    const slots = [];
+    
+    let [startHour, startMin] = hours.open.split(':').map(Number);
+    let [closeHour, closeMin] = hours.close.split(':').map(Number);
+    
+    // Calcola l'orario finale (chiusura + 2 ore per prenotazioni cena)
+    let endHour, endMin;
+    if (closeHour === 0) {
+        // Chiude a mezzanotte -> estendi fino alle 02:00
+        endHour = 2;
+        endMin = 0;
+    } else {
+        // Aggiungi 2 ore dopo la chiusura
+        endHour = closeHour + 2;
+        endMin = closeMin;
+    }
+    
+    let currentHour = startHour;
+    let currentMin = startMin;
+    
+    while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+        // Gestisci passaggio da 23 a 00
+        const displayHour = currentHour >= 24 ? currentHour - 24 : currentHour;
+        const timeStr = `${displayHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`;
+        slots.push(timeStr);
+        
+        // Incrementa di 30 minuti
+        currentMin += 30;
+        if (currentMin >= 60) {
+            currentMin = 0;
+            currentHour++;
+        }
+    }
+    
+    return slots;
+}
+
 // Ottieni orari di apertura per una data
 function getOpeningHours(date) {
     const dayOfWeek = new Date(date).getDay();
@@ -345,6 +386,7 @@ export {
     OPENING_HOURS,
     MEAL_DURATIONS,
     generateTimeSlots,
+    generateAdminTimeSlots,
     getOpeningHours,
     getOccupiedSlots,
     timeToMinutes,
