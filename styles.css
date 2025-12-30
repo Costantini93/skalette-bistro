@@ -1910,6 +1910,78 @@ h1, h2, h3, h4, h5, h6 {
     padding: 40px;
 }
 
+/* WhatsApp Large Group Step */
+.whatsapp-large-group {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.whatsapp-large-group .whatsapp-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.whatsapp-large-group h3 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--gold);
+    margin-bottom: 15px;
+}
+
+.whatsapp-large-group p {
+    color: var(--grey-light);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.whatsapp-large-group .whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-large-group .whatsapp-btn:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-large-group .whatsapp-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.btn-back-booking {
+    display: block;
+    margin: 25px auto 0;
+    padding: 10px 25px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--grey-light);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-back-booking:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
 .success-icon {
     width: 80px;
     height: 80px;
