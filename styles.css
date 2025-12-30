@@ -2486,13 +2486,23 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .title-line {
-        letter-spacing: 10px;
+        letter-spacing: 12px;
     }
     
     .title-accent {
-        letter-spacing: 10px;
+        letter-spacing: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-line {
+        letter-spacing: 8px;
+    }
+    
+    .title-accent {
+        letter-spacing: 8px;
     }
     
     .menu-tabs {
@@ -3141,19 +3151,11 @@ h1, h2, h3, h4, h5, h6 {
     .booking-form-grid input[type="date"] {
         width: 100%;
         min-width: 0;
-        -webkit-appearance: none;
-        appearance: none;
     }
     
     .booking-form-grid select {
         width: 100%;
         min-width: 0;
-        -webkit-appearance: none;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23c9a961' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        padding-right: 40px;
     }
     
     .booking-step {
