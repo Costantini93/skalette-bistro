@@ -1574,21 +1574,39 @@ Ci scusiamo per il disagio.`;
         
         window.testNotification = function() {
             if (!('Notification' in window)) {
-                alert('Il tuo browser non supporta le notifiche');
+                alert('Il tuo browser non supporta le notifiche push.\n\nLe notifiche browser funzionano solo su HTTPS.');
+                return;
+            }
+            
+            if (Notification.permission === 'denied') {
+                alert('Le notifiche sono state bloccate.\n\nPer abilitarle:\n1. Clicca sul lucchetto nella barra URL\n2. Trova "Notifiche"\n3. Seleziona "Consenti"');
                 return;
             }
             
             if (Notification.permission !== 'granted') {
-                alert('Prima attiva le notifiche');
+                alert('Prima attiva le notifiche usando il toggle sopra');
                 return;
             }
             
-            new Notification('🍽️ Skalette Bistro', {
-                body: 'Test notifica! Le notifiche funzionano correttamente.',
-                icon: 'logo.png',
-                badge: 'logo.png',
-                tag: 'test'
-            });
+            try {
+                const notification = new Notification('🍽️ Skalette Bistro', {
+                    body: 'Test notifica! Le notifiche funzionano correttamente.',
+                    icon: 'logo.png',
+                    badge: 'logo.png',
+                    tag: 'test-' + Date.now()
+                });
+                
+                notification.onclick = function() {
+                    window.focus();
+                    notification.close();
+                };
+                
+                // Auto-close after 5 seconds
+                setTimeout(() => notification.close(), 5000);
+                
+            } catch (e) {
+                alert('Errore notifica: ' + e.message + '\n\nNota: Le notifiche funzionano solo su HTTPS (GitHub Pages)');
+            }
         };
         
         // Function to show notification for new reservations
