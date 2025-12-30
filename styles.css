@@ -1577,6 +1577,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .booking-form-grid .form-group {
     margin-bottom: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .booking-form-grid label {
@@ -1598,12 +1600,27 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--white);
     font-size: 14px;
     font-family: var(--font-body);
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
 }
 
 .booking-form-grid input:focus,
 .booking-form-grid select:focus {
     outline: none;
     border-color: var(--gold);
+}
+
+.booking-form-grid select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.booking-form-grid select option {
+    background: var(--navy);
+    color: var(--white);
+    padding: 10px;
 }
 
 .floor-plan-container {
