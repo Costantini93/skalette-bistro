@@ -62,10 +62,12 @@ function timeToMinutes(time) {
     return hours * 60 + mins;
 }
 
-// Converti minuti in orario string
+// Converti minuti in orario string (normalizzato a 24 ore)
 function minutesToTime(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+    // Normalizza a 24 ore (es. 1440 minuti = 00:00, 1470 = 00:30)
+    const normalizedMinutes = minutes % (24 * 60);
+    const hours = Math.floor(normalizedMinutes / 60);
+    const mins = normalizedMinutes % 60;
     return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 }
 
