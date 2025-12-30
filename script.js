@@ -722,10 +722,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===================================
     console.log('Skalette Bistro website initialized with enhanced effects');
     
-    // Booking system - use local fallback if Firebase not available (file:// protocol)
-    if (window.location.protocol === 'file:') {
-        initBookingSystem();
-    }
+    // Booking system - always initialize (local storage fallback)
+    initBookingSystem();
 });
 
 // ===================================
