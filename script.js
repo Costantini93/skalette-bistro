@@ -1256,32 +1256,32 @@ function handleBookingSubmit(e) {
     
     // Message for the restaurant (always includes nationality)
     const message = siteLang === 'en' 
-        ? `🍽️ NEW RESERVATION - Skalette Bistro
+        ? `◇ NEW RESERVATION - Skalette Bistro
 
-👤 Name: ${name}
-📱 Phone: ${phone}
-📧 Email: ${email}
-👥 Guests: ${bookingData.guests}
-📅 Date: ${dateFormatted}
-⏰ Time: ${bookingData.time} (${mealLabels[bookingData.mealType]})
-🪑 Table: ${bookingData.tableName}
+◇ Name: ${name}
+◇ Phone: ${phone}
+◇ Email: ${email}
+◇ Guests: ${bookingData.guests}
+◇ Date: ${dateFormatted}
+◇ Time: ${bookingData.time} (${mealLabels[bookingData.mealType]})
+◇ Table: ${bookingData.tableName}
 
-🌍 Nationality: ${nationality} (${browserLang})
-📝 Notes: ${notes || 'None'}
+◇ Nationality: ${nationality} (${browserLang})
+◇ Notes: ${notes || 'None'}
 
 ID: ${reservation.id}`
-        : `🍽️ NUOVA PRENOTAZIONE - Skalette Bistro
+        : `◇ NUOVA PRENOTAZIONE - Skalette Bistro
 
-👤 Nome: ${name}
-📱 Telefono: ${phone}
-📧 Email: ${email}
-👥 Persone: ${bookingData.guests}
-📅 Data: ${dateFormatted}
-⏰ Orario: ${bookingData.time} (${mealLabels[bookingData.mealType]})
-🪑 Tavolo: ${bookingData.tableName}
+◇ Nome: ${name}
+◇ Telefono: ${phone}
+◇ Email: ${email}
+◇ Persone: ${bookingData.guests}
+◇ Data: ${dateFormatted}
+◇ Orario: ${bookingData.time} (${mealLabels[bookingData.mealType]})
+◇ Tavolo: ${bookingData.tableName}
 
-🌍 Nazionalità: ${nationality} (${browserLang})
-📝 Note: ${notes || 'Nessuna'}
+◇ Nazionalità: ${nationality} (${browserLang})
+◇ Note: ${notes || 'Nessuna'}
 
 ID: ${reservation.id}`;
 

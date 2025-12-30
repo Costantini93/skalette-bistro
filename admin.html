@@ -547,18 +547,18 @@
         window.confirmRes = async (id, phone, date, time, guests, table, name) => {
             await updateReservationStatus(id, 'confirmed');
             const fullDate = new Date(date).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            const msg = `🍽️ Skalette Bistro - Prenotazione CONFERMATA ✅
+            const msg = `◇ Skalette Bistro - Prenotazione CONFERMATA
 
 Gentile ${name},
 la tua prenotazione è stata confermata!
 
-📅 Data: ${fullDate}
-🕐 Orario: ${time}
-👥 Persone: ${guests}
-🪑 Tavolo: ${table}
+◇ Data: ${fullDate}
+◇ Orario: ${time}
+◇ Persone: ${guests}
+◇ Tavolo: ${table}
 
 Ti aspettiamo!
-📍 Via Pellicciai, 12 - Verona
+◇ Via Pellicciai, 12 - Verona
 
 Per modifiche: 045 8030500`;
             window.open(`https://wa.me/39${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -567,14 +567,14 @@ Per modifiche: 045 8030500`;
         window.rejectRes = async (id, phone, date, time, name) => {
             await updateReservationStatus(id, 'rejected');
             const fullDate = new Date(date).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            const msg = `🍽️ Skalette Bistro
+            const msg = `◇ Skalette Bistro
 
 Gentile ${name},
 ci dispiace ma non possiamo confermare la prenotazione per:
-📅 ${fullDate} alle ${time}
+◇ ${fullDate} alle ${time}
 
 Contattaci per trovare un'alternativa:
-📞 045 8030500
+◇ 045 8030500
 
 Ci scusiamo per il disagio.`;
             window.open(`https://wa.me/39${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
