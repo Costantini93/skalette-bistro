@@ -310,13 +310,132 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--grey); }
         .empty-state .icon { font-size: 48px; margin-bottom: 20px; }
         
+        /* Reports Dashboard */
+        .reports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .reports-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--gold);
+            font-size: 24px;
+        }
+        .reports-period-select {
+            display: flex;
+            gap: 10px;
+        }
+        .period-btn {
+            padding: 10px 20px;
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--grey-light);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .period-btn:hover { border-color: var(--gold); color: var(--white); }
+        .period-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .kpi-card {
+            background: var(--navy-light);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+        .kpi-card .kpi-icon { font-size: 28px; margin-bottom: 10px; }
+        .kpi-card .kpi-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+        .kpi-card .kpi-label {
+            font-size: 12px;
+            color: var(--grey-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .kpi-card .kpi-change {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        .kpi-card .kpi-change.positive { color: var(--green); }
+        .kpi-card .kpi-change.negative { color: var(--red); }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .chart-card {
+            background: var(--navy-light);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .chart-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--gold);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
+        
+        .top-list {
+            list-style: none;
+        }
+        .top-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .top-list li:last-child { border-bottom: none; }
+        .top-list .rank {
+            width: 30px;
+            height: 30px;
+            background: var(--gold);
+            color: var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+            margin-right: 12px;
+        }
+        .top-list .rank.silver { background: #9ca3af; }
+        .top-list .rank.bronze { background: #cd7f32; }
+        .top-list .name { flex: 1; }
+        .top-list .count { color: var(--gold); font-weight: 600; }
+        
         @media (max-width: 768px) {
             .admin-header { flex-direction: column; gap: 15px; text-align: center; }
             .admin-tabs { overflow-x: auto; }
             .admin-tab { padding: 12px 20px; white-space: nowrap; }
             .reservations-table { display: block; overflow-x: auto; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .reports-period-select { flex-wrap: wrap; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Login -->
@@ -339,6 +458,7 @@
         <nav class="admin-tabs">
             <button class="admin-tab active" data-tab="reservations">📋 Prenotazioni</button>
             <button class="admin-tab" data-tab="schedule">📅 Gestione Tavoli</button>
+            <button class="admin-tab" data-tab="reports">📊 Reports</button>
         </nav>
         
         <main class="admin-content">
@@ -423,6 +543,102 @@
                     <span><span class="dot booked"></span> Confermato</span>
                     <span><span class="dot occupied"></span> Occupato (durata)</span>
                     <span><span class="dot blocked"></span> Bloccato</span>
+                </div>
+            </div>
+            
+            <!-- Reports Tab -->
+            <div class="tab-panel" id="tab-reports">
+                <div class="reports-header">
+                    <h2>📊 Dashboard & Reports</h2>
+                    <div class="reports-period-select">
+                        <button class="period-btn" data-period="7">7 giorni</button>
+                        <button class="period-btn active" data-period="30">30 giorni</button>
+                        <button class="period-btn" data-period="90">3 mesi</button>
+                        <button class="period-btn" data-period="365">1 anno</button>
+                    </div>
+                </div>
+                
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📅</div>
+                        <div class="kpi-value" id="kpi-total">0</div>
+                        <div class="kpi-label">Prenotazioni Totali</div>
+                        <div class="kpi-change" id="kpi-total-change"></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">✅</div>
+                        <div class="kpi-value" id="kpi-confirmed">0</div>
+                        <div class="kpi-label">Confermate</div>
+                        <div class="kpi-change" id="kpi-confirmed-pct"></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-value" id="kpi-guests">0</div>
+                        <div class="kpi-label">Ospiti Totali</div>
+                        <div class="kpi-change" id="kpi-avg-guests"></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📈</div>
+                        <div class="kpi-value" id="kpi-avg-day">0</div>
+                        <div class="kpi-label">Media/Giorno</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🔥</div>
+                        <div class="kpi-value" id="kpi-peak-day">-</div>
+                        <div class="kpi-label">Giorno più Richiesto</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⏰</div>
+                        <div class="kpi-value" id="kpi-peak-time">-</div>
+                        <div class="kpi-label">Orario più Richiesto</div>
+                    </div>
+                </div>
+                
+                <!-- Charts Row 1 -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>📊 Prenotazioni per Tipo</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-meal-type"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>📈 Trend Prenotazioni</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-trend"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Row 2 -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>📆 Prenotazioni per Giorno</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-weekday"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>🪑 Tavoli più Prenotati</h3>
+                        <ul class="top-list" id="top-tables"></ul>
+                    </div>
+                </div>
+                
+                <!-- Charts Row 3 -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>👥 Distribuzione Ospiti</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-guests"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>📋 Stato Prenotazioni</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-status"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -511,6 +727,7 @@
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
             document.getElementById(`tab-${tabId}`).classList.add('active');
             if (tabId === 'schedule') renderScheduleGrid();
+            if (tabId === 'reports') renderReports();
         }
         
         // STATS
@@ -711,6 +928,274 @@ Ci scusiamo per il disagio.`;
         
         function formatDate(d) {
             return new Date(d).toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
+        }
+        
+        // ==================== REPORTS ====================
+        let reportPeriod = 30;
+        let charts = {};
+        
+        // Period buttons
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                reportPeriod = parseInt(btn.dataset.period);
+                renderReports();
+            });
+        });
+        
+        function renderReports() {
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - reportPeriod);
+            const cutoffStr = cutoffDate.toISOString().split('T')[0];
+            
+            const filteredRes = allReservations.filter(r => r.date >= cutoffStr);
+            
+            updateKPIs(filteredRes);
+            renderMealTypeChart(filteredRes);
+            renderTrendChart(filteredRes);
+            renderWeekdayChart(filteredRes);
+            renderTopTables(filteredRes);
+            renderGuestsChart(filteredRes);
+            renderStatusChart(filteredRes);
+        }
+        
+        function updateKPIs(reservations) {
+            const total = reservations.length;
+            const confirmed = reservations.filter(r => r.status === 'confirmed').length;
+            const totalGuests = reservations.reduce((sum, r) => sum + (parseInt(r.guests) || 0), 0);
+            const avgPerDay = (total / reportPeriod).toFixed(1);
+            
+            document.getElementById('kpi-total').textContent = total;
+            document.getElementById('kpi-confirmed').textContent = confirmed;
+            document.getElementById('kpi-guests').textContent = totalGuests;
+            document.getElementById('kpi-avg-day').textContent = avgPerDay;
+            
+            // Percentuale confermate
+            const pct = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+            document.getElementById('kpi-confirmed-pct').textContent = `${pct}% del totale`;
+            document.getElementById('kpi-confirmed-pct').className = 'kpi-change ' + (pct >= 70 ? 'positive' : pct >= 50 ? '' : 'negative');
+            
+            // Media ospiti
+            const avgGuests = total > 0 ? (totalGuests / total).toFixed(1) : 0;
+            document.getElementById('kpi-avg-guests').textContent = `Media: ${avgGuests} per prenotazione`;
+            
+            // Giorno più richiesto
+            const dayCount = {};
+            reservations.forEach(r => {
+                const day = new Date(r.date).getDay();
+                dayCount[day] = (dayCount[day] || 0) + 1;
+            });
+            const peakDay = Object.entries(dayCount).sort((a, b) => b[1] - a[1])[0];
+            const dayNames = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+            document.getElementById('kpi-peak-day').textContent = peakDay ? dayNames[peakDay[0]] : '-';
+            
+            // Orario più richiesto
+            const timeCount = {};
+            reservations.forEach(r => {
+                const hour = r.time?.split(':')[0] || '12';
+                timeCount[hour] = (timeCount[hour] || 0) + 1;
+            });
+            const peakTime = Object.entries(timeCount).sort((a, b) => b[1] - a[1])[0];
+            document.getElementById('kpi-peak-time').textContent = peakTime ? `${peakTime[0]}:00` : '-';
+        }
+        
+        function renderMealTypeChart(reservations) {
+            const ctx = document.getElementById('chart-meal-type');
+            if (charts.mealType) charts.mealType.destroy();
+            
+            const counts = { pranzo: 0, aperitivo: 0, cena: 0, dopocena: 0 };
+            reservations.forEach(r => {
+                const type = r.mealType || 'cena';
+                if (counts[type] !== undefined) counts[type]++;
+            });
+            
+            charts.mealType = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['☀️ Pranzo', '🍹 Aperitivo', '🍽️ Cena', '🌙 Dopocena'],
+                    datasets: [{
+                        data: [counts.pranzo, counts.aperitivo, counts.cena, counts.dopocena],
+                        backgroundColor: ['#f59e0b', '#22c55e', '#ef4444', '#8b5cf6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#9ca3af', padding: 15 } }
+                    }
+                }
+            });
+        }
+        
+        function renderTrendChart(reservations) {
+            const ctx = document.getElementById('chart-trend');
+            if (charts.trend) charts.trend.destroy();
+            
+            // Raggruppa per data
+            const byDate = {};
+            reservations.forEach(r => {
+                byDate[r.date] = (byDate[r.date] || 0) + 1;
+            });
+            
+            // Ultimi N giorni
+            const labels = [];
+            const data = [];
+            for (let i = reportPeriod - 1; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                labels.push(d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }));
+                data.push(byDate[dateStr] || 0);
+            }
+            
+            charts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Prenotazioni',
+                        data,
+                        borderColor: '#c9a961',
+                        backgroundColor: 'rgba(201, 169, 97, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+        
+        function renderWeekdayChart(reservations) {
+            const ctx = document.getElementById('chart-weekday');
+            if (charts.weekday) charts.weekday.destroy();
+            
+            const dayNames = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            const counts = [0, 0, 0, 0, 0, 0, 0];
+            reservations.forEach(r => {
+                const day = new Date(r.date).getDay();
+                counts[day]++;
+            });
+            
+            charts.weekday = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dayNames,
+                    datasets: [{
+                        label: 'Prenotazioni',
+                        data: counts,
+                        backgroundColor: 'rgba(201, 169, 97, 0.7)',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6b7280' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+        
+        function renderTopTables(reservations) {
+            const counts = {};
+            reservations.forEach(r => {
+                const table = r.tableName || r.tableId;
+                counts[table] = (counts[table] || 0) + 1;
+            });
+            
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const list = document.getElementById('top-tables');
+            
+            if (sorted.length === 0) {
+                list.innerHTML = '<li style="text-align:center;color:var(--grey);padding:40px;">Nessun dato</li>';
+                return;
+            }
+            
+            list.innerHTML = sorted.map((item, idx) => {
+                const rankClass = idx === 0 ? '' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+                return `<li>
+                    <span class="rank ${rankClass}">${idx + 1}</span>
+                    <span class="name">Tavolo ${item[0]}</span>
+                    <span class="count">${item[1]} prenotazioni</span>
+                </li>`;
+            }).join('');
+        }
+        
+        function renderGuestsChart(reservations) {
+            const ctx = document.getElementById('chart-guests');
+            if (charts.guests) charts.guests.destroy();
+            
+            const counts = { '1': 0, '2': 0, '3': 0, '4': 0, '5+': 0 };
+            reservations.forEach(r => {
+                const g = parseInt(r.guests) || 2;
+                if (g >= 5) counts['5+']++;
+                else counts[g.toString()]++;
+            });
+            
+            charts.guests = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1 persona', '2 persone', '3 persone', '4 persone', '5+ persone'],
+                    datasets: [{
+                        label: 'Prenotazioni',
+                        data: Object.values(counts),
+                        backgroundColor: ['#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6', '#ef4444'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6b7280' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+        
+        function renderStatusChart(reservations) {
+            const ctx = document.getElementById('chart-status');
+            if (charts.status) charts.status.destroy();
+            
+            const counts = { pending: 0, confirmed: 0, rejected: 0 };
+            reservations.forEach(r => {
+                if (counts[r.status] !== undefined) counts[r.status]++;
+            });
+            
+            charts.status = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['⏳ In Attesa', '✅ Confermate', '❌ Rifiutate'],
+                    datasets: [{
+                        data: [counts.pending, counts.confirmed, counts.rejected],
+                        backgroundColor: ['#f59e0b', '#22c55e', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#9ca3af', padding: 15 } }
+                    }
+                }
+            });
         }
     </script>
 </body>
