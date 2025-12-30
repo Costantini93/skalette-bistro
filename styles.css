@@ -3169,13 +3169,14 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .booking-form-grid input[type="date"] {
-        width: 100%;
+        width: calc(100% - 28px) !important;
         min-width: 0;
-        max-width: 100%;
+        max-width: calc(100% - 28px) !important;
         box-sizing: border-box;
         padding: 14px;
         font-size: 14px;
         height: auto;
+        margin: 0;
     }
     
     .booking-form-grid select {
