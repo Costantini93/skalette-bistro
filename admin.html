@@ -366,7 +366,14 @@
                 <div class="filters-bar">
                     <div class="filter-group">
                         <label>Data:</label>
-                        <input type="date" id="filter-date">
+                        <select id="filter-date-select">
+                            <option value="">Tutte le date</option>
+                            <option value="today">Oggi</option>
+                            <option value="tomorrow">Domani</option>
+                            <option value="week">Prossimi 7 giorni</option>
+                            <option value="custom">Data specifica...</option>
+                        </select>
+                        <input type="date" id="filter-date" style="display:none;margin-left:10px;">
                     </div>
                     <div class="filter-group">
                         <label>Stato:</label>
@@ -474,6 +481,17 @@
             document.getElementById('filter-date').value = today;
             document.getElementById('schedule-date').value = today;
             
+            // Date filter select
+            document.getElementById('filter-date-select').addEventListener('change', function() {
+                const dateInput = document.getElementById('filter-date');
+                if (this.value === 'custom') {
+                    dateInput.style.display = 'inline-block';
+                } else {
+                    dateInput.style.display = 'none';
+                }
+                filterReservations();
+            });
+            
             document.getElementById('filter-date').addEventListener('change', filterReservations);
             document.getElementById('filter-status').addEventListener('change', filterReservations);
             document.getElementById('schedule-date').addEventListener('change', renderScheduleGrid);
@@ -509,11 +527,42 @@
         
         // RESERVATIONS
         function filterReservations() {
+            const dateSelect = document.getElementById('filter-date-select').value;
             const dateFilter = document.getElementById('filter-date').value;
             const statusFilter = document.getElementById('filter-status').value;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            const weekLater = new Date();
+            weekLater.setDate(weekLater.getDate() + 7);
+            const weekLaterStr = weekLater.toISOString().split('T')[0];
+            
             let filtered = allReservations;
-            if (dateFilter) filtered = filtered.filter(r => r.date === dateFilter);
+            
+            // Filter by date selection
+            if (dateSelect === 'today') {
+                filtered = filtered.filter(r => r.date === today);
+            } else if (dateSelect === 'tomorrow') {
+                filtered = filtered.filter(r => r.date === tomorrowStr);
+            } else if (dateSelect === 'week') {
+                filtered = filtered.filter(r => r.date >= today && r.date <= weekLaterStr);
+            } else if (dateSelect === 'custom' && dateFilter) {
+                filtered = filtered.filter(r => r.date === dateFilter);
+            }
+            // If dateSelect is empty (''), show all dates
+            
             if (statusFilter) filtered = filtered.filter(r => r.status === statusFilter);
+            
+            // Sort by date and time (most recent first for pending, chronological for confirmed)
+            filtered.sort((a, b) => {
+                // First by date
+                if (a.date !== b.date) return a.date.localeCompare(b.date);
+                // Then by time
+                return a.time.localeCompare(b.time);
+            });
+            
             renderReservations(filtered);
         }
         
