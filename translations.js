@@ -18,9 +18,9 @@ const translations = {
         
         // About
         'about.label': 'La Nostra Storia',
-        'about.title': 'Un Viaggio tra <span class="gold">Sapori</span> e <span class="gold">Tradizione</span>',
-        'about.text1': "Benvenuti a Skalette Bistro, dove ogni piatto racconta una storia di passione e dedizione. Dal 2009, trasformiamo ingredienti selezionati in esperienze gastronomiche indimenticabili, unendo la tradizione italiana con un tocco di innovazione contemporanea.",
-        'about.text2': "Il nostro chef executive, con oltre 20 anni di esperienza nelle cucine più prestigiose d'Europa, crea composizioni che deliziano il palato e stupiscono la vista.",
+        'about.title': 'Dove Nasce la <span class="gold">Movida</span> Veronese',
+        'about.text1': "Skalette Bistro nasce nel 2022 dall'esperienza di Pietro, titolare con anni di successi in uno dei locali più iconici della nightlife veronese. Un progetto nato dalla passione per l'ospitalità e dalla voglia di creare un punto di riferimento per la città.",
+        'about.text2': "Dalla colazione al brunch, dal pranzo all'aperitivo, fino alla cena e alla movida serale: Skalette è il locale che non dorme mai, amato dai veronesi e scoperto dai visitatori in cerca dell'autentica atmosfera italiana.",
         'about.btn': 'Esplora il Menu',
         
         // Features
@@ -174,9 +174,9 @@ const translations = {
         
         // About
         'about.label': 'Our Story',
-        'about.title': 'A Journey Through <span class="gold">Flavors</span> and <span class="gold">Tradition</span>',
-        'about.text1': 'Welcome to Skalette Bistro, where every dish tells a story of passion and dedication. Since 2009, we transform selected ingredients into unforgettable gastronomic experiences, combining Italian tradition with a touch of contemporary innovation.',
-        'about.text2': "Our executive chef, with over 20 years of experience in Europe's most prestigious kitchens, creates compositions that delight the palate and amaze the eye.",
+        'about.title': 'Where Verona\'s <span class="gold">Nightlife</span> Begins',
+        'about.text1': 'Skalette Bistro was born in 2022 from the experience of Pietro, owner with years of success in one of the most iconic venues of Verona\'s nightlife scene. A project born from passion for hospitality and the desire to create a landmark for the city.',
+        'about.text2': "From breakfast to brunch, from lunch to aperitivo, through dinner and into the night: Skalette is the venue that never sleeps, loved by locals and discovered by visitors seeking the authentic Italian atmosphere.",
         'about.btn': 'Explore the Menu',
         
         // Features
