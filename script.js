@@ -1107,7 +1107,7 @@ function showLargeGroupWhatsApp() {
     document.getElementById('booking-step-1').style.display = 'none';
     document.getElementById('booking-step-2').style.display = 'none';
     document.getElementById('booking-step-3').style.display = 'none';
-    document.getElementById('booking-step-4').style.display = 'none';
+    document.getElementById('booking-success').style.display = 'none';
     
     // Create and show WhatsApp prompt
     let whatsappStep = document.getElementById('booking-step-whatsapp');
