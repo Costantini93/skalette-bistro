@@ -1088,8 +1088,8 @@ function showLargeGroupWhatsApp() {
         : { pranzo: 'Pranzo', aperitivo: 'Aperitivo', cena: 'Cena' };
     
     const whatsappMessage = siteLang === 'en'
-        ? `Hello! I would like to book for ${bookingData.guests} people on ${dateFormatted} at ${bookingData.time} (${mealLabels[bookingData.mealType]}). Thank you!`
-        : `Ciao! Vorrei prenotare per ${bookingData.guests} persone il ${dateFormatted} alle ${bookingData.time} (${mealLabels[bookingData.mealType]}). Grazie!`;
+        ? `Hello! I would like to book for ${bookingData.guests}+ people on ${dateFormatted} at ${bookingData.time} (${mealLabels[bookingData.mealType]}). Thank you!`
+        : `Ciao! Vorrei prenotare per ${bookingData.guests}+ persone il ${dateFormatted} alle ${bookingData.time} (${mealLabels[bookingData.mealType]}). Grazie!`;
     
     const title = siteLang === 'en' 
         ? 'Large Group Reservation'
