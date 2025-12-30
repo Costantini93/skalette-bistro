@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skalette Bistro | Ristorante Elegante</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
     <!-- Preloader -->
     <div class="preloader">
         <div class="preloader-content">
@@ -36,36 +45,82 @@
             </button>
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#about" class="nav-link">Chi Siamo</a></li>
+                <li><a href="#about" class="nav-link" data-i18n="nav.about">Chi Siamo</a></li>
                 <li><a href="#menu" class="nav-link">Menu</a></li>
-                <li><a href="#gallery" class="nav-link">Galleria</a></li>
-                <li><a href="#contact" class="nav-link">Contatti</a></li>
-                <li><a href="#reservation" class="nav-link btn-reserve">Prenota</a></li>
+                <li><a href="#gallery" class="nav-link" data-i18n="nav.gallery">Galleria</a></li>
+                <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contatti</a></li>
+                <li><a href="#reservation" class="nav-link btn-reserve" data-i18n="nav.reserve">Prenota</a></li>
+                <!-- Mobile Language Toggle -->
+                <li class="mobile-lang-toggle">
+                    <div class="lang-toggle-wrapper">
+                        <button class="lang-flag-btn active" data-lang="it" title="Italiano">
+                            <span class="flag-circle">
+                                <svg class="flag-icon" viewBox="0 0 512 512">
+                                    <mask id="itCircleMask">
+                                        <circle cx="256" cy="256" r="256" fill="white"/>
+                                    </mask>
+                                    <g mask="url(#itCircleMask)">
+                                        <rect fill="#009246" x="0" y="0" width="170.67" height="512"/>
+                                        <rect fill="#FFFFFF" x="170.67" y="0" width="170.67" height="512"/>
+                                        <rect fill="#CE2B37" x="341.33" y="0" width="170.67" height="512"/>
+                                    </g>
+                                </svg>
+                            </span>
+                            <span class="lang-name">Italiano</span>
+                        </button>
+                        <button class="lang-flag-btn" data-lang="en" title="English">
+                            <span class="flag-circle">
+                                <svg class="flag-icon" viewBox="0 0 512 512">
+                                    <mask id="ukCircleMask">
+                                        <circle cx="256" cy="256" r="256" fill="white"/>
+                                    </mask>
+                                    <g mask="url(#ukCircleMask)">
+                                        <rect fill="#012169" width="512" height="512"/>
+                                        <path fill="#FFFFFF" d="M0,0 L512,512 M512,0 L0,512" stroke="#FFFFFF" stroke-width="100"/>
+                                        <path fill="#C8102E" d="M0,0 L512,512 M512,0 L0,512" stroke="#C8102E" stroke-width="40"/>
+                                        <rect fill="#FFFFFF" x="206" y="0" width="100" height="512"/>
+                                        <rect fill="#FFFFFF" x="0" y="206" width="512" height="100"/>
+                                        <rect fill="#C8102E" x="226" y="0" width="60" height="512"/>
+                                        <rect fill="#C8102E" x="0" y="226" width="512" height="60"/>
+                                    </g>
+                                </svg>
+                            </span>
+                            <span class="lang-name">English</span>
+                        </button>
+                    </div>
+                </li>
             </ul>
+            <!-- Language Selector (Desktop) -->
+            <div class="lang-selector desktop-only">
+                <button class="lang-btn active" data-lang="it">IT</button>
+                <span class="lang-divider">|</span>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section id="home" class="hero" data-parallax>
+        <div class="hero-bg" data-parallax-bg></div>
         <div class="hero-overlay"></div>
-        <div class="hero-particles"></div>
+        <div class="hero-particles" id="particles-container"></div>
         <div class="hero-content">
-            <div class="hero-badge">
+            <div class="hero-badge animate-fade-in">
                 <span class="badge-line"></span>
                 <span>Verona</span>
                 <span class="badge-line"></span>
             </div>
             <h1 class="hero-title">
-                <span class="title-line">SKALETTE</span>
-                <span class="title-accent">BISTRO</span>
+                <span class="title-line reveal-text" data-text="SKALETTE">SKALETTE</span>
+                <span class="title-accent reveal-text" data-text="BISTRO">BISTRO</span>
             </h1>
-            <p class="hero-subtitle">Dove l'eleganza incontra il gusto autentico</p>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">Dove l'eleganza incontra il gusto autentico</p>
             <div class="hero-cta">
-                <a href="#menu" class="btn btn-primary">Scopri il Menu</a>
-                <a href="#reservation" class="btn btn-secondary">Prenota un Tavolo</a>
+                <a href="#menu" class="btn btn-primary" data-i18n="hero.btnMenu">Scopri il Menu</a>
+                <a href="#reservation" class="btn btn-secondary" data-i18n="hero.btnReserve">Prenota un Tavolo</a>
             </div>
             <div class="hero-scroll">
-                <span>Scorri</span>
+                <span data-i18n="hero.scroll">Scorri</span>
                 <div class="scroll-indicator"></div>
             </div>
         </div>
@@ -84,19 +139,19 @@
                 <div class="about-content">
                     <div class="section-label">
                         <span class="label-icon">✦</span>
-                        <span>La Nostra Storia</span>
+                        <span data-i18n="about.label">La Nostra Storia</span>
                     </div>
-                    <h2 class="section-title">Un Viaggio tra <span class="gold">Sapori</span> e <span class="gold">Tradizione</span></h2>
-                    <p class="about-text">
+                    <h2 class="section-title" data-i18n="about.title">Un Viaggio tra <span class="gold">Sapori</span> e <span class="gold">Tradizione</span></h2>
+                    <p class="about-text" data-i18n="about.text1">
                         Benvenuti a Skalette Bistro, dove ogni piatto racconta una storia di passione e dedizione. 
                         Dal 2009, trasformiamo ingredienti selezionati in esperienze gastronomiche indimenticabili, 
                         unendo la tradizione italiana con un tocco di innovazione contemporanea.
                     </p>
-                    <p class="about-text">
+                    <p class="about-text" data-i18n="about.text2">
                         Il nostro chef executive, con oltre 20 anni di esperienza nelle cucine più prestigiose d'Europa, 
                         crea composizioni che deliziano il palato e stupiscono la vista.
                     </p>
-                    <a href="#menu" class="btn btn-primary">Esplora il Menu</a>
+                    <a href="#menu" class="btn btn-primary" data-i18n="about.btn">Esplora il Menu</a>
                 </div>
             </div>
         </div>
@@ -112,8 +167,8 @@
                             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                         </svg>
                     </div>
-                    <h3>Qualità Premium</h3>
-                    <p>Solo i migliori ingredienti per i nostri piatti</p>
+                    <h3 data-i18n="features.quality.title">Qualità Premium</h3>
+                    <p data-i18n="features.quality.text">Solo i migliori ingredienti per i nostri piatti</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon-large">
@@ -122,8 +177,8 @@
                             <path d="M12 6V12L16 14"/>
                         </svg>
                     </div>
-                    <h3>Servizio Impeccabile</h3>
-                    <p>Attenzione ad ogni dettaglio</p>
+                    <h3 data-i18n="features.service.title">Servizio Impeccabile</h3>
+                    <p data-i18n="features.service.text">Attenzione ad ogni dettaglio</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon-large">
@@ -131,8 +186,8 @@
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                         </svg>
                     </div>
-                    <h3>Passione Autentica</h3>
-                    <p>Amore per la cucina italiana</p>
+                    <h3 data-i18n="features.passion.title">Passione Autentica</h3>
+                    <p data-i18n="features.passion.text">Amore per la cucina italiana</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon-large">
@@ -143,8 +198,8 @@
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
                     </div>
-                    <h3>Eventi Privati</h3>
-                    <p>Sale riservate per occasioni speciali</p>
+                    <h3 data-i18n="features.events.title">Eventi Privati</h3>
+                    <p data-i18n="features.events.text">Sale riservate per occasioni speciali</p>
                 </div>
             </div>
         </div>
@@ -156,19 +211,19 @@
             <div class="section-header">
                 <div class="section-label">
                     <span class="label-icon">✦</span>
-                    <span>Il Nostro Menu</span>
+                    <span data-i18n="menu.label">Il Nostro Menu</span>
                 </div>
-                <h2 class="section-title">Capolavori <span class="gold">Culinari</span></h2>
-                <p class="section-subtitle">Prodotti freschi del giorno. Chiedere al personale per la disponibilità e per gli allergeni.</p>
+                <h2 class="section-title" data-i18n="menu.title">Capolavori <span class="gold">Culinari</span></h2>
+                <p class="section-subtitle" data-i18n="menu.subtitle">Prodotti freschi del giorno. Chiedere al personale per la disponibilità e per gli allergeni.</p>
             </div>
             
             <div class="menu-tabs">
-                <button class="menu-tab active" data-tab="caffetteria">Caffetteria</button>
-                <button class="menu-tab" data-tab="gastronomia">Gastronomia</button>
-                <button class="menu-tab" data-tab="piatti">I Nostri Piatti</button>
-                <button class="menu-tab" data-tab="bevande">Bevande</button>
-                <button class="menu-tab" data-tab="aperitivi">Aperitivi & Birre</button>
-                <button class="menu-tab" data-tab="vini">Vini</button>
+                <button class="menu-tab active" data-tab="caffetteria" data-i18n="menu.tabs.coffee">Caffetteria</button>
+                <button class="menu-tab" data-tab="gastronomia" data-i18n="menu.tabs.deli">Gastronomia</button>
+                <button class="menu-tab" data-tab="piatti" data-i18n="menu.tabs.dishes">I Nostri Piatti</button>
+                <button class="menu-tab" data-tab="bevande" data-i18n="menu.tabs.drinks">Bevande</button>
+                <button class="menu-tab" data-tab="aperitivi" data-i18n="menu.tabs.aperitifs">Aperitivi & Birre</button>
+                <button class="menu-tab" data-tab="vini" data-i18n="menu.tabs.wines">Vini</button>
             </div>
 
             <div class="menu-content">
@@ -712,7 +767,7 @@
                     </div>
                     
                     <!-- Sottosezione Dolci -->
-                    <h3 class="menu-subcategory-title">Dolci</h3>
+                    <h3 class="menu-subcategory-title" data-i18n="menu.desserts">Dolci</h3>
                     <div class="menu-grid">
                         <div class="menu-item">
                             <div class="menu-item-content">
@@ -994,7 +1049,7 @@
                 <!-- Vini -->
                 <div class="menu-category" id="vini">
                     <!-- BIANCHI -->
-                    <h3 class="menu-subcategory-title">Bianchi</h3>
+                    <h3 class="menu-subcategory-title" data-i18n="menu.whites">Bianchi</h3>
                     <div class="menu-grid">
                         <div class="menu-item">
                             <div class="menu-item-content">
@@ -1056,7 +1111,7 @@
                     </div>
 
                     <!-- ROSSI -->
-                    <h3 class="menu-subcategory-title">Rossi</h3>
+                    <h3 class="menu-subcategory-title" data-i18n="menu.reds">Rossi</h3>
                     <div class="menu-grid">
                         <div class="menu-item">
                             <div class="menu-item-content">
@@ -1106,7 +1161,7 @@
                     </div>
 
                     <!-- BOLLICINE -->
-                    <h3 class="menu-subcategory-title">Bollicine</h3>
+                    <h3 class="menu-subcategory-title" data-i18n="menu.sparkling">Bollicine</h3>
                     <div class="menu-grid">
                         <div class="menu-item">
                             <div class="menu-item-content">
@@ -1213,7 +1268,7 @@
             </div>
 
             <div class="menu-footer">
-                <a href="#" class="btn btn-secondary">Scarica Menu Completo</a>
+                <a href="#" class="btn btn-secondary" data-i18n="menu.download">Scarica Menu Completo</a>
             </div>
         </div>
     </section>
@@ -1224,47 +1279,55 @@
             <div class="section-header">
                 <div class="section-label">
                     <span class="label-icon">✦</span>
-                    <span>Galleria</span>
+                    <span data-i18n="gallery.label">Galleria</span>
                 </div>
-                <h2 class="section-title">Momenti <span class="gold">Indimenticabili</span></h2>
-                <p class="section-subtitle">Un assaggio visivo della nostra esperienza culinaria</p>
+                <h2 class="section-title" data-i18n="gallery.title">Momenti <span class="gold">Indimenticabili</span></h2>
+                <p class="section-subtitle" data-i18n="gallery.subtitle">Un assaggio visivo della nostra esperienza culinaria</p>
+            </div>
+
+            <!-- Gallery Filters -->
+            <div class="gallery-filters">
+                <button class="gallery-filter active" data-filter="all" data-i18n="gallery.all">Tutti</button>
+                <button class="gallery-filter" data-filter="ambiente" data-i18n="gallery.ambiente">Ambiente</button>
+                <button class="gallery-filter" data-filter="piatti" data-i18n="gallery.dishes">Piatti</button>
+                <button class="gallery-filter" data-filter="drinks">Drinks</button>
             </div>
 
             <div class="gallery-grid">
-                <div class="gallery-item large">
-                    <img src="locale.PNG" alt="Interno ristorante">
+                <div class="gallery-item large" data-category="ambiente">
+                    <img src="locale.PNG" alt="Interno ristorante" loading="lazy">
                     <div class="gallery-overlay">
-                        <span>Il Nostro Ambiente</span>
+                        <span data-i18n="gallery.ourPlace">Il Nostro Ambiente</span>
                     </div>
                 </div>
-                <div class="gallery-item">
-                    <img src="ostriche.PNG" alt="Ostriche">
+                <div class="gallery-item" data-category="piatti">
+                    <img src="ostriche.PNG" alt="Ostriche" loading="lazy">
                     <div class="gallery-overlay">
-                        <span>Ostriche Fresche</span>
+                        <span data-i18n="gallery.freshOysters">Ostriche Fresche</span>
                     </div>
                 </div>
-                <div class="gallery-item">
-                    <img src="brindisi.PNG" alt="Brindisi">
+                <div class="gallery-item" data-category="ambiente">
+                    <img src="brindisi.PNG" alt="Brindisi" loading="lazy">
                     <div class="gallery-overlay">
-                        <span>Momenti Speciali</span>
+                        <span data-i18n="gallery.specialMoments">Momenti Speciali</span>
                     </div>
                 </div>
-                <div class="gallery-item">
-                    <img src="moscardini.PNG" alt="Moscardini">
+                <div class="gallery-item" data-category="piatti">
+                    <img src="moscardini.PNG" alt="Moscardini" loading="lazy">
                     <div class="gallery-overlay">
-                        <span>I Nostri Piatti</span>
+                        <span data-i18n="gallery.ourDishes">I Nostri Piatti</span>
                     </div>
                 </div>
-                <div class="gallery-item tall">
-                    <img src="cocktail.PNG" alt="Cocktail">
+                <div class="gallery-item tall" data-category="drinks">
+                    <img src="cocktail.PNG" alt="Cocktail" loading="lazy">
                     <div class="gallery-overlay">
-                        <span>Cocktail Bar</span>
+                        <span data-i18n="gallery.cocktailBar">Cocktail Bar</span>
                     </div>
                 </div>
-                <div class="gallery-item">
-                    <img src="coppetta.PNG" alt="Coppetta">
+                <div class="gallery-item" data-category="piatti">
+                    <img src="coppetta.PNG" alt="Coppetta" loading="lazy">
                     <div class="gallery-overlay">
-                        <span>Arte nel Piatto</span>
+                        <span data-i18n="gallery.artOnPlate">Arte nel Piatto</span>
                     </div>
                 </div>
             </div>
@@ -1277,48 +1340,68 @@
             <div class="section-header">
                 <div class="section-label">
                     <span class="label-icon">✦</span>
-                    <span>Recensioni</span>
+                    <span data-i18n="testimonials.label">Recensioni</span>
                 </div>
-                <h2 class="section-title">Cosa Dicono i <span class="gold">Nostri Ospiti</span></h2>
+                <h2 class="section-title" data-i18n="testimonials.title">Cosa Dicono i <span class="gold">Nostri Ospiti</span></h2>
             </div>
 
-            <div class="testimonials-slider">
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">★★★★★</div>
-                    <div class="testimonial-source">Google</div>
-                    <p class="testimonial-text">"Skalette Bistrò è un locale che conquista immediatamente grazie alla sua atmosfera giovane e accogliente. Il cibo è davvero delizioso; ogni piatto è preparato con cura e attenzione ai dettagli. Il personale merita una menzione speciale: sono estremamente cordiali e attenti. Se ti trovi a Verona, Skalette Bistrò è sicuramente il posto da visitare. Consigliatissimo!"</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">M</div>
-                        <div>
-                            <h4>Moreno Berterini</h4>
-                            <span>Recensione Google</span>
+            <div class="testimonials-wrapper">
+                <button class="testimonial-nav prev" aria-label="Precedente">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                
+                <div class="testimonials-slider">
+                    <div class="testimonial-card active">
+                        <div class="testimonial-rating">★★★★★</div>
+                        <div class="testimonial-source">Google</div>
+                        <p class="testimonial-text">"Skalette Bistrò è un locale che conquista immediatamente grazie alla sua atmosfera giovane e accogliente. Il cibo è davvero delizioso; ogni piatto è preparato con cura e attenzione ai dettagli. Il personale merita una menzione speciale: sono estremamente cordiali e attenti. Se ti trovi a Verona, Skalette Bistrò è sicuramente il posto da visitare. Consigliatissimo!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">M</div>
+                            <div>
+                                <h4>Moreno Berterini</h4>
+                                <span>Recensione Google</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">★★★★★</div>
+                        <div class="testimonial-source">Google</div>
+                        <p class="testimonial-text">"Piacevole ritrovo adatto per passare un po' di tempo in compagnia sorseggiando un drink o un calice di ottimo vino. La musica, non troppo alta, non è invadente e permette di conversare. Personale cordiale, cortese e attento. Prezzi più che equi."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">E</div>
+                            <div>
+                                <h4>Emanuele Bignardi</h4>
+                                <span>Recensione Google</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">★★★★★</div>
+                        <div class="testimonial-source">Google</div>
+                        <p class="testimonial-text">"L'atmosfera è curata nei minimi dettagli, con la musica giusta. Il servizio è stato veloce e personalizzato. Il cibo era delizioso e appetitoso!!! Consiglio vivamente questa esperienza culinaria."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">M</div>
+                            <div>
+                                <h4>Maria Fynn</h4>
+                                <span>Recensione Google</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">★★★★★</div>
-                    <div class="testimonial-source">Google</div>
-                    <p class="testimonial-text">"Piacevole ritrovo adatto per passare un po' di tempo in compagnia sorseggiando un drink o un calice di ottimo vino. La musica, non troppo alta, non è invadente e permette di conversare. Personale cordiale, cortese e attento. Prezzi più che equi."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">E</div>
-                        <div>
-                            <h4>Emanuele Bignardi</h4>
-                            <span>Recensione Google</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">★★★★★</div>
-                    <div class="testimonial-source">Google</div>
-                    <p class="testimonial-text">"L'atmosfera è curata nei minimi dettagli, con la musica giusta. Il servizio è stato veloce e personalizzato. Il cibo era delizioso e appetitoso!!! Consiglio vivamente questa esperienza culinaria."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">M</div>
-                        <div>
-                            <h4>Maria Fynn</h4>
-                            <span>Recensione Google</span>
-                        </div>
-                    </div>
-                </div>
+
+                <button class="testimonial-nav next" aria-label="Successivo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="testimonial-dots">
+                <span class="dot active" data-index="0"></span>
+                <span class="dot" data-index="1"></span>
+                <span class="dot" data-index="2"></span>
             </div>
         </div>
     </section>
@@ -1329,19 +1412,19 @@
             <div class="section-header" style="text-align: center; margin-bottom: 50px;">
                 <div class="section-label">
                     <span class="label-icon">✦</span>
-                    <span>Prenotazioni</span>
+                    <span data-i18n="reservation.label">Prenotazioni</span>
                 </div>
-                <h2 class="section-title">Prenota il Tuo <span class="gold">Tavolo</span></h2>
-                <p class="section-subtitle">Seleziona le tue preferenze e scegli il tavolo che preferisci</p>
+                <h2 class="section-title" data-i18n="reservation.title">Prenota il Tuo <span class="gold">Tavolo</span></h2>
+                <p class="section-subtitle" data-i18n="reservation.subtitle">Seleziona le tue preferenze e scegli il tavolo che preferisci</p>
             </div>
 
             <!-- Step 1: Selezione parametri -->
             <div class="booking-steps">
                 <div class="booking-step active" id="booking-step-1">
-                    <h3 class="step-title">1. Scegli Data e Orario</h3>
+                    <h3 class="step-title" data-i18n="reservation.step1">1. Scegli Data e Orario</h3>
                     <div class="booking-form-grid">
                         <div class="form-group">
-                            <label for="booking-guests">Numero Ospiti</label>
+                            <label for="booking-guests" data-i18n="reservation.guests">Numero Ospiti</label>
                             <select id="booking-guests" required>
                                 <option value="2" selected>2 Persone</option>
                                 <option value="1">1 Persona</option>
@@ -1354,66 +1437,67 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="booking-date">Data</label>
+                            <label for="booking-date" data-i18n="reservation.date">Data</label>
                             <input type="date" id="booking-date" required>
                         </div>
                         <div class="form-group">
-                            <label for="booking-meal">Tipo</label>
+                            <label for="booking-meal" data-i18n="reservation.type">Tipo</label>
                             <select id="booking-meal" required>
-                                <option value="pranzo">☀️ Pranzo</option>
-                                <option value="aperitivo">🍹 Aperitivo</option>
-                                <option value="cena">🌙 Cena</option>
+                                <option value="" data-i18n="reservation.selectType">-- Seleziona --</option>
+                                <option value="pranzo" data-i18n="reservation.lunch">☀️ Pranzo</option>
+                                <option value="aperitivo" data-i18n="reservation.aperitif">🍹 Aperitivo</option>
+                                <option value="cena" data-i18n="reservation.dinner">🌙 Cena</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="booking-time">Orario</label>
-                            <select id="booking-time" required>
-                                <option value="">Caricamento...</option>
+                            <label for="booking-time" data-i18n="reservation.time">Orario</label>
+                            <select id="booking-time" required disabled>
+                                <option value="" data-i18n="reservation.selectTime">-- Prima scegli il tipo --</option>
                             </select>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" id="btn-view-tables">Vedi Tavoli Disponibili</button>
+                    <button type="button" class="btn btn-primary" id="btn-view-tables" data-i18n="reservation.viewTables">Vedi Tavoli Disponibili</button>
                 </div>
 
                 <!-- Step 2: Selezione tavolo -->
                 <div class="booking-step" id="booking-step-2" style="display: none;">
-                    <h3 class="step-title">2. Scegli il Tuo Tavolo</h3>
-                    <p class="step-subtitle">Clicca su un tavolo disponibile (dorato) per selezionarlo</p>
+                    <h3 class="step-title" data-i18n="reservation.step2">2. Scegli il Tuo Tavolo</h3>
+                    <p class="step-subtitle" data-i18n="reservation.step2subtitle">Clicca su un tavolo disponibile (dorato) per selezionarlo</p>
                     <div id="floor-plan-container" class="floor-plan-container"></div>
                     <div class="selected-table-info" id="selected-table-info" style="display: none;">
-                        <p>Tavolo selezionato: <strong id="selected-table-name"></strong></p>
+                        <p><span data-i18n="reservation.selectedTable">Tavolo selezionato:</span> <strong id="selected-table-name"></strong></p>
                     </div>
                     <div class="step-actions">
-                        <button type="button" class="btn btn-secondary" id="btn-back-step1">← Indietro</button>
-                        <button type="button" class="btn btn-primary" id="btn-continue-step3" disabled>Continua →</button>
+                        <button type="button" class="btn btn-secondary" id="btn-back-step1" data-i18n="reservation.back">← Indietro</button>
+                        <button type="button" class="btn btn-primary" id="btn-continue-step3" disabled data-i18n="reservation.continue">Continua →</button>
                     </div>
                 </div>
 
                 <!-- Step 3: Dati personali -->
                 <div class="booking-step" id="booking-step-3" style="display: none;">
-                    <h3 class="step-title">3. I Tuoi Dati</h3>
+                    <h3 class="step-title" data-i18n="reservation.step3">3. I Tuoi Dati</h3>
                     <form id="booking-final-form" class="booking-final-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="booking-name">Nome Completo</label>
+                                <label for="booking-name" data-i18n="reservation.name">Nome Completo</label>
                                 <input type="text" id="booking-name" required>
                             </div>
                             <div class="form-group">
-                                <label for="booking-phone">Telefono</label>
-                                <input type="tel" id="booking-phone" required placeholder="es. 3401234567">
+                                <label for="booking-phone" data-i18n="reservation.phone">Telefono</label>
+                                <input type="tel" id="booking-phone" required data-i18n="reservation.phonePlaceholder" placeholder="es. 3401234567">
                             </div>
                         </div>
                         <div class="form-group full-width">
-                            <label for="booking-email">Email</label>
+                            <label for="booking-email" data-i18n="reservation.email">Email</label>
                             <input type="email" id="booking-email" required>
                         </div>
                         <div class="form-group full-width">
-                            <label for="booking-notes">Note (opzionale)</label>
-                            <textarea id="booking-notes" rows="3" placeholder="Allergie, occasioni speciali, richieste particolari..."></textarea>
+                            <label for="booking-notes" data-i18n="reservation.notes">Note (opzionale)</label>
+                            <textarea id="booking-notes" rows="3" data-i18n="reservation.notesPlaceholder" placeholder="Allergie, occasioni speciali, richieste particolari..."></textarea>
                         </div>
                         
                         <div class="booking-summary">
-                            <h4>Riepilogo Prenotazione</h4>
+                            <h4 data-i18n="reservation.summary">Riepilogo Prenotazione</h4>
                             <div class="summary-grid">
                                 <div><span>📅</span> <span id="summary-date"></span></div>
                                 <div><span>⏰</span> <span id="summary-time"></span></div>
@@ -1423,8 +1507,8 @@
                         </div>
                         
                         <div class="step-actions">
-                            <button type="button" class="btn btn-secondary" id="btn-back-step2">← Indietro</button>
-                            <button type="submit" class="btn btn-primary">Conferma Prenotazione</button>
+                            <button type="button" class="btn btn-secondary" id="btn-back-step2" data-i18n="reservation.back">← Indietro</button>
+                            <button type="submit" class="btn btn-primary" data-i18n="reservation.confirm">Conferma Prenotazione</button>
                         </div>
                     </form>
                 </div>
@@ -1433,10 +1517,10 @@
                 <div class="booking-step" id="booking-success" style="display: none;">
                     <div class="booking-success">
                         <div class="success-icon">✓</div>
-                        <h3>Prenotazione Inviata!</h3>
-                        <p>Riceverai conferma su WhatsApp al numero indicato.</p>
+                        <h3 data-i18n="reservation.success">Prenotazione Inviata!</h3>
+                        <p data-i18n="reservation.successMsg">Riceverai conferma su WhatsApp al numero indicato.</p>
                         <p class="success-id">ID: <span id="booking-id"></span></p>
-                        <button class="btn btn-primary" onclick="location.reload()">Nuova Prenotazione</button>
+                        <button class="btn btn-primary" onclick="location.reload()" data-i18n="reservation.newReservation">Nuova Prenotazione</button>
                     </div>
                 </div>
             </div>
@@ -1458,8 +1542,8 @@
                     </iframe>
                 </div>
                 <div class="contact-info">
-                    <h3>Vieni a Trovarci</h3>
-                    <p>Siamo nel cuore di Verona, a due passi da Piazza delle Erbe. Facilmente raggiungibile a piedi dal centro storico.</p>
+                    <h3 data-i18n="contact.title">Vieni a Trovarci</h3>
+                    <p data-i18n="contact.text">Siamo nel cuore di Verona, a due passi da Piazza delle Erbe. Facilmente raggiungibile a piedi dal centro storico.</p>
                     <div class="social-links">
                         <a href="https://www.instagram.com/skalette_bistro/" target="_blank" class="social-link" aria-label="Instagram">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1496,19 +1580,19 @@
                             <span class="logo-sub">BISTRO</span>
                         </div>
                     </a>
-                    <p>Un'esperienza culinaria dove l'eleganza incontra la tradizione italiana.</p>
+                    <p data-i18n="footer.tagline">Un'esperienza culinaria dove l'eleganza incontra la tradizione italiana.</p>
                 </div>
                 <div class="footer-links">
-                    <h4>Link Rapidi</h4>
+                    <h4 data-i18n="footer.quickLinks">Link Rapidi</h4>
                     <ul>
-                        <li><a href="#about">Chi Siamo</a></li>
+                        <li><a href="#about" data-i18n="nav.about">Chi Siamo</a></li>
                         <li><a href="#menu">Menu</a></li>
-                        <li><a href="#gallery">Galleria</a></li>
-                        <li><a href="#reservation">Prenotazioni</a></li>
+                        <li><a href="#gallery" data-i18n="nav.gallery">Galleria</a></li>
+                        <li><a href="#reservation" data-i18n="reservation.label">Prenotazioni</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
-                    <h4>Contatti</h4>
+                    <h4 data-i18n="footer.contacts">Contatti</h4>
                     <ul>
                         <li>Via Pellicciai, 12</li>
                         <li>37121 Verona, Italia</li>
@@ -1535,6 +1619,58 @@
         </div>
     </footer>
 
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="#home" class="bottom-nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span data-i18n="mobile.home">Home</span>
+        </a>
+        <a href="#menu" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                <line x1="6" y1="1" x2="6" y2="4"/>
+                <line x1="10" y1="1" x2="10" y2="4"/>
+                <line x1="14" y1="1" x2="14" y2="4"/>
+            </svg>
+            <span data-i18n="mobile.menu">Menu</span>
+        </a>
+        <a href="#reservation" class="bottom-nav-item cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span data-i18n="mobile.reserve">Prenota</span>
+        </a>
+        <a href="#gallery" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span data-i18n="mobile.gallery">Galleria</span>
+        </a>
+        <a href="#contact" class="bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span data-i18n="mobile.contact">Contatti</span>
+        </a>
+    </nav>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" aria-label="Torna su">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/393428691832" target="_blank" class="whatsapp-float" aria-label="Contattaci su WhatsApp">
         <svg viewBox="0 0 24 24">
@@ -1542,7 +1678,17 @@
         </svg>
     </a>
 
+    <script src="translations.js"></script>
     <script src="script.js"></script>
-    <script type="module" src="reservation-firebase.js"></script>
+    <!-- Firebase reservation script - requires HTTP server, will gracefully fail on file:// protocol -->
+    <script>
+        // Only load Firebase module if running on HTTP/HTTPS
+        if (window.location.protocol !== 'file:') {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = 'reservation-firebase.js';
+            document.body.appendChild(script);
+        }
+    </script>
 </body>
 </html>

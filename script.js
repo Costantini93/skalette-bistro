@@ -1,19 +1,108 @@
 /* ===================================
    SKALETTE BISTRO - JavaScript
+   Enhanced with Advanced Effects
    =================================== */
 
 document.addEventListener('DOMContentLoaded', function() {
     
     // ===================================
+    // CUSTOM CURSOR
+    // ===================================
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+    
+    if (cursorDot && cursorOutline && window.innerWidth > 768) {
+        let mouseX = 0, mouseY = 0;
+        let outlineX = 0, outlineY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
+        });
+        
+        // Smooth cursor outline follow
+        function animateCursor() {
+            outlineX += (mouseX - outlineX) * 0.15;
+            outlineY += (mouseY - outlineY) * 0.15;
+            
+            cursorOutline.style.left = outlineX + 'px';
+            cursorOutline.style.top = outlineY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Cursor hover effects
+        const hoverElements = document.querySelectorAll('a, button, .menu-item, .gallery-item, .nav-link');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                document.body.classList.add('cursor-hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                document.body.classList.remove('cursor-hover');
+            });
+        });
+    }
+
+    // ===================================
+    // SCROLL PROGRESS BAR
+    // ===================================
+    const scrollProgress = document.querySelector('.scroll-progress');
+    
+    if (scrollProgress) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+    }
+
+    // ===================================
+    // BACK TO TOP BUTTON
+    // ===================================
+    const backToTop = document.querySelector('.back-to-top');
+    
+    if (backToTop) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    // ===================================
     // PRELOADER
     // ===================================
     const preloader = document.querySelector('.preloader');
     
-    window.addEventListener('load', function() {
-        setTimeout(() => {
+    function hidePreloader() {
+        if (preloader) {
             preloader.classList.add('hidden');
-        }, 1500);
+            // Trigger hero animations after preloader
+            initHeroAnimations();
+        }
+    }
+    
+    // Hide preloader when page loads
+    window.addEventListener('load', function() {
+        setTimeout(hidePreloader, 1500);
     });
+    
+    // Fallback: hide preloader after 3 seconds even if load event doesn't fire properly
+    setTimeout(hidePreloader, 3000);
 
     // ===================================
     // NAVIGATION
@@ -32,10 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Mobile menu toggle
+    // Mobile menu toggle with body overlay
     navToggle.addEventListener('click', function() {
         navToggle.classList.toggle('active');
         navMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
     });
 
     // Close mobile menu on link click
@@ -43,30 +133,240 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function() {
             navToggle.classList.remove('active');
             navMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
         });
     });
 
-    // Active nav link on scroll
-    const sections = document.querySelectorAll('section[id]');
+    // Close menu when clicking overlay
+    document.addEventListener('click', function(e) {
+        if (document.body.classList.contains('menu-open') && 
+            !navMenu.contains(e.target) && 
+            !navToggle.contains(e.target)) {
+            navToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+    });
+
+    // ===================================
+    // MOBILE BOTTOM NAVIGATION
+    // ===================================
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    const allSections = document.querySelectorAll('section[id]');
     
+    // Update active bottom nav on scroll
     window.addEventListener('scroll', function() {
+        let current = '';
         const scrollY = window.pageYOffset;
         
-        sections.forEach(section => {
+        allSections.forEach(section => {
+            const sectionTop = section.offsetTop - 150;
             const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 200;
-            const sectionId = section.getAttribute('id');
-            const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
             
-            if (navLink) {
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    navLink.classList.add('active');
-                } else {
-                    navLink.classList.remove('active');
-                }
+            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        bottomNavItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href') === '#' + current) {
+                item.classList.add('active');
             }
         });
     });
+
+    // ===================================
+    // HERO ANIMATIONS & EFFECTS
+    // ===================================
+    function initHeroAnimations() {
+        // Reveal text animation
+        const revealTexts = document.querySelectorAll('.reveal-text');
+        revealTexts.forEach((text, index) => {
+            setTimeout(() => {
+                text.classList.add('revealed');
+            }, index * 300);
+        });
+    }
+
+    // ===================================
+    // PARALLAX EFFECT
+    // ===================================
+    const heroBg = document.querySelector('.hero-bg');
+    const heroContent = document.querySelector('.hero-content');
+    
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        
+        if (heroBg && scrolled < window.innerHeight) {
+            heroBg.style.transform = `translateY(${scrolled * 0.4}px)`;
+        }
+        
+        if (heroContent && scrolled < window.innerHeight) {
+            heroContent.style.transform = `translateY(${scrolled * 0.2}px)`;
+            heroContent.style.opacity = 1 - (scrolled / window.innerHeight);
+        }
+    });
+
+
+
+    // ===================================
+    // 3D TILT EFFECT FOR MENU ITEMS
+    // ===================================
+    function initTiltEffect() {
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transition = 'none';
+            });
+            
+            item.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 15;
+                const rotateY = (centerX - x) / 15;
+                
+                this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+                this.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(201, 169, 97, 0.15)';
+                this.style.borderColor = 'rgba(201, 169, 97, 0.4)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transition = 'all 0.5s ease';
+                this.style.transform = '';
+                this.style.boxShadow = '';
+                this.style.borderColor = '';
+            });
+        });
+    }
+    
+    // Initialize on load and when tabs change
+    initTiltEffect();
+    
+    // Re-init when menu tabs are clicked
+    document.querySelectorAll('.menu-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            setTimeout(initTiltEffect, 100);
+        });
+    });
+
+    // ===================================
+    // GALLERY FILTERS
+    // ===================================
+    const galleryFilters = document.querySelectorAll('.gallery-filter');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    galleryFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            // Update active filter
+            galleryFilters.forEach(f => f.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.dataset.filter;
+            
+            galleryItems.forEach((item, index) => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.classList.remove('hidden');
+                    item.style.animationDelay = (index * 0.1) + 's';
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    // ===================================
+    // TESTIMONIALS SLIDER
+    // ===================================
+    const testimonialCards = document.querySelectorAll('.testimonial-card');
+    const testimonialDots = document.querySelectorAll('.testimonial-dots .dot');
+    const prevBtn = document.querySelector('.testimonial-nav.prev');
+    const nextBtn = document.querySelector('.testimonial-nav.next');
+    let currentTestimonial = 0;
+    let testimonialInterval;
+    
+    function showTestimonial(index) {
+        testimonialCards.forEach((card, i) => {
+            card.classList.remove('active', 'prev');
+            if (i < index) {
+                card.classList.add('prev');
+            }
+        });
+        testimonialDots.forEach(dot => dot.classList.remove('active'));
+        
+        testimonialCards[index].classList.add('active');
+        testimonialDots[index].classList.add('active');
+        currentTestimonial = index;
+    }
+    
+    function nextTestimonial() {
+        const next = (currentTestimonial + 1) % testimonialCards.length;
+        showTestimonial(next);
+    }
+    
+    function prevTestimonial() {
+        const prev = (currentTestimonial - 1 + testimonialCards.length) % testimonialCards.length;
+        showTestimonial(prev);
+    }
+    
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        nextTestimonial();
+        resetAutoPlay();
+    });
+    
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        prevTestimonial();
+        resetAutoPlay();
+    });
+    
+    testimonialDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            showTestimonial(index);
+            resetAutoPlay();
+        });
+    });
+    
+    function resetAutoPlay() {
+        clearInterval(testimonialInterval);
+        testimonialInterval = setInterval(nextTestimonial, 5000);
+    }
+    
+    // Auto-play testimonials
+    if (testimonialCards.length > 0) {
+        testimonialInterval = setInterval(nextTestimonial, 5000);
+    }
+
+    // ===================================
+    // SWIPE GESTURES FOR TESTIMONIALS (Mobile)
+    // ===================================
+    const testimonialsWrapper = document.querySelector('.testimonials-wrapper');
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    if (testimonialsWrapper) {
+        testimonialsWrapper.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        testimonialsWrapper.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextTestimonial();
+                } else {
+                    prevTestimonial();
+                }
+                resetAutoPlay();
+            }
+        }, { passive: true });
+    }
 
     // ===================================
     // MENU TABS
@@ -114,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===================================
-    // INTERSECTION OBSERVER FOR ANIMATIONS
+    // INTERSECTION OBSERVER FOR STAGGERED ANIMATIONS
     // ===================================
     const observerOptions = {
         root: null,
@@ -131,14 +431,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, observerOptions);
 
+    // Staggered animation for grid items
+    const staggerObserver = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const children = entry.target.querySelectorAll('.menu-item, .feature-item, .gallery-item');
+                children.forEach((child, index) => {
+                    setTimeout(() => {
+                        child.classList.add('animate');
+                    }, index * 100);
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe grids for staggered animations
+    const grids = document.querySelectorAll('.menu-grid, .features-grid, .gallery-grid');
+    grids.forEach(grid => staggerObserver.observe(grid));
+
     // Observe elements with animation classes
-    const animatedElements = document.querySelectorAll('.about-content, .about-images, .menu-item, .gallery-item, .testimonial-card, .feature-item');
+    const animatedElements = document.querySelectorAll('.about-content, .about-images, .section-header');
     
     animatedElements.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
+    });
+
+    // Individual items animation setup
+    const individualItems = document.querySelectorAll('.menu-item, .gallery-item, .feature-item');
+    individualItems.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     });
 
     // Add animate class styles
@@ -321,88 +648,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===================================
-    // GALLERY LIGHTBOX (Optional Enhancement)
-    // ===================================
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    
-    galleryItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const img = this.querySelector('img');
-            if (img) {
-                // Create lightbox
-                const lightbox = document.createElement('div');
-                lightbox.className = 'lightbox';
-                lightbox.innerHTML = `
-                    <div class="lightbox-content">
-                        <img src="${img.src.replace('w=400', 'w=1200').replace('w=800', 'w=1200')}" alt="${img.alt}">
-                        <button class="lightbox-close">&times;</button>
-                    </div>
-                `;
-
-                // Add styles
-                const lightboxStyles = `
-                    .lightbox {
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(10, 22, 40, 0.95);
-                        z-index: 10000;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        animation: fadeIn 0.3s ease;
-                    }
-                    .lightbox-content {
-                        position: relative;
-                        max-width: 90%;
-                        max-height: 90%;
-                    }
-                    .lightbox-content img {
-                        max-width: 100%;
-                        max-height: 90vh;
-                        object-fit: contain;
-                    }
-                    .lightbox-close {
-                        position: absolute;
-                        top: -40px;
-                        right: 0;
-                        background: none;
-                        border: none;
-                        color: var(--gold);
-                        font-size: 36px;
-                        cursor: pointer;
-                    }
-                `;
-
-                if (!document.querySelector('#lightbox-styles')) {
-                    const styleSheet = document.createElement('style');
-                    styleSheet.id = 'lightbox-styles';
-                    styleSheet.textContent = lightboxStyles;
-                    document.head.appendChild(styleSheet);
-                }
-
-                document.body.appendChild(lightbox);
-
-                // Close lightbox
-                lightbox.addEventListener('click', function(e) {
-                    if (e.target === lightbox || e.target.classList.contains('lightbox-close')) {
-                        lightbox.remove();
-                    }
-                });
-
-                // Close on escape key
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape' && document.querySelector('.lightbox')) {
-                        document.querySelector('.lightbox').remove();
-                    }
-                });
-            }
-        });
-    });
-
-    // ===================================
     // COUNTER ANIMATION
     // ===================================
     function animateCounter(element, target, duration = 2000) {
@@ -442,51 +687,45 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===================================
-    // TYPING EFFECT FOR HERO (Optional)
+    // LAZY LOADING IMAGES (Native + Fallback)
     // ===================================
-    const heroSubtitle = document.querySelector('.hero-subtitle');
-    if (heroSubtitle) {
-        const text = heroSubtitle.textContent;
-        heroSubtitle.textContent = '';
-        
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                heroSubtitle.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        }
-        
-        // Start typing after preloader
-        setTimeout(typeWriter, 2000);
-    }
-
-    // ===================================
-    // LAZY LOADING IMAGES
-    // ===================================
-    const lazyImages = document.querySelectorAll('img[data-src]');
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
     
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
+    // For browsers that don't support native lazy loading
+    if ('loading' in HTMLImageElement.prototype) {
+        // Native lazy loading supported
+        lazyImages.forEach(img => {
+            if (img.dataset.src) {
                 img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-                observer.unobserve(img);
             }
         });
-    });
+    } else {
+        // Fallback for older browsers
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    observer.unobserve(img);
+                }
+            });
+        });
 
-    lazyImages.forEach(img => imageObserver.observe(img));
+        lazyImages.forEach(img => imageObserver.observe(img));
+    }
 
     // ===================================
     // INITIALIZE
     // ===================================
-    console.log('Skalette Bistro website initialized');
+    console.log('Skalette Bistro website initialized with enhanced effects');
     
-    // Booking system is now handled by reservation-firebase.js
-    // initBookingSystem();
+    // Booking system - use local fallback if Firebase not available (file:// protocol)
+    if (window.location.protocol === 'file:') {
+        initBookingSystem();
+    }
 });
 
 // ===================================
@@ -497,11 +736,170 @@ const WHATSAPP_NUMBER = '393428691832';
 let selectedTable = null;
 let bookingData = {};
 
-const TIME_SLOTS = {
-    pranzo: ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30'],
-    aperitivo: ['17:00', '17:30', '18:00', '18:30', '19:00'],
-    cena: ['19:30', '20:00', '20:30', '21:00', '21:30', '22:00']
+// Map browser language codes to country/nationality names
+function getCountryFromLanguage(langCode) {
+    const languageToCountry = {
+        'it': '🇮🇹 Italia',
+        'it-IT': '🇮🇹 Italia',
+        'it-CH': '🇨🇭 Svizzera (IT)',
+        'en': '🇬🇧 United Kingdom',
+        'en-US': '🇺🇸 United States',
+        'en-GB': '🇬🇧 United Kingdom',
+        'en-AU': '🇦🇺 Australia',
+        'en-CA': '🇨🇦 Canada',
+        'en-NZ': '🇳🇿 New Zealand',
+        'en-IE': '🇮🇪 Ireland',
+        'en-ZA': '🇿🇦 South Africa',
+        'de': '🇩🇪 Deutschland',
+        'de-DE': '🇩🇪 Deutschland',
+        'de-AT': '🇦🇹 Österreich',
+        'de-CH': '🇨🇭 Schweiz',
+        'fr': '🇫🇷 France',
+        'fr-FR': '🇫🇷 France',
+        'fr-CA': '🇨🇦 Canada (FR)',
+        'fr-BE': '🇧🇪 Belgique',
+        'fr-CH': '🇨🇭 Suisse',
+        'es': '🇪🇸 España',
+        'es-ES': '🇪🇸 España',
+        'es-MX': '🇲🇽 México',
+        'es-AR': '🇦🇷 Argentina',
+        'es-CO': '🇨🇴 Colombia',
+        'es-CL': '🇨🇱 Chile',
+        'pt': '🇵🇹 Portugal',
+        'pt-PT': '🇵🇹 Portugal',
+        'pt-BR': '🇧🇷 Brasil',
+        'nl': '🇳🇱 Nederland',
+        'nl-NL': '🇳🇱 Nederland',
+        'nl-BE': '🇧🇪 België',
+        'pl': '🇵🇱 Polska',
+        'pl-PL': '🇵🇱 Polska',
+        'ru': '🇷🇺 Россия',
+        'ru-RU': '🇷🇺 Россия',
+        'uk': '🇺🇦 Україна',
+        'uk-UA': '🇺🇦 Україна',
+        'zh': '🇨🇳 中国',
+        'zh-CN': '🇨🇳 中国',
+        'zh-TW': '🇹🇼 台灣',
+        'zh-HK': '🇭🇰 香港',
+        'ja': '🇯🇵 日本',
+        'ja-JP': '🇯🇵 日本',
+        'ko': '🇰🇷 한국',
+        'ko-KR': '🇰🇷 한국',
+        'ar': '🇸🇦 العربية',
+        'ar-SA': '🇸🇦 السعودية',
+        'ar-AE': '🇦🇪 الإمارات',
+        'he': '🇮🇱 ישראל',
+        'he-IL': '🇮🇱 ישראל',
+        'tr': '🇹🇷 Türkiye',
+        'tr-TR': '🇹🇷 Türkiye',
+        'el': '🇬🇷 Ελλάδα',
+        'el-GR': '🇬🇷 Ελλάδα',
+        'sv': '🇸🇪 Sverige',
+        'sv-SE': '🇸🇪 Sverige',
+        'no': '🇳🇴 Norge',
+        'nb-NO': '🇳🇴 Norge',
+        'nn-NO': '🇳🇴 Norge',
+        'da': '🇩🇰 Danmark',
+        'da-DK': '🇩🇰 Danmark',
+        'fi': '🇫🇮 Suomi',
+        'fi-FI': '🇫🇮 Suomi',
+        'cs': '🇨🇿 Česko',
+        'cs-CZ': '🇨🇿 Česko',
+        'sk': '🇸🇰 Slovensko',
+        'sk-SK': '🇸🇰 Slovensko',
+        'hu': '🇭🇺 Magyarország',
+        'hu-HU': '🇭🇺 Magyarország',
+        'ro': '🇷🇴 România',
+        'ro-RO': '🇷🇴 România',
+        'bg': '🇧🇬 България',
+        'bg-BG': '🇧🇬 България',
+        'hr': '🇭🇷 Hrvatska',
+        'hr-HR': '🇭🇷 Hrvatska',
+        'sl': '🇸🇮 Slovenija',
+        'sl-SI': '🇸🇮 Slovenija',
+        'sr': '🇷🇸 Србија',
+        'sr-RS': '🇷🇸 Србија',
+        'th': '🇹🇭 ประเทศไทย',
+        'th-TH': '🇹🇭 ประเทศไทย',
+        'vi': '🇻🇳 Việt Nam',
+        'vi-VN': '🇻🇳 Việt Nam',
+        'id': '🇮🇩 Indonesia',
+        'id-ID': '🇮🇩 Indonesia',
+        'ms': '🇲🇾 Malaysia',
+        'ms-MY': '🇲🇾 Malaysia',
+        'hi': '🇮🇳 भारत',
+        'hi-IN': '🇮🇳 भारत',
+        'bn': '🇧🇩 বাংলাদেশ',
+        'bn-BD': '🇧🇩 বাংলাদেশ',
+        'bn-IN': '🇮🇳 India (BN)'
+    };
+    
+    // First try exact match
+    if (languageToCountry[langCode]) {
+        return languageToCountry[langCode];
+    }
+    
+    // Try base language code (e.g., 'en' from 'en-US')
+    const baseLang = langCode.split('-')[0];
+    if (languageToCountry[baseLang]) {
+        return languageToCountry[baseLang];
+    }
+    
+    // Fallback: return the language code itself
+    return `🌍 ${langCode}`;
+}
+
+// Last aperitivo reservation by day of week (0 = Sunday)
+const APERITIVO_LAST_SLOT = {
+    0: '22:30',  // Domenica
+    1: '23:30',  // Lunedì
+    2: '23:30',  // Martedì
+    3: '23:30',  // Mercoledì
+    4: '23:30',  // Giovedì
+    5: '00:30',  // Venerdì
+    6: '00:30',  // Sabato
 };
+
+// Generate time slots based on meal type and selected date
+function getTimeSlots(mealType, dateStr) {
+    const slots = [];
+    const date = new Date(dateStr);
+    const dayOfWeek = date.getDay();
+    
+    if (mealType === 'pranzo') {
+        // Pranzo: 10:30 - 16:00
+        for (let mins = 10 * 60 + 30; mins <= 16 * 60; mins += 30) {
+            const hours = Math.floor(mins / 60);
+            const minutes = mins % 60;
+            slots.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+        }
+    } else if (mealType === 'aperitivo') {
+        // Aperitivo: 10:30 until last slot based on day
+        const lastSlot = APERITIVO_LAST_SLOT[dayOfWeek];
+        let lastMinutes;
+        if (lastSlot === '00:30') {
+            lastMinutes = 24 * 60 + 30; // 00:30 next day = 1470 minutes
+        } else {
+            const [h, m] = lastSlot.split(':').map(Number);
+            lastMinutes = h * 60 + m;
+        }
+        
+        for (let mins = 10 * 60 + 30; mins <= lastMinutes; mins += 30) {
+            const hours = Math.floor(mins / 60) % 24;
+            const minutes = mins % 60;
+            slots.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+        }
+    } else if (mealType === 'cena') {
+        // Cena: 16:30 until 21:30 (fixed)
+        for (let mins = 16 * 60 + 30; mins <= 21 * 60 + 30; mins += 30) {
+            const hours = Math.floor(mins / 60);
+            const minutes = mins % 60;
+            slots.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+        }
+    }
+    
+    return slots;
+}
 
 function initBookingSystem() {
     // Set min date to today
@@ -510,12 +908,44 @@ function initBookingSystem() {
         const today = new Date().toISOString().split('T')[0];
         dateInput.min = today;
         dateInput.value = today;
+        
+        // Date change -> update time slots (different closing times per day)
+        dateInput.addEventListener('change', updateTimeSlots);
     }
     
     // Meal type change -> update time slots
     const mealSelect = document.getElementById('booking-meal');
     if (mealSelect) {
         mealSelect.addEventListener('change', updateTimeSlots);
+    }
+    
+    // View tables button
+    const viewTablesBtn = document.getElementById('btn-view-tables');
+    if (viewTablesBtn) {
+        viewTablesBtn.addEventListener('click', showFloorPlan);
+    }
+    
+    // Back buttons
+    const backStep1Btn = document.getElementById('btn-back-step1');
+    if (backStep1Btn) {
+        backStep1Btn.addEventListener('click', () => {
+            document.getElementById('booking-step-2').style.display = 'none';
+            document.getElementById('booking-step-1').style.display = 'block';
+        });
+    }
+    
+    const backStep2Btn = document.getElementById('btn-back-step2');
+    if (backStep2Btn) {
+        backStep2Btn.addEventListener('click', () => {
+            document.getElementById('booking-step-3').style.display = 'none';
+            document.getElementById('booking-step-2').style.display = 'block';
+        });
+    }
+    
+    // Continue to step 3
+    const continueStep3Btn = document.getElementById('btn-continue-step3');
+    if (continueStep3Btn) {
+        continueStep3Btn.addEventListener('click', showStep3);
     }
     
     // Form submission
@@ -527,19 +957,44 @@ function initBookingSystem() {
 
 function updateTimeSlots() {
     const mealType = document.getElementById('booking-meal').value;
+    const dateInput = document.getElementById('booking-date');
     const timeSelect = document.getElementById('booking-time');
     
-    timeSelect.innerHTML = '<option value="">Seleziona orario</option>';
-    timeSelect.disabled = !mealType;
+    // Get current language for placeholder text
+    const lang = document.documentElement.lang || 'it';
+    const placeholderText = lang === 'en' ? '-- Select time --' : '-- Seleziona orario --';
+    const noTypeText = lang === 'en' ? '-- First select type --' : '-- Prima scegli il tipo --';
     
-    if (mealType && TIME_SLOTS[mealType]) {
-        TIME_SLOTS[mealType].forEach(time => {
-            const option = document.createElement('option');
-            option.value = time;
-            option.textContent = time;
-            timeSelect.appendChild(option);
-        });
+    if (!mealType) {
+        timeSelect.innerHTML = `<option value="">${noTypeText}</option>`;
+        timeSelect.disabled = true;
+        return;
     }
+    
+    timeSelect.innerHTML = `<option value="">${placeholderText}</option>`;
+    timeSelect.disabled = false;
+    
+    const dateStr = dateInput?.value || new Date().toISOString().split('T')[0];
+    const slots = getTimeSlots(mealType, dateStr);
+    
+    // Filter out past times if today
+    const now = new Date();
+    const selectedDate = new Date(dateStr);
+    const isToday = selectedDate.toDateString() === now.toDateString();
+    
+    slots.forEach(time => {
+        if (isToday) {
+            const [hours, mins] = time.split(':').map(Number);
+            const slotTime = new Date(selectedDate);
+            slotTime.setHours(hours, mins, 0, 0);
+            if (slotTime <= now) return; // Skip past times
+        }
+        
+        const option = document.createElement('option');
+        option.value = time;
+        option.textContent = time;
+        timeSelect.appendChild(option);
+    });
 }
 
 function showFloorPlan() {
@@ -549,7 +1004,11 @@ function showFloorPlan() {
     const time = document.getElementById('booking-time').value;
     
     if (!guests || !date || !mealType || !time) {
-        alert('Per favore compila tutti i campi prima di continuare.');
+        const siteLang = localStorage.getItem('skalette_lang') || 'it';
+        const msg = siteLang === 'en' 
+            ? 'Please fill in all fields before continuing.'
+            : 'Per favore compila tutti i campi prima di continuare.';
+        alert(msg);
         return;
     }
     
@@ -557,8 +1016,8 @@ function showFloorPlan() {
     bookingData = { guests: parseInt(guests), date, mealType, time };
     
     // Show step 2
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('step2').style.display = 'block';
+    document.getElementById('booking-step-1').style.display = 'none';
+    document.getElementById('booking-step-2').style.display = 'block';
     
     // Render floor plan
     renderFloorPlan();
@@ -679,10 +1138,14 @@ function selectTable(table, element) {
     element.style.border = '3px solid #fff';
     element.style.transform = 'translate(-50%, -50%) scale(1.1)';
     
-    // Update UI
-    document.getElementById('selected-table-info').style.display = 'block';
-    document.getElementById('selected-table-name').textContent = table.name;
-    document.getElementById('btn-confirm-table').disabled = false;
+    // Update UI - show selected table info
+    const tableInfo = document.getElementById('selected-table-info');
+    const tableName = document.getElementById('selected-table-name');
+    const continueBtn = document.getElementById('btn-continue-step3');
+    
+    if (tableInfo) tableInfo.style.display = 'block';
+    if (tableName) tableName.textContent = table.name;
+    if (continueBtn) continueBtn.disabled = false;
     
     bookingData.tableId = table.id;
     bookingData.tableName = table.name;
@@ -690,25 +1153,58 @@ function selectTable(table, element) {
 
 function goToStep(step) {
     document.querySelectorAll('.booking-step').forEach(s => s.style.display = 'none');
-    document.getElementById('step' + step).style.display = 'block';
+    
+    // Map step numbers to element IDs
+    const stepIds = {
+        1: 'booking-step-1',
+        2: 'booking-step-2',
+        3: 'booking-step-3',
+        4: 'booking-success'
+    };
+    
+    const stepEl = document.getElementById(stepIds[step]);
+    if (stepEl) {
+        stepEl.style.display = 'block';
+    }
     
     if (step === 3) {
         updateSummary();
     }
 }
 
+function showStep3() {
+    if (!selectedTable) {
+        const siteLang = localStorage.getItem('skalette_lang') || 'it';
+        const msg = siteLang === 'en'
+            ? 'Please select a table before continuing.'
+            : 'Per favore seleziona un tavolo prima di continuare.';
+        alert(msg);
+        return;
+    }
+    goToStep(3);
+}
+
 function updateSummary() {
-    const dateFormatted = new Date(bookingData.date).toLocaleDateString('it-IT', {
+    const siteLang = localStorage.getItem('skalette_lang') || 'it';
+    const dateLocale = siteLang === 'en' ? 'en-GB' : 'it-IT';
+    
+    const dateFormatted = new Date(bookingData.date).toLocaleDateString(dateLocale, {
         weekday: 'long',
         day: 'numeric',
         month: 'long'
     });
     
-    const mealLabels = { pranzo: '☀️ Pranzo', aperitivo: '🍹 Aperitivo', cena: '🌙 Cena' };
+    const mealLabels = siteLang === 'en'
+        ? { pranzo: '☀️ Lunch', aperitivo: '🍹 Aperitivo', cena: '🌙 Dinner' }
+        : { pranzo: '☀️ Pranzo', aperitivo: '🍹 Aperitivo', cena: '🌙 Cena' };
+    
+    const guestText = siteLang === 'en'
+        ? bookingData.guests + ' guest' + (bookingData.guests > 1 ? 's' : '')
+        : bookingData.guests + ' person' + (bookingData.guests > 1 ? 'e' : 'a');
     
     document.getElementById('summary-date').textContent = dateFormatted;
     document.getElementById('summary-time').textContent = bookingData.time + ' - ' + mealLabels[bookingData.mealType];
-    document.getElementById('summary-guests').textContent = bookingData.guests + ' person' + (bookingData.guests > 1 ? 'e' : 'a');
+    document.getElementById('summary-guests').textContent = guestText;
     document.getElementById('summary-table').textContent = bookingData.tableName;
 }
 
@@ -738,20 +1234,45 @@ function handleBookingSubmit(e) {
     saveReservations(reservations);
     
     // Show success
-    document.getElementById('reservation-id').textContent = reservation.id;
+    const bookingIdEl = document.getElementById('booking-id');
+    if (bookingIdEl) bookingIdEl.textContent = reservation.id;
     goToStep(4);
     
+    // Detect site language and browser language/nationality
+    const siteLang = localStorage.getItem('skalette_lang') || 'it';
+    const browserLang = navigator.language || navigator.userLanguage || 'it';
+    const nationality = getCountryFromLanguage(browserLang);
+    
     // Open WhatsApp with pre-filled message
-    const dateFormatted = new Date(bookingData.date).toLocaleDateString('it-IT', {
+    const dateLocale = siteLang === 'en' ? 'en-GB' : 'it-IT';
+    const dateFormatted = new Date(bookingData.date).toLocaleDateString(dateLocale, {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
         year: 'numeric'
     });
     
-    const mealLabels = { pranzo: 'Pranzo', aperitivo: 'Aperitivo', cena: 'Cena' };
+    const mealLabels = siteLang === 'en' 
+        ? { pranzo: 'Lunch', aperitivo: 'Aperitivo', cena: 'Dinner' }
+        : { pranzo: 'Pranzo', aperitivo: 'Aperitivo', cena: 'Cena' };
     
-    const message = `🍽️ NUOVA PRENOTAZIONE - Skalette Bistro
+    // Message for the restaurant (always includes nationality)
+    const message = siteLang === 'en' 
+        ? `🍽️ NEW RESERVATION - Skalette Bistro
+
+👤 Name: ${name}
+📱 Phone: ${phone}
+📧 Email: ${email}
+👥 Guests: ${bookingData.guests}
+📅 Date: ${dateFormatted}
+⏰ Time: ${bookingData.time} (${mealLabels[bookingData.mealType]})
+🪑 Table: ${bookingData.tableName}
+
+🌍 Nationality: ${nationality} (${browserLang})
+📝 Notes: ${notes || 'None'}
+
+ID: ${reservation.id}`
+        : `🍽️ NUOVA PRENOTAZIONE - Skalette Bistro
 
 👤 Nome: ${name}
 📱 Telefono: ${phone}
@@ -761,6 +1282,7 @@ function handleBookingSubmit(e) {
 ⏰ Orario: ${bookingData.time} (${mealLabels[bookingData.mealType]})
 🪑 Tavolo: ${bookingData.tableName}
 
+🌍 Nazionalità: ${nationality} (${browserLang})
 📝 Note: ${notes || 'Nessuna'}
 
 ID: ${reservation.id}`;
@@ -774,9 +1296,12 @@ function resetBooking() {
     selectedTable = null;
     bookingData = {};
     
+    const siteLang = localStorage.getItem('skalette_lang') || 'it';
+    const timeOptionText = siteLang === 'en' ? 'Choose meal type first' : 'Prima scegli il tipo';
+    
     document.getElementById('booking-guests').value = '';
     document.getElementById('booking-meal').value = '';
-    document.getElementById('booking-time').innerHTML = '<option value="">Prima scegli il tipo</option>';
+    document.getElementById('booking-time').innerHTML = `<option value="">${timeOptionText}</option>`;
     document.getElementById('booking-time').disabled = true;
     document.getElementById('booking-name').value = '';
     document.getElementById('booking-phone').value = '';
