@@ -1119,6 +1119,31 @@ async function getFirebaseReservations(date) {
     }
 }
 
+// Durata prenotazioni in minuti
+const MEAL_DURATIONS = {
+    pranzo: 120,    // 2 ore
+    aperitivo: 90,  // 1.5 ore
+    cena: 120       // 2 ore
+};
+
+// Converti orario "HH:MM" in minuti dalla mezzanotte
+function timeToMinutes(timeStr) {
+    const [hours, mins] = timeStr.split(':').map(Number);
+    return hours * 60 + mins;
+}
+
+// Verifica se due intervalli di tempo si sovrappongono
+function timesOverlap(time1, mealType1, time2, mealType2) {
+    const start1 = timeToMinutes(time1);
+    const end1 = start1 + (MEAL_DURATIONS[mealType1] || 120);
+    
+    const start2 = timeToMinutes(time2);
+    const end2 = start2 + (MEAL_DURATIONS[mealType2] || 120);
+    
+    // Due intervalli si sovrappongono se: start1 < end2 AND start2 < end1
+    return start1 < end2 && start2 < end1;
+}
+
 function renderFloorPlan(firebaseReservations = []) {
     const container = document.getElementById('floor-plan-container');
     if (!container) return;
@@ -1174,10 +1199,10 @@ function renderFloorPlan(firebaseReservations = []) {
     }
     
     floorPlan.tables.forEach(table => {
-        // Check availability using Firebase reservations
+        // Check availability using Firebase reservations with time overlap
         const isTableBooked = firebaseReservations.some(res => 
             res.tableId === table.id && 
-            res.time === time
+            timesOverlap(res.time, res.mealType, time, mealType)
         );
         
         const isAvailable = guests >= table.minGuests && 
