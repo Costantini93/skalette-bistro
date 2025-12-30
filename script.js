@@ -1062,11 +1062,64 @@ function showFloorPlan() {
     document.getElementById('booking-step-1').style.display = 'none';
     document.getElementById('booking-step-2').style.display = 'block';
     
-    // Render floor plan
-    renderFloorPlan();
+    // Render floor plan (async to load Firebase reservations)
+    renderFloorPlanAsync();
 }
 
-function renderFloorPlan() {
+// Load reservations from Firebase and render floor plan
+async function renderFloorPlanAsync() {
+    const container = document.getElementById('floor-plan-container');
+    if (!container) return;
+    
+    // Show loading
+    container.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#c9a961;"><p>Caricamento tavoli...</p></div>';
+    
+    // Load reservations from Firebase
+    try {
+        const firebaseReservations = await getFirebaseReservations(bookingData.date);
+        renderFloorPlan(firebaseReservations);
+    } catch (error) {
+        console.error('Error loading reservations:', error);
+        renderFloorPlan([]);
+    }
+}
+
+// Get reservations from Firebase for a specific date
+async function getFirebaseReservations(date) {
+    try {
+        const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/reservations?key=${FIREBASE_API_KEY}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Failed to fetch reservations');
+        }
+        
+        const data = await response.json();
+        
+        if (!data.documents) return [];
+        
+        // Parse Firestore format and filter by date
+        return data.documents
+            .map(doc => {
+                const fields = doc.fields;
+                return {
+                    id: doc.name.split('/').pop(),
+                    tableId: fields.tableId?.stringValue || '',
+                    date: fields.date?.stringValue || '',
+                    time: fields.time?.stringValue || '',
+                    mealType: fields.mealType?.stringValue || '',
+                    status: fields.status?.stringValue || 'pending',
+                    guests: parseInt(fields.guests?.integerValue || '0')
+                };
+            })
+            .filter(res => res.date === date && res.status !== 'rejected');
+    } catch (error) {
+        console.error('Error fetching Firebase reservations:', error);
+        return [];
+    }
+}
+
+function renderFloorPlan(firebaseReservations = []) {
     const container = document.getElementById('floor-plan-container');
     if (!container) return;
     
@@ -1121,9 +1174,15 @@ function renderFloorPlan() {
     }
     
     floorPlan.tables.forEach(table => {
+        // Check availability using Firebase reservations
+        const isTableBooked = firebaseReservations.some(res => 
+            res.tableId === table.id && 
+            res.time === time
+        );
+        
         const isAvailable = guests >= table.minGuests && 
                            guests <= table.maxGuests && 
-                           isTableAvailable(table.id, date, time, mealType);
+                           !isTableBooked;
         
         const tableEl = document.createElement('div');
         tableEl.className = 'floor-table ' + (isAvailable ? 'available' : 'unavailable') + ' ' + (table.shape || 'square');
