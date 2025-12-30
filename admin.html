@@ -1623,9 +1623,8 @@ Ci scusiamo per il disagio.`;
                 return;
             }
             
-            // Get reservations for that date
-            const reservations = await fetchAllReservationsFromFirebase();
-            const dayReservations = reservations.filter(r => r.date === date && r.status !== 'rejected');
+            // Get reservations for that date from allReservations array
+            const dayReservations = allReservations.filter(r => r.date === date && r.status !== 'rejected');
             dayReservations.sort((a, b) => a.time.localeCompare(b.time));
             
             if (dayReservations.length === 0) {
