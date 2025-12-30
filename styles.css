@@ -3164,32 +3164,54 @@ h1, h2, h3, h4, h5, h6 {
     .booking-form-grid {
         grid-template-columns: 1fr;
         gap: 15px;
+        width: 100%;
+        max-width: 100%;
     }
     
     .booking-form-grid input[type="date"] {
         width: 100%;
         min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .booking-form-grid select {
         width: 100%;
         min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .booking-form-grid input,
+    .booking-form-grid .form-group {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .booking-step {
         padding: 20px 15px;
-        margin: 0 -15px;
-        border-radius: 0;
+        margin: 0;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
     }
     
     .form-group {
         margin-bottom: 15px;
+        width: 100%;
+        max-width: 100%;
     }
     
     .form-group input,
     .form-group select {
         font-size: 16px; /* Prevents iOS zoom */
         padding: 14px 12px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 }
 
