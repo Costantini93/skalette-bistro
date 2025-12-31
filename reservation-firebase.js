@@ -26,47 +26,52 @@ let closedDatesCacheTime = 0;
 // ===================== CLOSED DATES CHECK =====================
 
 async function isDateClosed(date) {
-    // Always fetch from Firebase for reliability (with short caching)
-    const now = Date.now();
+    console.log('🔍 Checking if date is closed:', date);
     
-    // Use a shorter cache (30 seconds) to ensure fresh data
-    if (!closedDatesCache || now - closedDatesCacheTime > 30000) {
-        try {
-            const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/closedDates/config`;
-            const response = await fetch(url);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.fields?.dates?.arrayValue?.values) {
-                    closedDatesCache = data.fields.dates.arrayValue.values.map(v => ({
-                        date: v.mapValue.fields.date.stringValue,
-                        reason: v.mapValue.fields.reason.stringValue
-                    }));
+    // Always fetch fresh from Firebase (no caching for now to debug)
+    try {
+        const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/closedDates/config`;
+        console.log('📥 Fetching from Firebase...');
+        const response = await fetch(url);
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('📦 Firebase response:', data);
+            
+            if (data.fields?.dates?.arrayValue?.values) {
+                const closedDates = data.fields.dates.arrayValue.values.map(v => ({
+                    date: v.mapValue.fields.date.stringValue,
+                    reason: v.mapValue.fields.reason.stringValue
+                }));
+                console.log('📅 All closed dates:', closedDates);
+                
+                const found = closedDates.find(c => c.date === date);
+                if (found) {
+                    console.log('✅ Date IS closed:', date, '- Reason:', found.reason);
+                    return found;
                 } else {
-                    closedDatesCache = [];
+                    console.log('✅ Date is NOT closed:', date);
                 }
-                closedDatesCacheTime = now;
-                console.log('Closed dates loaded from Firebase:', closedDatesCache);
+            } else {
+                console.log('⚠️ No closed dates in Firebase');
             }
-        } catch (e) {
-            console.log('Could not fetch closed dates from Firebase:', e);
+        } else {
+            console.log('❌ Firebase error:', response.status);
         }
+    } catch (e) {
+        console.log('❌ Could not fetch closed dates from Firebase:', e);
     }
     
-    // Check Firebase cache
-    if (closedDatesCache && closedDatesCache.length > 0) {
-        const found = closedDatesCache.find(c => c.date === date);
-        if (found) {
-            console.log('Date is closed:', date, found.reason);
-            return found;
-        }
-    }
-    
-    // Fallback: also check local storage (for local testing)
+    // Fallback: also check local storage
     const localClosures = localStorage.getItem('skalette_closures');
     if (localClosures) {
         const closures = JSON.parse(localClosures);
+        console.log('💾 LocalStorage closures:', closures);
         const found = closures.find(c => c.date === date);
-        if (found) return found;
+        if (found) {
+            console.log('✅ Found in localStorage:', found);
+            return found;
+        }
     }
     
     return null;
