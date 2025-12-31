@@ -376,6 +376,20 @@
             font-size: 12px;
             color: var(--grey-light);
         }
+        .day-detail-type {
+            font-size: 12px;
+            color: var(--gold);
+            margin-top: 2px;
+        }
+        .day-detail-notes {
+            font-size: 11px;
+            color: var(--grey);
+            margin-top: 4px;
+            font-style: italic;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
         .day-detail-status {
             padding: 4px 10px;
             border-radius: 4px;
@@ -2170,6 +2184,8 @@ Ci scusiamo per il disagio.`;
                         <div class="day-detail-info">
                             <div class="day-detail-name">${r.name}</div>
                             <div class="day-detail-guests">${r.guests} ospiti - Tavolo ${r.tableName || r.table || 'N/A'}</div>
+                            <div class="day-detail-type">${getMealTypeLabel(r.mealType)}</div>
+                            ${r.notes ? `<div class="day-detail-notes">📝 ${r.notes}</div>` : ''}
                         </div>
                         <div class="day-detail-status ${r.status}">${
                             r.status === 'pending' ? 'In Attesa' :
