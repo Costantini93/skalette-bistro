@@ -2377,6 +2377,7 @@ h1, h2, h3, h4, h5, h6 {
 .review-card {
     flex: 0 0 320px;
     min-width: 320px;
+    max-width: 320px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(201, 169, 97, 0.15);
     border-radius: 16px;
@@ -2441,11 +2442,9 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--grey-light);
     font-size: 14px;
     line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .reviews-nav {
