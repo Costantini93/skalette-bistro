@@ -1457,7 +1457,7 @@ Ci scusiamo per il disagio.`;
             try {
                 const docPath = `closedDates/config`;
                 const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${docPath}`;
-                await fetch(url, {
+                const response = await fetch(url, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1477,9 +1477,42 @@ Ci scusiamo per il disagio.`;
                         }
                     })
                 });
+                
+                if (response.ok) {
+                    console.log('✅ Chiusure sincronizzate su Firebase:', closures);
+                    showNotification('Chiusure salvate su Firebase', 'success');
+                } else {
+                    const error = await response.text();
+                    console.error('❌ Errore sync Firebase:', error);
+                    showNotification('Errore sincronizzazione Firebase', 'error');
+                }
             } catch (e) {
-                console.log('Could not sync closures to Firebase:', e);
+                console.error('❌ Could not sync closures to Firebase:', e);
+                showNotification('Errore connessione Firebase', 'error');
             }
+        }
+        
+        function showNotification(message, type) {
+            const existing = document.querySelector('.sync-notification');
+            if (existing) existing.remove();
+            
+            const notif = document.createElement('div');
+            notif.className = 'sync-notification';
+            notif.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+            `;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
         }
         
         window.addClosureDate = function() {

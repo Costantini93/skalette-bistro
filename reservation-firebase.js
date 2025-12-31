@@ -26,17 +26,11 @@ let closedDatesCacheTime = 0;
 // ===================== CLOSED DATES CHECK =====================
 
 async function isDateClosed(date) {
-    // Check local storage first (synced from admin)
-    const localClosures = localStorage.getItem('skalette_closures');
-    if (localClosures) {
-        const closures = JSON.parse(localClosures);
-        const found = closures.find(c => c.date === date);
-        if (found) return found;
-    }
-    
-    // Also check Firebase (with caching)
+    // Always fetch from Firebase for reliability (with short caching)
     const now = Date.now();
-    if (!closedDatesCache || now - closedDatesCacheTime > 300000) { // 5 min cache
+    
+    // Use a shorter cache (30 seconds) to ensure fresh data
+    if (!closedDatesCache || now - closedDatesCacheTime > 30000) {
         try {
             const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/closedDates/config`;
             const response = await fetch(url);
@@ -47,16 +41,31 @@ async function isDateClosed(date) {
                         date: v.mapValue.fields.date.stringValue,
                         reason: v.mapValue.fields.reason.stringValue
                     }));
-                    closedDatesCacheTime = now;
+                } else {
+                    closedDatesCache = [];
                 }
+                closedDatesCacheTime = now;
+                console.log('Closed dates loaded from Firebase:', closedDatesCache);
             }
         } catch (e) {
-            console.log('Could not fetch closed dates from Firebase');
+            console.log('Could not fetch closed dates from Firebase:', e);
         }
     }
     
-    if (closedDatesCache) {
+    // Check Firebase cache
+    if (closedDatesCache && closedDatesCache.length > 0) {
         const found = closedDatesCache.find(c => c.date === date);
+        if (found) {
+            console.log('Date is closed:', date, found.reason);
+            return found;
+        }
+    }
+    
+    // Fallback: also check local storage (for local testing)
+    const localClosures = localStorage.getItem('skalette_closures');
+    if (localClosures) {
+        const closures = JSON.parse(localClosures);
+        const found = closures.find(c => c.date === date);
         if (found) return found;
     }
     
