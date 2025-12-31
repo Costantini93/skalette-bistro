@@ -814,11 +814,14 @@
                             <input type="date" id="closure-date" min="">
                             <input type="text" id="closure-reason" placeholder="Motivo (es. Ferie, Evento privato...)">
                             <button class="btn-add" onclick="addClosureDate()">+ Aggiungi</button>
+                            <button class="btn-add" style="background:#4285f4;margin-left:10px;" onclick="verifyFirebaseClosures()">🔍 Verifica Firebase</button>
                         </div>
                         
                         <div class="closures-list" id="closures-list">
                             <!-- Dynamic list -->
                         </div>
+                        
+                        <div id="firebase-debug" style="margin-top:15px;padding:15px;background:rgba(0,0,0,0.3);border-radius:8px;font-family:monospace;font-size:12px;display:none;"></div>
                     </div>
                     
                     <!-- Notifications Section -->
@@ -1593,6 +1596,49 @@ Ci scusiamo per il disagio.`;
                 </div>`;
             }).join('');
         }
+        
+        // Verify Firebase closures
+        window.verifyFirebaseClosures = async function() {
+            const debugDiv = document.getElementById('firebase-debug');
+            debugDiv.style.display = 'block';
+            debugDiv.innerHTML = '⏳ Caricamento da Firebase...';
+            
+            try {
+                const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/closedDates/config`;
+                const response = await fetch(url);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('📥 Raw Firebase data:', data);
+                    
+                    let html = '<strong>📥 Dati Firebase RAW:</strong><br><pre style="white-space:pre-wrap;word-break:break-all;">' + JSON.stringify(data, null, 2) + '</pre>';
+                    
+                    if (data.fields?.dates?.arrayValue?.values) {
+                        const dates = data.fields.dates.arrayValue.values.map(v => ({
+                            date: v.mapValue?.fields?.date?.stringValue,
+                            reason: v.mapValue?.fields?.reason?.stringValue
+                        }));
+                        html += '<br><strong>📅 Date parsate:</strong><br>';
+                        dates.forEach(d => {
+                            html += `• ${d.date} - ${d.reason}<br>`;
+                        });
+                    } else {
+                        html += '<br><strong>⚠️ Nessuna data trovata nel campo dates</strong>';
+                    }
+                    
+                    html += '<br><br><strong>💾 LocalStorage:</strong><br>';
+                    const local = localStorage.getItem('skalette_closures');
+                    html += local || '(vuoto)';
+                    
+                    debugDiv.innerHTML = html;
+                } else {
+                    const error = await response.text();
+                    debugDiv.innerHTML = `<span style="color:#ef4444;">❌ Errore ${response.status}: ${error}</span>`;
+                }
+            } catch (e) {
+                debugDiv.innerHTML = `<span style="color:#ef4444;">❌ Errore: ${e.message}</span>`;
+            }
+        };
         
         // NOTIFICATIONS
         function checkNotificationStatus() {
