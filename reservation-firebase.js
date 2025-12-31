@@ -116,11 +116,20 @@ function closeClosedDateModal() {
 
 // ===================== INITIALIZATION =====================
 
-document.addEventListener('DOMContentLoaded', () => {
+// DOMContentLoaded might have already fired since this is a dynamically loaded module
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('📄 DOMContentLoaded fired, initializing booking system...');
+        initBookingSystem();
+    });
+} else {
+    // DOM is already ready
+    console.log('📄 DOM already ready, initializing booking system immediately...');
     initBookingSystem();
-});
+}
 
 function initBookingSystem() {
+    console.log('🚀 initBookingSystem() called');
     const dateInput = document.getElementById('booking-date');
     const timeSelect = document.getElementById('booking-time');
     const guestsSelect = document.getElementById('booking-guests');
@@ -172,7 +181,18 @@ function initBookingSystem() {
     });
     
     // Button handlers
-    document.getElementById('btn-view-tables')?.addEventListener('click', showStep2);
+    const viewTablesBtn = document.getElementById('btn-view-tables');
+    console.log('🔘 btn-view-tables element:', viewTablesBtn);
+    if (viewTablesBtn) {
+        viewTablesBtn.addEventListener('click', () => {
+            console.log('👆 View tables button clicked!');
+            showStep2();
+        });
+        console.log('✅ Click listener added to btn-view-tables');
+    } else {
+        console.error('❌ btn-view-tables NOT FOUND!');
+    }
+    
     document.getElementById('btn-back-step1')?.addEventListener('click', showStep1);
     document.getElementById('btn-continue-step3')?.addEventListener('click', showStep3);
     document.getElementById('btn-back-step2')?.addEventListener('click', showStep2);
@@ -182,6 +202,8 @@ function initBookingSystem() {
     
     // Initialize guests select
     bookingData.guests = parseInt(guestsSelect.value) || 2;
+    
+    console.log('✅ initBookingSystem() completed');
 }
 
 // ===================== TIME SLOTS =====================
