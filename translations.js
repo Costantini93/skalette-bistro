@@ -94,6 +94,12 @@ const translations = {
         'testimonials.title': 'Cosa Dicono i <span class="gold">Nostri Ospiti</span>',
         'testimonials.googleReview': 'Recensione Google',
         
+        // Google Reviews Section
+        'reviews.title': 'Cosa Dicono i Nostri Ospiti',
+        'reviews.subtitle': 'Le recensioni dei clienti su Google',
+        'reviews.based': 'su 171 recensioni',
+        'reviews.write': 'Lascia una Recensione',
+        
         // Reservation
         'reservation.label': 'Prenotazioni',
         'reservation.title': 'Prenota il Tuo <span class="gold">Tavolo</span>',
@@ -281,6 +287,12 @@ const translations = {
         'testimonials.label': 'Reviews',
         'testimonials.title': 'What Our <span class="gold">Guests Say</span>',
         'testimonials.googleReview': 'Google Review',
+        
+        // Google Reviews Section
+        'reviews.title': 'What Our Guests Say',
+        'reviews.subtitle': 'Customer reviews on Google',
+        'reviews.based': 'based on 171 reviews',
+        'reviews.write': 'Leave a Review',
         
         // Reservation
         'reservation.label': 'Reservations',
@@ -690,6 +702,11 @@ function setLanguage(lang, animate = true, isManualSelection = false) {
     
     // Update HTML lang attribute
     document.documentElement.lang = lang;
+    
+    // Update Google Reviews language
+    if (typeof initReviews === 'function') {
+        initReviews();
+    }
     
     // Update desktop button state
     document.querySelectorAll('.lang-btn').forEach(btn => {
