@@ -276,16 +276,29 @@ function showStep1() {
 }
 
 async function showStep2() {
+    console.log('🎯 showStep2() called, bookingData:', bookingData);
+    
     if (!bookingData.date || !bookingData.time) {
-        alert('Seleziona data e orario');
+        // Use custom modal instead of alert (can't be blocked)
+        showClosedDateModal(
+            '⚠️ Attenzione',
+            'Per favore seleziona <strong>data</strong> e <strong>orario</strong> prima di procedere.',
+            '',
+            ''
+        );
         return;
     }
     
+    console.log('🔍 Checking if date is closed:', bookingData.date);
+    
     // Check if date is closed BEFORE showing tables
     const closureInfo = await isDateClosed(bookingData.date);
+    console.log('📅 Closure info:', closureInfo);
+    
     if (closureInfo) {
         const isItalian = document.documentElement.lang === 'it';
         const formattedDate = formatDate(bookingData.date);
+        console.log('🔒 Date is closed! Showing modal...');
         
         if (isItalian) {
             showClosedDateModal(
