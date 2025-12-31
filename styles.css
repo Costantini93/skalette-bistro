@@ -3699,3 +3699,109 @@ h1, h2, h3, h4, h5, h6 {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
 }
+
+/* ===================================
+   CLOSED DATE MODAL
+   =================================== */
+.closed-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100001;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.closed-modal-content {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, #1a1a2e 100%);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(201, 169, 97, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+.closed-modal-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.closed-modal-title {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    color: var(--gold);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.closed-modal-message {
+    color: var(--white);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.closed-modal-reason {
+    background: rgba(201, 169, 97, 0.15);
+    border-left: 4px solid var(--gold);
+    padding: 15px 20px;
+    margin: 20px 0;
+    color: var(--gold-light);
+    font-size: 15px;
+    text-align: left;
+    border-radius: 0 8px 8px 0;
+}
+
+.closed-modal-suggestion {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.closed-modal-btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy-dark);
+    border: none;
+    padding: 14px 50px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 25px;
+    transition: all 0.3s ease;
+}
+
+.closed-modal-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 25px rgba(201, 169, 97, 0.4);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}

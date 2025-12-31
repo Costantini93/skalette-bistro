@@ -63,6 +63,39 @@ async function isDateClosed(date) {
     return null;
 }
 
+// Function to show closed date modal
+function showClosedDateModal(title, message, reason, suggestion) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('closed-date-modal');
+    if (existingModal) existingModal.remove();
+    
+    const modal = document.createElement('div');
+    modal.id = 'closed-date-modal';
+    modal.innerHTML = `
+        <div class="closed-modal-overlay">
+            <div class="closed-modal-content">
+                <div class="closed-modal-icon">🔒</div>
+                <h3 class="closed-modal-title">${title}</h3>
+                <p class="closed-modal-message">${message}</p>
+                <p class="closed-modal-reason">${reason}</p>
+                <p class="closed-modal-suggestion">${suggestion}</p>
+                <button class="closed-modal-btn" onclick="closeClosedDateModal()">OK</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Close on overlay click
+    modal.querySelector('.closed-modal-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeClosedDateModal();
+    });
+}
+
+function closeClosedDateModal() {
+    const modal = document.getElementById('closed-date-modal');
+    if (modal) modal.remove();
+}
+
 // ===================== INITIALIZATION =====================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -202,9 +235,33 @@ function showStep1() {
     }
 }
 
-function showStep2() {
+async function showStep2() {
     if (!bookingData.date || !bookingData.time) {
         alert('Seleziona data e orario');
+        return;
+    }
+    
+    // Check if date is closed BEFORE showing tables
+    const closureInfo = await isDateClosed(bookingData.date);
+    if (closureInfo) {
+        const isItalian = document.documentElement.lang === 'it';
+        const formattedDate = formatDate(bookingData.date);
+        
+        if (isItalian) {
+            showClosedDateModal(
+                '🔒 Locale Chiuso',
+                `Siamo spiacenti, il giorno <strong>${formattedDate}</strong> il locale è chiuso.`,
+                `<strong>Motivo:</strong> ${closureInfo.reason}`,
+                'Seleziona un\'altra data per effettuare la prenotazione.'
+            );
+        } else {
+            showClosedDateModal(
+                '🔒 Restaurant Closed',
+                `We're sorry, on <strong>${formattedDate}</strong> the restaurant is closed.`,
+                `<strong>Reason:</strong> ${closureInfo.reason}`,
+                'Please select a different date to make a reservation.'
+            );
+        }
         return;
     }
     
