@@ -1,4 +1,6 @@
 // Reservation System with Firebase - Skalette Bistro
+console.log('🔥 reservation-firebase.js loading...');
+
 import {
     TABLES_CONFIG,
     OPENING_HOURS,
@@ -9,6 +11,8 @@ import {
     subscribeToTableAvailability,
     PROJECT_ID
 } from './firebase-config.js';
+
+console.log('✅ Firebase config imported successfully');
 
 let bookingData = {
     guests: 2,
