@@ -1814,70 +1814,72 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile responsive floor plan */
 @media (max-width: 600px) {
     .floor-plan-container {
-        height: 450px;
+        height: 500px;
+        overflow: visible;
     }
     
     .floor-table {
-        width: 50px !important;
-        height: 50px !important;
+        width: 45px !important;
+        height: 45px !important;
+        touch-action: manipulation;
     }
     
     .floor-table .table-name {
-        font-size: 11px;
+        font-size: 10px;
     }
     
     .floor-table .table-seats {
-        font-size: 8px;
+        font-size: 7px;
     }
     
     .floor-element.banco {
-        width: 90px;
-        height: 35px;
+        width: 80px;
+        height: 30px;
     }
     
     .floor-element.banco span {
-        font-size: 10px !important;
-    }
-    
-    .floor-element.divano-piccolo {
-        width: 45px;
-        height: 14px;
-    }
-    
-    .floor-element.divano-piccolo span {
-        font-size: 6px !important;
-    }
-    
-    .floor-element.divano-grande {
-        width: 200px;
-        height: 18px;
-    }
-    
-    .floor-element.divano-grande span {
-        font-size: 7px !important;
-    }
-    
-    .floor-element.scala {
-        width: 30px;
-        height: 50px;
-    }
-    
-    .floor-element.scala span {
         font-size: 9px !important;
     }
     
-    .floor-element.entrata {
-        width: 22px;
-        height: 38px;
+    .floor-element.divano-piccolo {
+        width: 40px;
+        height: 12px;
     }
     
-    .floor-element.entrata span {
+    .floor-element.divano-piccolo span {
         font-size: 5px !important;
     }
     
+    .floor-element.divano-grande {
+        width: 180px;
+        height: 16px;
+    }
+    
+    .floor-element.divano-grande span {
+        font-size: 6px !important;
+    }
+    
+    .floor-element.scala {
+        width: 25px;
+        height: 45px;
+    }
+    
+    .floor-element.scala span {
+        font-size: 8px !important;
+    }
+    
+    .floor-element.entrata {
+        width: 18px;
+        height: 32px;
+    }
+    
+    .floor-element.entrata span {
+        font-size: 4px !important;
+    }
+    
     .floor-legend {
-        gap: 10px;
-        font-size: 10px;
+        gap: 8px;
+        font-size: 9px;
     }
 }
 

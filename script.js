@@ -756,6 +756,13 @@ const WHATSAPP_NUMBER = '393428691832';
 let selectedTable = null;
 let bookingData = {};
 
+// Clear old floor plan cache to use new positions
+const FLOOR_PLAN_VERSION = '2.0';
+if (localStorage.getItem('skalette_floorplan_version') !== FLOOR_PLAN_VERSION) {
+    localStorage.removeItem('skalette_floorplan');
+    localStorage.setItem('skalette_floorplan_version', FLOOR_PLAN_VERSION);
+}
+
 // Firebase configuration
 const FIREBASE_PROJECT_ID = 'skalette-bistro';
 const FIREBASE_API_KEY = 'AIzaSyAbTQnt26Gca0sPa1RlhIyq2TIwLfKfl0s';
@@ -1332,7 +1339,16 @@ function renderFloorPlan(firebaseReservations = []) {
         `;
         
         if (isAvailable) {
-            tableEl.addEventListener('click', () => selectTable(table, tableEl));
+            tableEl.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                selectTable(table, tableEl);
+            });
+            tableEl.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                selectTable(table, tableEl);
+            });
             tableEl.addEventListener('mouseenter', () => {
                 if (selectedTable?.id !== table.id) {
                     tableEl.style.transform = 'translate(-50%, -50%) scale(1.1)';
@@ -1572,16 +1588,16 @@ function getFloorPlan() {
             { id: 'S3', name: 'S3', shape: 'square', minGuests: 3, maxGuests: 5, width: 70, height: 70, x: 84, y: 22 },
             
             // Zona bassa sinistra - Entrata
-            { id: 'B3', name: 'B3', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 12, y: 75 },
-            { id: 'B2', name: 'B2', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 24, y: 75 },
-            { id: 'B1', name: 'B1', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 36, y: 75 },
+            { id: 'B3', name: 'B3', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 12, y: 72 },
+            { id: 'B2', name: 'B2', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 24, y: 72 },
+            { id: 'B1', name: 'B1', shape: 'square', minGuests: 1, maxGuests: 4, width: 60, height: 60, x: 36, y: 72 },
             
             // Zona bassa destra - Divano grande (S8 a S4)
-            { id: 'S8', name: 'S8', shape: 'square', minGuests: 3, maxGuests: 5, width: 65, height: 65, x: 52, y: 68 },
-            { id: 'S7', name: 'S7', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 64, y: 68 },
-            { id: 'S6', name: 'S6', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 74, y: 68 },
-            { id: 'S5', name: 'S5', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 84, y: 68 },
-            { id: 'S4', name: 'S4', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 94, y: 68 }
+            { id: 'S8', name: 'S8', shape: 'square', minGuests: 3, maxGuests: 5, width: 65, height: 65, x: 52, y: 60 },
+            { id: 'S7', name: 'S7', shape: 'square', minGuests: 1, maxGuests: 2, width: 50, height: 50, x: 64, y: 60 },
+            { id: 'S6', name: 'S6', shape: 'square', minGuests: 2, maxGuests: 2, width: 50, height: 50, x: 74, y: 60 },
+            { id: 'S5', name: 'S5', shape: 'square', minGuests: 2, maxGuests: 2, width: 50, height: 50, x: 84, y: 60 },
+            { id: 'S4', name: 'S4', shape: 'square', minGuests: 2, maxGuests: 2, width: 50, height: 50, x: 92, y: 60 }
         ],
         updatedAt: new Date().toISOString()
     };
