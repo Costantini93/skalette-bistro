@@ -493,7 +493,28 @@ function renderFloorPlan() {
             <span class="table-seats">${table.minGuests}-${table.maxGuests} posti</span>
         `;
         
-        tableEl.addEventListener('click', () => handleTableClick(table, tableEl));
+        // Handle both click and touch events for mobile
+        let isTouched = false;
+        
+        tableEl.addEventListener('touchstart', (e) => {
+            isTouched = true;
+        }, { passive: true });
+        
+        tableEl.addEventListener('touchend', (e) => {
+            if (isTouched) {
+                e.preventDefault();
+                handleTableClick(table, tableEl);
+                isTouched = false;
+            }
+        });
+        
+        tableEl.addEventListener('click', (e) => {
+            // Skip if it was a touch event (to avoid double trigger)
+            if (!isTouched) {
+                handleTableClick(table, tableEl);
+            }
+            isTouched = false;
+        });
         
         container.appendChild(tableEl);
     });
