@@ -1,5 +1,5 @@
 // Reservation System with Firebase - Skalette Bistro
-console.log('🔥 reservation-firebase.js loading...');
+
 
 import {
     TABLES_CONFIG,
@@ -12,7 +12,7 @@ import {
     PROJECT_ID
 } from './firebase-config.js';
 
-console.log('✅ Firebase config imported successfully');
+
 
 let bookingData = {
     guests: 2,
@@ -30,50 +30,50 @@ let closedDatesCacheTime = 0;
 // ===================== CLOSED DATES CHECK =====================
 
 async function isDateClosed(date) {
-    console.log('🔍 Checking if date is closed:', date);
+    
     
     // Always fetch fresh from Firebase (no caching for now to debug)
     try {
         const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/closedDates/config`;
-        console.log('📥 Fetching from Firebase...');
+        
         const response = await fetch(url);
         
         if (response.ok) {
             const data = await response.json();
-            console.log('📦 Firebase response:', data);
+            
             
             if (data.fields?.dates?.arrayValue?.values) {
                 const closedDates = data.fields.dates.arrayValue.values.map(v => ({
                     date: v.mapValue.fields.date.stringValue,
                     reason: v.mapValue.fields.reason.stringValue
                 }));
-                console.log('📅 All closed dates:', closedDates);
+                
                 
                 const found = closedDates.find(c => c.date === date);
                 if (found) {
-                    console.log('✅ Date IS closed:', date, '- Reason:', found.reason);
+                    
                     return found;
                 } else {
-                    console.log('✅ Date is NOT closed:', date);
+                    
                 }
             } else {
-                console.log('⚠️ No closed dates in Firebase');
+                
             }
         } else {
-            console.log('❌ Firebase error:', response.status);
+            
         }
     } catch (e) {
-        console.log('❌ Could not fetch closed dates from Firebase:', e);
+        
     }
     
     // Fallback: also check local storage
     const localClosures = localStorage.getItem('skalette_closures');
     if (localClosures) {
         const closures = JSON.parse(localClosures);
-        console.log('💾 LocalStorage closures:', closures);
+        
         const found = closures.find(c => c.date === date);
         if (found) {
-            console.log('✅ Found in localStorage:', found);
+            
             return found;
         }
     }
@@ -83,7 +83,7 @@ async function isDateClosed(date) {
 
 // Function to show closed date modal
 function showClosedDateModal(title, message, reason, suggestion) {
-    console.log('🔔 showClosedDateModal called:', title);
+    
     
     // Remove existing modal if any
     const existingModal = document.getElementById('closed-date-modal');
@@ -104,7 +104,7 @@ function showClosedDateModal(title, message, reason, suggestion) {
         </div>
     `;
     document.body.appendChild(modal);
-    console.log('✅ Modal appended to body');
+    
     
     // Close button click
     document.getElementById('close-modal-btn').addEventListener('click', () => {
@@ -127,17 +127,17 @@ function closeClosedDateModal() {
 // DOMContentLoaded might have already fired since this is a dynamically loaded module
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        console.log('📄 DOMContentLoaded fired, initializing booking system...');
+        
         initBookingSystem();
     });
 } else {
     // DOM is already ready
-    console.log('📄 DOM already ready, initializing booking system immediately...');
+    
     initBookingSystem();
 }
 
 function initBookingSystem() {
-    console.log('🚀 initBookingSystem() called');
+     called');
     const dateInput = document.getElementById('booking-date');
     const timeSelect = document.getElementById('booking-time');
     const guestsSelect = document.getElementById('booking-guests');
@@ -204,17 +204,17 @@ function initBookingSystem() {
     
     // Button handlers
     const viewTablesBtn = document.getElementById('btn-view-tables');
-    console.log('🔘 btn-view-tables element:', viewTablesBtn);
+    
     if (viewTablesBtn) {
         viewTablesBtn.addEventListener('click', async () => {
-            console.log('👆 View tables button clicked!');
+            
             try {
                 await showStep2();
             } catch (err) {
                 console.error('❌ Error in showStep2:', err);
             }
         });
-        console.log('✅ Click listener added to btn-view-tables');
+        
     } else {
         console.error('❌ btn-view-tables NOT FOUND!');
     }
@@ -229,7 +229,7 @@ function initBookingSystem() {
     // Initialize guests select
     bookingData.guests = parseInt(guestsSelect.value) || 2;
     
-    console.log('✅ initBookingSystem() completed');
+     completed');
 }
 
 // ===================== TIME SLOTS =====================
@@ -302,7 +302,7 @@ function showStep1() {
 }
 
 async function showStep2() {
-    console.log('🎯 showStep2() called, bookingData:', bookingData);
+     called, bookingData:', bookingData);
     
     if (!bookingData.date || !bookingData.time) {
         // Use custom modal instead of alert (can't be blocked)
@@ -315,16 +315,16 @@ async function showStep2() {
         return;
     }
     
-    console.log('🔍 Checking if date is closed:', bookingData.date);
+    
     
     // Check if date is closed BEFORE showing tables
     const closureInfo = await isDateClosed(bookingData.date);
-    console.log('📅 Closure info:', closureInfo);
+    
     
     if (closureInfo) {
         const isItalian = document.documentElement.lang === 'it';
         const formattedDate = formatDate(bookingData.date);
-        console.log('🔒 Date is closed! Showing modal...');
+        
         
         if (isItalian) {
             showClosedDateModal(

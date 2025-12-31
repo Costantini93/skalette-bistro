@@ -736,13 +736,12 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         deferredPrompt = e;
         // Show install button/banner if desired
-        console.log('📱 PWA install available');
     });
 
     // ===================================
     // INITIALIZE
     // ===================================
-    console.log('Skalette Bistro website initialized with enhanced effects');
+    // Skalette Bistro website initialized
     
     // Booking system - always initialize (local storage fallback)
     initBookingSystem();
@@ -799,7 +798,7 @@ async function saveToFirebase(data, reservationId) {
         });
         
         if (response.ok) {
-            console.log('Reservation saved to Firebase successfully');
+            // Reservation saved to Firebase successfully
         } else {
             console.error('Firebase save failed:', await response.text());
         }
