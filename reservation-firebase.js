@@ -358,7 +358,6 @@ async function showStep2() {
 }
 
 function showStep3() {
-    console.log('showStep3 called, selectedTable:', selectedTable);
     if (!selectedTable) {
         const lang = localStorage.getItem('skalette_lang') || 'it';
         alert(lang === 'en' ? 'Please select a table' : 'Seleziona un tavolo');
@@ -538,13 +537,9 @@ function renderFloorPlan() {
 }
 
 async function handleTableClick(table, element) {
-    console.log('Table clicked:', table.id, table.name);
-    
     // Check availability first
     const available = await isTableAvailable(table.id, bookingData.date, bookingData.time);
     const guestsOk = bookingData.guests >= table.minGuests && bookingData.guests <= table.maxGuests;
-    
-    console.log('Available:', available, 'Guests OK:', guestsOk);
     
     if (!available || !guestsOk) {
         return; // Table not available
@@ -558,8 +553,6 @@ async function handleTableClick(table, element) {
     
     // Select new
     selectedTable = table;
-    console.log('selectedTable set to:', selectedTable);
-    
     element.style.border = '3px solid #fff';
     element.style.transform = 'translate(-50%, -50%) scale(1.1)';
     
