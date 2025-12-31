@@ -1022,9 +1022,10 @@ function initBookingSystem() {
         });
     }
     
-    // Continue to step 3
+    // Continue to step 3 - Only add listener on file:// protocol
+    // On HTTP/HTTPS, reservation-firebase.js handles this
     const continueStep3Btn = document.getElementById('btn-continue-step3');
-    if (continueStep3Btn) {
+    if (continueStep3Btn && window.location.protocol === 'file:') {
         continueStep3Btn.addEventListener('click', showStep3);
     }
     
