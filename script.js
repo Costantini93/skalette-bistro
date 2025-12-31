@@ -414,69 +414,69 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===================================
-    // INTERSECTION OBSERVER FOR STAGGERED ANIMATIONS
+    // SCROLL ANIMATIONS - Mobile Friendly
     // ===================================
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Staggered animation for grid items
-    const staggerObserver = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const children = entry.target.querySelectorAll('.menu-item, .feature-item, .gallery-item');
-                children.forEach((child, index) => {
-                    setTimeout(() => {
-                        child.classList.add('animate');
-                    }, index * 100);
-                });
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observe grids for staggered animations
-    const grids = document.querySelectorAll('.menu-grid, .features-grid, .gallery-grid');
-    grids.forEach(grid => staggerObserver.observe(grid));
-
-    // Observe elements with animation classes
-    const animatedElements = document.querySelectorAll('.about-content, .about-images, .section-header');
-    
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-
-    // Individual items animation setup
-    const individualItems = document.querySelectorAll('.menu-item, .gallery-item, .feature-item');
-    individualItems.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    });
-
-    // Add animate class styles
-    const style = document.createElement('style');
-    style.textContent = `
-        .animate {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
+    function initScrollAnimations() {
+        // Check if IntersectionObserver is supported
+        if (!('IntersectionObserver' in window)) {
+            // Fallback: show all elements immediately
+            document.querySelectorAll('.scroll-animate').forEach(el => {
+                el.classList.add('animate');
+            });
+            return;
         }
-    `;
-    document.head.appendChild(style);
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -50px 0px', // Trigger slightly before element is fully visible
+            threshold: 0.05 // Lower threshold for mobile
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Add scroll-animate class to elements and observe them
+        const animateSelectors = [
+            '.about-content',
+            '.about-images', 
+            '.section-header',
+            '.menu-item',
+            '.gallery-item',
+            '.feature-item',
+            '.events-content',
+            '.reservation-content'
+        ];
+
+        animateSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach((el, index) => {
+                el.classList.add('scroll-animate');
+                // Add stagger delay for items in grids
+                if (selector.includes('-item')) {
+                    el.style.transitionDelay = (index % 6) * 0.1 + 's';
+                }
+                observer.observe(el);
+            });
+        });
+
+        // Trigger animation for elements already in view on page load
+        setTimeout(() => {
+            document.querySelectorAll('.scroll-animate').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    el.classList.add('animate');
+                }
+            });
+        }, 100);
+    }
+
+    // Initialize scroll animations
+    initScrollAnimations();
 
     // ===================================
     // RESERVATION FORM
