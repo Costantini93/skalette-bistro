@@ -195,6 +195,12 @@
     }
 }
 
+/* Scroll Animation Classes */
+.animate {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
 .animate-fade-in {
     animation: fadeIn 1s ease forwards;
 }
