@@ -1305,11 +1305,13 @@
                     <!-- Menu Categories -->
                     <div class="menu-categories">
                         <button class="category-btn active" data-category="all">Tutti</button>
-                        <button class="category-btn" data-category="antipasti">Antipasti</button>
-                        <button class="category-btn" data-category="primi">Primi</button>
-                        <button class="category-btn" data-category="secondi">Secondi</button>
-                        <button class="category-btn" data-category="dolci">Dolci</button>
-                        <button class="category-btn" data-category="bevande">Bevande</button>
+                        <button class="category-btn" data-category="caffetteria">☕ Caffetteria</button>
+                        <button class="category-btn" data-category="gastronomia">🥪 Gastronomia</button>
+                        <button class="category-btn" data-category="piatti">🍽️ Piatti</button>
+                        <button class="category-btn" data-category="dolci">🍰 Dolci</button>
+                        <button class="category-btn" data-category="bevande">🥤 Bevande</button>
+                        <button class="category-btn" data-category="aperitivi">🍹 Aperitivi</button>
+                        <button class="category-btn" data-category="vini">🍷 Vini</button>
                     </div>
                     
                     <!-- Menu Items Grid -->
@@ -1340,11 +1342,13 @@
                             <label>Categoria *</label>
                             <select id="dish-category" required>
                                 <option value="">Seleziona...</option>
-                                <option value="antipasti">Antipasti</option>
-                                <option value="primi">Primi</option>
-                                <option value="secondi">Secondi</option>
-                                <option value="dolci">Dolci</option>
-                                <option value="bevande">Bevande</option>
+                                <option value="caffetteria">☕ Caffetteria</option>
+                                <option value="gastronomia">🥪 Gastronomia</option>
+                                <option value="piatti">🍽️ Piatti</option>
+                                <option value="dolci">🍰 Dolci</option>
+                                <option value="bevande">🥤 Bevande</option>
+                                <option value="aperitivi">🍹 Aperitivi & Birre</option>
+                                <option value="vini">🍷 Vini</option>
                             </select>
                         </div>
                         
@@ -1371,9 +1375,12 @@
                                 <label><input type="checkbox" value="uova"> 🥚 Uova</label>
                                 <label><input type="checkbox" value="pesce"> 🐟 Pesce</label>
                                 <label><input type="checkbox" value="crostacei"> 🦐 Crostacei</label>
+                                <label><input type="checkbox" value="molluschi"> 🐚 Molluschi</label>
                                 <label><input type="checkbox" value="fruttasecca"> 🥜 Frutta secca</label>
                                 <label><input type="checkbox" value="sedano"> 🥬 Sedano</label>
                                 <label><input type="checkbox" value="soia"> 🫘 Soia</label>
+                                <label><input type="checkbox" value="senape"> 🟡 Senape</label>
+                                <label><input type="checkbox" value="solfiti"> 🍷 Solfiti</label>
                             </div>
                         </div>
                         
@@ -2206,16 +2213,111 @@ Ci scusiamo per il disagio.`;
             if (saved) {
                 menuItems = JSON.parse(saved);
             } else {
-                // Default menu items
+                // Menu completo Skalette Bistro
                 menuItems = [
-                    { id: 1, name: 'Carpaccio di Manzo', nameEn: 'Beef Carpaccio', category: 'antipasti', price: 16, description: 'Con rucola e scaglie di parmigiano', descriptionEn: 'With arugula and parmesan shavings', allergens: ['lattosio'], available: true },
-                    { id: 2, name: 'Burrata Pugliese', nameEn: 'Apulian Burrata', category: 'antipasti', price: 14, description: 'Con pomodorini e basilico fresco', descriptionEn: 'With cherry tomatoes and fresh basil', allergens: ['lattosio'], available: true },
-                    { id: 3, name: 'Risotto allo Zafferano', nameEn: 'Saffron Risotto', category: 'primi', price: 18, description: 'Mantecato al burro con midollo', descriptionEn: 'Creamy with butter and bone marrow', allergens: ['glutine', 'lattosio'], available: true },
-                    { id: 4, name: 'Tagliatelle al Ragù', nameEn: 'Tagliatelle Bolognese', category: 'primi', price: 16, description: 'Pasta fresca con ragù tradizionale', descriptionEn: 'Fresh pasta with traditional meat sauce', allergens: ['glutine', 'uova'], available: true },
-                    { id: 5, name: 'Filetto di Manzo', nameEn: 'Beef Fillet', category: 'secondi', price: 28, description: 'Con riduzione al vino rosso', descriptionEn: 'With red wine reduction', allergens: [], available: true },
-                    { id: 6, name: 'Branzino al Forno', nameEn: 'Baked Sea Bass', category: 'secondi', price: 24, description: 'Con patate e olive taggiasche', descriptionEn: 'With potatoes and taggiasca olives', allergens: ['pesce'], available: true },
-                    { id: 7, name: 'Tiramisù', nameEn: 'Tiramisu', category: 'dolci', price: 9, description: 'Ricetta tradizionale', descriptionEn: 'Traditional recipe', allergens: ['glutine', 'lattosio', 'uova'], available: true },
-                    { id: 8, name: 'Panna Cotta', nameEn: 'Panna Cotta', category: 'dolci', price: 8, description: 'Con frutti di bosco', descriptionEn: 'With mixed berries', allergens: ['lattosio'], available: true }
+                    // CAFFETTERIA
+                    { id: 1, name: 'Espresso', nameEn: 'Espresso', category: 'caffetteria', price: 2, description: "L'autentico caffè italiano.", descriptionEn: 'Authentic Italian coffee.', allergens: [], available: true },
+                    { id: 2, name: 'Macchiatone', nameEn: 'Macchiatone', category: 'caffetteria', price: 2, description: 'Simile al cappuccino ma con meno latte.', descriptionEn: 'Similar to cappuccino but with less milk.', allergens: ['lattosio'], available: true },
+                    { id: 3, name: 'Cappuccino', nameEn: 'Cappuccino', category: 'caffetteria', price: 2.50, description: 'Caffè e latte montato con schiuma cremosa.', descriptionEn: 'Coffee with foamed milk.', allergens: ['lattosio'], available: true },
+                    { id: 4, name: 'Caffè Americano', nameEn: 'Americano', category: 'caffetteria', price: 3, description: 'Caffè lungo con aggiunta di acqua calda.', descriptionEn: 'Long coffee with hot water.', allergens: [], available: true },
+                    { id: 5, name: 'Latte Macchiato', nameEn: 'Latte Macchiato', category: 'caffetteria', price: 3, description: 'Latte caldo macchiato con un tocco di caffè.', descriptionEn: 'Hot milk with a touch of coffee.', allergens: ['lattosio'], available: true },
+                    { id: 6, name: 'Caffè Corretto', nameEn: 'Corrected Coffee', category: 'caffetteria', price: 3, description: "Espresso con l'aggiunta di un liquore a scelta.", descriptionEn: 'Espresso with liquor of choice.', allergens: [], available: true },
+                    { id: 7, name: 'Caffè Skalette', nameEn: 'Skalette Coffee', category: 'caffetteria', price: 3, description: 'Doppio espresso versato su ghiaccio.', descriptionEn: 'Double espresso poured over ice.', allergens: [], available: true },
+                    { id: 8, name: 'Ginseng/Orzo', nameEn: 'Ginseng/Barley', category: 'caffetteria', price: 2.30, description: 'Bevanda calda alternativa al caffè.', descriptionEn: 'Hot alternative to coffee.', allergens: [], available: true },
+                    { id: 9, name: 'Infuso', nameEn: 'Herbal Tea', category: 'caffetteria', price: 4, description: 'Selezione di erbe e frutta.', descriptionEn: 'Selection of herbs and fruit.', allergens: [], available: true },
+                    { id: 10, name: 'Croissant', nameEn: 'Croissant', category: 'caffetteria', price: 2.50, description: 'Sfoglia fresca, semplice o farcito.', descriptionEn: 'Fresh pastry, plain or filled.', allergens: ['glutine', 'lattosio', 'uova'], available: true },
+                    { id: 11, name: 'Biscotto', nameEn: 'Cookie', category: 'caffetteria', price: 1.50, description: 'Biscotto singolo.', descriptionEn: 'Single cookie.', allergens: ['glutine'], available: true },
+                    
+                    // GASTRONOMIA
+                    { id: 12, name: 'Polpetta di Carne', nameEn: 'Meat Meatball', category: 'gastronomia', price: 2, description: 'Polpetta di carne mista.', descriptionEn: 'Mixed meat meatball.', allergens: ['glutine', 'uova'], available: true },
+                    { id: 13, name: 'Polpetta Vegetariana', nameEn: 'Veggie Meatball', category: 'gastronomia', price: 2, description: 'Polpetta a base di verdure e ricotta.', descriptionEn: 'Vegetable and ricotta meatball.', allergens: ['lattosio', 'uova'], available: true },
+                    { id: 14, name: 'Arancino al Tastasal', nameEn: 'Tastasal Arancino', category: 'gastronomia', price: 2, description: 'Ripieno di riso e tastasal.', descriptionEn: 'Rice and sausage filling.', allergens: ['glutine'], available: true },
+                    { id: 15, name: 'Pizza Margherita', nameEn: 'Margherita Pizza', category: 'gastronomia', price: 6, description: 'Impasto fresco, pomodoro, mozzarella e basilico.', descriptionEn: 'Fresh dough, tomato, mozzarella and basil.', allergens: ['glutine', 'lattosio'], available: true },
+                    { id: 16, name: 'Pizza Farcita', nameEn: 'Stuffed Pizza', category: 'gastronomia', price: 7, description: 'Impasto fresco con ripieno del giorno.', descriptionEn: 'Fresh dough with daily filling.', allergens: ['glutine'], available: true },
+                    { id: 17, name: 'Toast', nameEn: 'Toast', category: 'gastronomia', price: 5, description: 'Con prosciutto e formaggio.', descriptionEn: 'With ham and cheese.', allergens: ['glutine', 'lattosio'], available: true },
+                    { id: 18, name: 'Focaccia', nameEn: 'Focaccia', category: 'gastronomia', price: 5, description: 'Chiedere al personale per i gusti disponibili.', descriptionEn: 'Ask staff for available flavors.', allergens: ['glutine'], available: true },
+                    { id: 19, name: 'Pizzetta', nameEn: 'Small Pizza', category: 'gastronomia', price: 3.50, description: 'Piccola porzione ideale per un assaggio veloce.', descriptionEn: 'Small portion for a quick taste.', allergens: ['glutine', 'lattosio'], available: true },
+                    { id: 20, name: 'Nachos', nameEn: 'Nachos', category: 'gastronomia', price: 6, description: 'Croccanti nachos con guacamole, cheddar e panna acida.', descriptionEn: 'Crispy nachos with guacamole, cheddar and sour cream.', allergens: ['lattosio'], available: true },
+                    
+                    // PIATTI
+                    { id: 21, name: 'Tagliere Salumi e Formaggi', nameEn: 'Cheese & Cold Cuts Board', category: 'piatti', price: 25, description: 'Con giardiniera della casa e mostarda.', descriptionEn: 'With house pickles and mustard.', allergens: ['lattosio', 'senape'], available: true },
+                    { id: 22, name: 'Pata Negra de Bellota 100%', nameEn: 'Pata Negra 100%', category: 'piatti', price: 20, description: 'Con pan y tomate.', descriptionEn: 'With bread and tomato.', allergens: ['glutine'], available: true },
+                    { id: 23, name: 'Vellutata di Verdure', nameEn: 'Vegetable Cream Soup', category: 'piatti', price: 12, description: 'Con crostini e pecorino. Con bacon (+3€) o gamberi (+3€).', descriptionEn: 'With croutons and pecorino. Add bacon (+€3) or shrimp (+€3).', allergens: ['glutine', 'lattosio', 'sedano'], available: true },
+                    { id: 24, name: 'Battuta di Manzo alla Francese', nameEn: 'French Style Beef Tartare', category: 'piatti', price: 15, description: 'Tagliata al coltello, con senape, scalogno, capperi e tuorlo. Con tartufo nero (+5€).', descriptionEn: 'Hand-cut with mustard, shallot, capers and yolk. Add black truffle (+€5).', allergens: ['uova', 'senape'], available: true },
+                    { id: 25, name: 'Insalata Mista di Pollo', nameEn: 'Mixed Chicken Salad', category: 'piatti', price: 15, description: 'Con bacon croccante, avocado, salsa yogurt e ravanelli.', descriptionEn: 'With crispy bacon, avocado, yogurt sauce and radishes.', allergens: ['lattosio'], available: true },
+                    { id: 26, name: 'Acciuga del Cantabrico', nameEn: 'Cantabrian Anchovies', category: 'piatti', price: 15, description: 'Con pane tostato e burro.', descriptionEn: 'With toasted bread and butter.', allergens: ['pesce', 'glutine', 'lattosio'], available: true },
+                    { id: 27, name: 'Ovetto Poché', nameEn: 'Poached Egg', category: 'piatti', price: 16, description: 'Su fonduta di formaggio, con lamelle di tartufo nero della Lessinia.', descriptionEn: 'On cheese fondue with black truffle shavings.', allergens: ['uova', 'lattosio'], available: true },
+                    { id: 28, name: 'Tagliatelle al Ragù di Quaglia', nameEn: 'Tagliatelle with Quail Ragù', category: 'piatti', price: 18, description: 'Pasta fresca con ragù di quaglia, il suo uovo e lamelle di tartufo nero.', descriptionEn: 'Fresh pasta with quail ragù, quail egg and black truffle.', allergens: ['glutine', 'uova'], available: true },
+                    { id: 29, name: 'Pad Thai', nameEn: 'Pad Thai', category: 'piatti', price: 16, description: 'Spaghetti di riso saltati con verdure croccanti, pollo, gamberi e salsa tamarindo.', descriptionEn: 'Rice noodles with crispy vegetables, chicken, shrimp and tamarind sauce.', allergens: ['crostacei', 'uova', 'fruttasecca'], available: true },
+                    { id: 30, name: 'Gyoza (6pz)', nameEn: 'Gyoza (6pcs)', category: 'piatti', price: 12, description: 'Ravioli giapponesi croccanti ripieni di maiale, con salsa teriyaki e semi di sesamo.', descriptionEn: 'Crispy Japanese dumplings with pork, teriyaki sauce and sesame seeds.', allergens: ['glutine', 'soia'], available: true },
+                    { id: 31, name: 'Gnocchi alla Zucca', nameEn: 'Pumpkin Gnocchi', category: 'piatti', price: 16, description: 'Gnocchi di patate con crema di zucca, gorgonzola e speck croccante.', descriptionEn: 'Potato gnocchi with pumpkin cream, gorgonzola and crispy speck.', allergens: ['glutine', 'lattosio'], available: true },
+                    { id: 32, name: 'Ravioli Artigianali alla Gricia', nameEn: 'Gricia Ravioli', category: 'piatti', price: 16, description: 'Ravioli ripieni di cacio e pepe, serviti con guanciale croccante.', descriptionEn: 'Ravioli filled with cacio e pepe, with crispy guanciale.', allergens: ['glutine', 'uova', 'lattosio'], available: true },
+                    { id: 33, name: 'Tagliata di Manzo', nameEn: 'Sliced Beef', category: 'piatti', price: 22, description: 'Controfiletto di manzo scottato, con porcini e scaglie di Monte Veronese. Con tartufo nero (+5€).', descriptionEn: 'Seared beef sirloin with porcini mushrooms and Monte Veronese cheese. Add black truffle (+€5).', allergens: ['lattosio'], available: true },
+                    { id: 34, name: 'Yakitori', nameEn: 'Yakitori', category: 'piatti', price: 16, description: 'Spiedini di pollo glassati alla teriyaki, con riso basmati, edamame e semi di sesamo.', descriptionEn: 'Teriyaki glazed chicken skewers with basmati rice, edamame and sesame.', allergens: ['glutine', 'soia'], available: true },
+                    { id: 35, name: 'Guancetta di Maiale', nameEn: 'Pork Cheek', category: 'piatti', price: 20, description: "Brasata all'Amarone, con purè di patate.", descriptionEn: 'Amarone braised, with mashed potatoes.', allergens: ['lattosio', 'solfiti'], available: true },
+                    { id: 36, name: 'Moscardini in Umido', nameEn: 'Stewed Baby Octopus', category: 'piatti', price: 14, description: 'Con crema di polenta.', descriptionEn: 'With polenta cream.', allergens: ['molluschi'], available: true },
+                    { id: 37, name: 'Trancio di Salmone', nameEn: 'Salmon Fillet', category: 'piatti', price: 18, description: 'Salmone scottato con salsa al tamarindo e pak choi saltato.', descriptionEn: 'Seared salmon with tamarind sauce and sautéed pak choi.', allergens: ['pesce'], available: true },
+                    { id: 38, name: 'Burrito', nameEn: 'Burrito', category: 'piatti', price: 16, description: 'Farcito con manzo e maiale, fagioli neri, Monterrey Jack, guacamole, panna acida e riso basmati.', descriptionEn: 'Filled with beef and pork, black beans, Monterey Jack, guacamole, sour cream and basmati rice.', allergens: ['glutine', 'lattosio'], available: true },
+                    { id: 39, name: 'Bacon Cheeseburger', nameEn: 'Bacon Cheeseburger', category: 'piatti', price: 16, description: 'Hamburger di manzo, cheddar, pomodoro, insalata, bacon croccante e salsa BBQ. Con patate spadellate.', descriptionEn: 'Beef burger, cheddar, tomato, lettuce, crispy bacon and BBQ sauce. With pan-fried potatoes.', allergens: ['glutine', 'lattosio', 'uova'], available: true },
+                    { id: 40, name: 'Club Sandwich', nameEn: 'Club Sandwich', category: 'piatti', price: 15, description: 'Pollo, bacon croccante, uovo, pomodoro, insalata e maionese.', descriptionEn: 'Chicken, crispy bacon, egg, tomato, lettuce and mayo.', allergens: ['glutine', 'uova'], available: true },
+                    { id: 41, name: 'Avocado Toast', nameEn: 'Avocado Toast', category: 'piatti', price: 12, description: 'Pane tostato, crema alla robiola, avocado, uovo in camicia. Con bacon (+3€) o salmone (+3€).', descriptionEn: 'Toasted bread, robiola cream, avocado, poached egg. Add bacon (+€3) or salmon (+€3).', allergens: ['glutine', 'lattosio', 'uova', 'fruttasecca'], available: true },
+                    { id: 42, name: 'Veggie Burger', nameEn: 'Veggie Burger', category: 'piatti', price: 16, description: 'Pane bun nero, burger vegetale, maionese al tartufo, brie, spinacino, cipolla caramellata e patate.', descriptionEn: 'Black bun, veggie burger, truffle mayo, brie, spinach, caramelized onion and potatoes.', allergens: ['glutine', 'lattosio', 'uova'], available: true },
+                    
+                    // DOLCI
+                    { id: 43, name: 'Tiramisù della Casa', nameEn: 'Homemade Tiramisu', category: 'dolci', price: 6, description: 'Ricetta tradizionale con mascarpone e caffè.', descriptionEn: 'Traditional recipe with mascarpone and coffee.', allergens: ['glutine', 'lattosio', 'uova'], available: true },
+                    { id: 44, name: 'Panna Cotta', nameEn: 'Panna Cotta', category: 'dolci', price: 6, description: 'Gusto a scelta: cioccolato o caramello.', descriptionEn: 'Choice of chocolate or caramel.', allergens: ['lattosio'], available: true },
+                    { id: 45, name: 'Crema Catalana', nameEn: 'Crème Brûlée', category: 'dolci', price: 6, description: 'Classico dessert spagnolo con crosta caramellata.', descriptionEn: 'Classic Spanish dessert with caramelized crust.', allergens: ['lattosio', 'uova'], available: true },
+                    { id: 46, name: 'Sbrisolona e Grappa', nameEn: 'Sbrisolona & Grappa', category: 'dolci', price: 7, description: 'Torta secca mantovana con farina di mais e mandorle, servita con un bicchierino di grappa veneta.', descriptionEn: 'Mantuan crumbly cake with corn flour and almonds, served with Venetian grappa.', allergens: ['glutine', 'fruttasecca', 'uova'], available: true },
+                    
+                    // BEVANDE
+                    { id: 47, name: 'Acqua 0,5 L', nameEn: 'Water 0.5L', category: 'bevande', price: 1.50, description: 'Naturale o Frizzante.', descriptionEn: 'Still or Sparkling.', allergens: [], available: true },
+                    { id: 48, name: 'Acqua 0,75 L', nameEn: 'Water 0.75L', category: 'bevande', price: 3, description: 'Naturale o Frizzante.', descriptionEn: 'Still or Sparkling.', allergens: [], available: true },
+                    { id: 49, name: 'Crodino XL', nameEn: 'Crodino XL', category: 'bevande', price: 4, description: 'Analcolico biondo in bottiglia grande.', descriptionEn: 'Non-alcoholic blond in large bottle.', allergens: [], available: true },
+                    { id: 50, name: 'Coca Cola', nameEn: 'Coca Cola', category: 'bevande', price: 4.50, description: 'Classica bevanda gassata.', descriptionEn: 'Classic carbonated drink.', allergens: [], available: true },
+                    { id: 51, name: 'Coca Cola Zero', nameEn: 'Coca Cola Zero', category: 'bevande', price: 4.50, description: 'Senza zuccheri aggiunti.', descriptionEn: 'No added sugars.', allergens: [], available: true },
+                    { id: 52, name: 'Tonica', nameEn: 'Tonic Water', category: 'bevande', price: 4, description: 'Bevanda frizzante e rinfrescante.', descriptionEn: 'Sparkling and refreshing drink.', allergens: [], available: true },
+                    { id: 53, name: 'Succo di Frutta', nameEn: 'Fruit Juice', category: 'bevande', price: 4, description: 'Gusti assortiti disponibili.', descriptionEn: 'Various flavors available.', allergens: [], available: true },
+                    { id: 54, name: 'Ginger Ale', nameEn: 'Ginger Ale', category: 'bevande', price: 4.50, description: 'Bevanda frizzante al gusto di zenzero.', descriptionEn: 'Ginger flavored sparkling drink.', allergens: [], available: true },
+                    { id: 55, name: 'Tè Limone/Pesca', nameEn: 'Iced Tea', category: 'bevande', price: 4.50, description: 'Tè freddo in bottiglia.', descriptionEn: 'Bottled iced tea.', allergens: [], available: true },
+                    { id: 56, name: 'Homemade Gingerbeer', nameEn: 'Homemade Ginger Beer', category: 'bevande', price: 4, description: 'Bevanda analcolica allo zenzero di nostra produzione.', descriptionEn: 'Our homemade ginger non-alcoholic drink.', allergens: [], available: true },
+                    { id: 57, name: 'Pomodoro Condito', nameEn: 'Seasoned Tomato Juice', category: 'bevande', price: 5, description: 'Succo di pomodoro con sale, pepe e spezie.', descriptionEn: 'Tomato juice with salt, pepper and spices.', allergens: ['sedano'], available: true },
+                    { id: 58, name: 'Soda al Pompelmo Rosa', nameEn: 'Pink Grapefruit Soda', category: 'bevande', price: 4.50, description: 'Gassosa al gusto di pompelmo rosa.', descriptionEn: 'Pink grapefruit flavored soda.', allergens: [], available: true },
+                    
+                    // APERITIVI & BIRRE
+                    { id: 59, name: 'Spritz Bianco', nameEn: 'White Spritz', category: 'aperitivi', price: 4, description: 'Vino bianco frizzante e seltz.', descriptionEn: 'Sparkling white wine and seltzer.', allergens: ['solfiti'], available: true },
+                    { id: 60, name: 'Spritz', nameEn: 'Spritz', category: 'aperitivi', price: 6, description: 'Scegli tra: Aperol, Campari, Hugo, Select, Cynar, Rabarbaro, Rosa, Sorbole, Misto.', descriptionEn: 'Choose: Aperol, Campari, Hugo, Select, Cynar, Rhubarb, Rosa, Sorbole, Mixed.', allergens: ['solfiti'], available: true },
+                    { id: 61, name: 'Campari Soda', nameEn: 'Campari Soda', category: 'aperitivi', price: 5, description: 'Classico aperitivo monoporzione, pronto da bere.', descriptionEn: 'Classic single-serve aperitif, ready to drink.', allergens: [], available: true },
+                    { id: 62, name: 'Americano', nameEn: 'Americano', category: 'aperitivi', price: 6, description: 'Campari, Blend di Vermouth Rossi, Soda.', descriptionEn: 'Campari, Red Vermouth blend, Soda.', allergens: ['solfiti'], available: true },
+                    { id: 63, name: 'Negroni', nameEn: 'Negroni', category: 'aperitivi', price: 9, description: 'Gin, Campari, Blend di Vermouth Rossi. Classico potente.', descriptionEn: 'Gin, Campari, Red Vermouth blend. Powerful classic.', allergens: ['solfiti'], available: true },
+                    { id: 64, name: 'Bloody Mary', nameEn: 'Bloody Mary', category: 'aperitivi', price: 9, description: 'Vodka, succo di pomodoro condito e spezie.', descriptionEn: 'Vodka, seasoned tomato juice and spices.', allergens: ['sedano'], available: true },
+                    { id: 65, name: 'Cocktail', nameEn: 'Cocktail', category: 'aperitivi', price: 9, description: 'Richiedi il tuo cocktail preferito ai nostri barman.', descriptionEn: 'Ask our bartenders for your favorite cocktail.', allergens: [], available: true },
+                    { id: 66, name: 'Cocktail Premium', nameEn: 'Premium Cocktail', category: 'aperitivi', price: 10, description: 'Cocktail preparati con distillati e ingredienti di alta gamma.', descriptionEn: 'Cocktails made with premium spirits and ingredients.', allergens: [], available: true },
+                    { id: 67, name: 'Birra Pils "Maes" 0,25L', nameEn: 'Pils Beer "Maes" 0.25L', category: 'aperitivi', price: 3.50, description: 'Lager belga leggera e rinfrescante con un tocco luppolato.', descriptionEn: 'Light and refreshing Belgian lager with a hoppy touch.', allergens: ['glutine'], available: true },
+                    { id: 68, name: 'Birra Pils "Maes" 0,5L', nameEn: 'Pils Beer "Maes" 0.5L', category: 'aperitivi', price: 6, description: 'Lager belga leggera e rinfrescante con un tocco luppolato.', descriptionEn: 'Light and refreshing Belgian lager with a hoppy touch.', allergens: ['glutine'], available: true },
+                    
+                    // VINI BIANCHI
+                    { id: 69, name: 'Lugana "Tenuta Roveglia"', nameEn: 'Lugana "Tenuta Roveglia"', category: 'vini', price: 5, description: 'Fresco e sapido, con sentori di mandorla e fiori bianchi. €5 calice / €32 bottiglia', descriptionEn: 'Fresh and savory, with almond and white flowers notes. €5 glass / €32 bottle', allergens: ['solfiti'], available: true },
+                    { id: 70, name: 'Soave "Coffele"', nameEn: 'Soave "Coffele"', category: 'vini', price: 5, description: 'Vino elegante e minerale del Veneto, profumo di biancospino e camomilla. €5 calice / €32 bottiglia', descriptionEn: 'Elegant and mineral Veneto wine, hawthorn and chamomile aroma. €5 glass / €32 bottle', allergens: ['solfiti'], available: true },
+                    { id: 71, name: 'Chardonnay "Dolfo"', nameEn: 'Chardonnay "Dolfo"', category: 'vini', price: 6, description: 'Vino dal gusto morbido con sentori di mela matura e vaniglia. €6 calice / €40 bottiglia', descriptionEn: 'Soft taste wine with ripe apple and vanilla notes. €6 glass / €40 bottle', allergens: ['solfiti'], available: true },
+                    { id: 72, name: 'Ribolla Gialla "Dolfo"', nameEn: 'Ribolla Gialla "Dolfo"', category: 'vini', price: 6, description: 'Acidità vibrante, note floreali e minerali. €6 calice / €40 bottiglia', descriptionEn: 'Vibrant acidity, floral and mineral notes. €6 glass / €40 bottle', allergens: ['solfiti'], available: true },
+                    { id: 73, name: 'Falanghina "San Salvatore"', nameEn: 'Falanghina "San Salvatore"', category: 'vini', price: 5, description: 'Bianco fresco e minerale della Campania, con note di agrumi e fiori bianchi. €5 calice / €32 bottiglia', descriptionEn: 'Fresh and mineral white from Campania with citrus and white flower notes. €5 glass / €32 bottle', allergens: ['solfiti'], available: true },
+                    { id: 74, name: 'Rosé "San Salvatore Vetere"', nameEn: 'Rosé "San Salvatore Vetere"', category: 'vini', price: 5, description: 'Rosato delicato e profumato con sentori di frutti rossi estivi. €5 calice / €32 bottiglia', descriptionEn: 'Delicate and fragrant rosé with summer red fruit notes. €5 glass / €32 bottle', allergens: ['solfiti'], available: true },
+                    // VINI ROSSI
+                    { id: 75, name: 'Valpolicella Classico "Speri"', nameEn: 'Valpolicella Classico "Speri"', category: 'vini', price: 5, description: 'Rosso giovane e vivace del Veneto, note di ciliegia e pepe nero. €5 calice / €32 bottiglia', descriptionEn: 'Young and lively Veneto red, cherry and black pepper notes. €5 glass / €32 bottle', allergens: ['solfiti'], available: true },
+                    { id: 76, name: 'Valpolicella Superiore "Speri"', nameEn: 'Valpolicella Superiore "Speri"', category: 'vini', price: 6, description: 'Più strutturato e complesso del Classico, con note di frutta matura e spezie. €6 calice / €40 bottiglia', descriptionEn: 'More structured and complex, with ripe fruit and spice notes. €6 glass / €40 bottle', allergens: ['solfiti'], available: true },
+                    { id: 77, name: 'Pinot Nero "Ploner"', nameEn: 'Pinot Nero "Ploner"', category: 'vini', price: 6, description: 'Elegante e vellutato, con sentori di sottobosco e lampone. €6 calice / €40 bottiglia', descriptionEn: 'Elegant and velvety, with forest floor and raspberry notes. €6 glass / €40 bottle', allergens: ['solfiti'], available: true },
+                    { id: 78, name: 'Cabernet Sauvignon "Dolfo"', nameEn: 'Cabernet Sauvignon "Dolfo"', category: 'vini', price: 6, description: 'Corposo e robusto, con note decise di ribes nero e peperone verde. €6 calice / €40 bottiglia', descriptionEn: 'Full-bodied, with blackcurrant and green pepper notes. €6 glass / €40 bottle', allergens: ['solfiti'], available: true },
+                    { id: 79, name: 'Aglianico "San Salvatore"', nameEn: 'Aglianico "San Salvatore"', category: 'vini', price: 6, description: 'Rosso decisivo e strutturato dalla Campania, con note di ciliegia scura, prugna e spezie. €6 calice / €40 bottiglia', descriptionEn: 'Bold Campania red with dark cherry, plum and spice notes. €6 glass / €40 bottle', allergens: ['solfiti'], available: true },
+                    // BOLLICINE
+                    { id: 80, name: 'Prosecco "Follador"', nameEn: 'Prosecco "Follador"', category: 'vini', price: 5, description: 'Frizzante e aromatico, con sentori di mela e pera. €5 calice / €32 bottiglia', descriptionEn: 'Sparkling and aromatic, with apple and pear notes. €5 glass / €32 bottle', allergens: ['solfiti'], available: true },
+                    { id: 81, name: 'Franciacorta Satèn "Berlucchi"', nameEn: 'Franciacorta Satèn "Berlucchi"', category: 'vini', price: 7, description: 'Bollicina elegante e cremosa, con perlage fine. €7 calice / €45 bottiglia', descriptionEn: 'Elegant and creamy bubbles with fine perlage. €7 glass / €45 bottle', allergens: ['solfiti'], available: true },
+                    { id: 82, name: 'Vulcano 800 Rosé "Terra dei Re"', nameEn: 'Vulcano 800 Rosé "Terra dei Re"', category: 'vini', price: 7, description: 'Spumante rosé campano, fresco e fruttato. €7 calice / €45 bottiglia', descriptionEn: 'Campania rosé sparkling, fresh and fruity. €7 glass / €45 bottle', allergens: ['solfiti'], available: true },
+                    { id: 83, name: 'Trento DOC "Altemasi"', nameEn: 'Trento DOC "Altemasi"', category: 'vini', price: 7, description: 'Metodo classico trentino, elegante e minerale. €7 calice / €45 bottiglia', descriptionEn: 'Classic method from Trentino, elegant and mineral. €7 glass / €45 bottle', allergens: ['solfiti'], available: true },
+                    { id: 84, name: 'Champagne Diebolt Vallois Blanc de Blancs', nameEn: 'Champagne Diebolt Vallois Blanc de Blancs', category: 'vini', price: 10, description: 'Elegante Blanc de Blancs con note di agrumi freschi e mineralità. €10 calice / €65 bottiglia', descriptionEn: 'Elegant Blanc de Blancs with fresh citrus and mineral notes. €10 glass / €65 bottle', allergens: ['solfiti'], available: true },
+                    { id: 85, name: 'Champagne Drappier Brut Nature', nameEn: 'Champagne Drappier Brut Nature', category: 'vini', price: 80, description: 'Champagne senza dosaggio, puro e autentico con carattere deciso. Solo bottiglia.', descriptionEn: 'Zero dosage Champagne, pure and authentic with bold character. Bottle only.', allergens: ['solfiti'], available: true },
+                    { id: 86, name: 'Bollinger Special Cuvée', nameEn: 'Bollinger Special Cuvée', category: 'vini', price: 120, description: 'Champagne iconico, complesso e raffinato con note di frutta matura e spezie. Solo bottiglia.', descriptionEn: 'Iconic Champagne, complex and refined with ripe fruit and spice notes. Bottle only.', allergens: ['solfiti'], available: true },
+                    { id: 87, name: 'Bollinger La Grande Année', nameEn: 'Bollinger La Grande Année', category: 'vini', price: 260, description: 'Cuvée prestigiosa millesimata, elegante e di grande finezza. Solo bottiglia.', descriptionEn: 'Prestigious vintage cuvée, elegant with great finesse. Bottle only.', allergens: ['solfiti'], available: true },
+                    { id: 88, name: 'Dom Pérignon Vintage 2013', nameEn: 'Dom Pérignon Vintage 2013', category: 'vini', price: 380, description: 'Champagne leggendario, sublime espressione di eleganza e complessità. Solo bottiglia.', descriptionEn: 'Legendary Champagne, sublime expression of elegance and complexity. Bottle only.', allergens: ['solfiti'], available: true }
                 ];
                 saveMenuToStorage();
             }
@@ -2282,9 +2384,12 @@ Ci scusiamo per il disagio.`;
                 uova: '🥚',
                 pesce: '🐟',
                 crostacei: '🦐',
+                molluschi: '🐚',
                 fruttasecca: '🥜',
                 sedano: '🥬',
-                soia: '🫘'
+                soia: '🫘',
+                senape: '🟡',
+                solfiti: '🍷'
             };
             
             grid.innerHTML = filtered.map(item => `

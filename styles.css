@@ -2314,6 +2314,10 @@ h1, h2, h3, h4, h5, h6 {
     background-clip: text;
 }
 
+.rating-stars .star.partial {
+    color: rgba(251, 188, 4, 0.3);
+}
+
 .rating-score {
     font-size: 32px;
     font-weight: 700;

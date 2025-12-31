@@ -1782,58 +1782,58 @@ function formatDateDisplay(dateStr) {
 
 const sampleReviews = [
     {
-        name: 'Marco Rossi',
-        avatar: 'MR',
+        name: 'Moreno Berterini',
+        avatar: 'MB',
         rating: 5,
-        date: '2 settimane fa',
-        dateEn: '2 weeks ago',
-        text: 'Ambiente elegante e raffinato, cibo eccezionale. Il filetto di manzo era cotto alla perfezione. Servizio impeccabile. Torneremo sicuramente!',
-        textEn: 'Elegant and refined atmosphere, exceptional food. The beef fillet was cooked to perfection. Impeccable service. We will definitely come back!'
+        date: 'Recensione recente',
+        dateEn: 'Recent review',
+        text: 'Skalette Bistrò a Verona è un locale che conquista immediatamente grazie alla sua atmosfera giovane e accogliente. Abbiamo avuto la fortuna di trovarlo per caso mentre passeggiavamo per le vie della città e, devo dire, è stata una bellissima scoperta. Il cibo è davvero delizioso; ogni piatto è preparato con cura e attenzione ai dettagli. Il personale merita una menzione speciale: sono estremamente cordiali e attenti. Consigliatissimo!',
+        textEn: 'Skalette Bistrò in Verona is a place that immediately wins you over with its young and welcoming atmosphere. We were lucky to find it by chance while walking through the city streets, and I must say, it was a wonderful discovery. The food is truly delicious; every dish is prepared with care and attention to detail. The staff deserves a special mention: they are extremely friendly and attentive. Highly recommended!'
     },
     {
-        name: 'Giulia Bianchi',
-        avatar: 'GB',
+        name: 'Moisili Matzi',
+        avatar: 'MM',
         rating: 5,
-        date: '3 settimane fa',
-        dateEn: '3 weeks ago',
-        text: 'Una vera esperienza gastronomica. Il risotto allo zafferano è il migliore che abbia mai mangiato. Personale gentilissimo e attento.',
-        textEn: 'A true gastronomic experience. The saffron risotto is the best I have ever had. Very kind and attentive staff.'
+        date: 'Recensione recente',
+        dateEn: 'Recent review',
+        text: 'Abbiamo fatto un tour guidato a Verona. Il vero momento clou per noi è stata la visita allo Skalette Bistro. Qui si può gustare la deliziosa cucina italiana. Un piatto di tapas, cappuccino, tiramisù, Aperol e un personale cordiale e simpatico. Ecco perché vorreste tornare in Italia.',
+        textEn: 'We did a guided tour in Verona. The real highlight for us was the visit to Skalette Bistro. Here you can enjoy delicious Italian cuisine. A plate of tapas, cappuccino, tiramisu, Aperol and friendly, nice staff. This is why you would want to come back to Italy.'
     },
     {
-        name: 'Alessandro V.',
-        avatar: 'AV',
+        name: 'Maria Fynn',
+        avatar: 'MF',
         rating: 5,
-        date: '1 mese fa',
-        dateEn: '1 month ago',
-        text: 'Abbiamo festeggiato il nostro anniversario qui. Location romantica, menu degustazione straordinario. Il tiramisù finale è stato il tocco perfetto.',
-        textEn: 'We celebrated our anniversary here. Romantic location, extraordinary tasting menu. The final tiramisu was the perfect touch.'
+        date: 'Recensione recente',
+        dateEn: 'Recent review',
+        text: "L'atmosfera è curata nei minimi dettagli, con la musica giusta. Il servizio è stato veloce e personalizzato. Il cibo era delizioso e appetitoso!!! Consiglio vivamente questa esperienza culinaria.",
+        textEn: 'The atmosphere is carefully crafted down to the smallest detail, with the right music. The service was fast and personalized. The food was delicious and appetizing!!! I highly recommend this culinary experience.'
     },
     {
-        name: 'Francesca Marini',
-        avatar: 'FM',
+        name: 'I S',
+        avatar: 'IS',
+        rating: 5,
+        date: 'Recensione recente',
+        dateEn: 'Recent review',
+        text: 'Un posticino delizioso per un drink in tutta tranquillità. Lontano dal caos e dalla confusione. I prezzi sono davvero ragionevoli per Verona. La cameriera è stata gentilissima!',
+        textEn: 'A delightful little spot for a drink in peace and quiet. Away from the chaos and confusion. Prices are really reasonable for Verona. The waitress was very kind!'
+    },
+    {
+        name: 'Jhonatas Silva',
+        avatar: 'JS',
         rating: 4,
-        date: '1 mese fa',
-        dateEn: '1 month ago',
-        text: 'Ottima cucina e bella atmosfera. I prezzi sono un po alti ma la qualità è innegabile. Consiglio il branzino, delizioso!',
-        textEn: 'Excellent cuisine and nice atmosphere. Prices are a bit high but the quality is undeniable. I recommend the sea bass, delicious!'
+        date: 'Recensione recente',
+        dateEn: 'Recent review',
+        text: 'Un posto davvero piacevole dove sedersi e chiacchierare con gli amici. Temperatura piacevole e drink davvero gustosi.',
+        textEn: 'A really pleasant place to sit and chat with friends. Nice temperature and really tasty drinks.'
     },
     {
-        name: 'Roberto Ferri',
-        avatar: 'RF',
-        rating: 5,
-        date: '2 mesi fa',
-        dateEn: '2 months ago',
-        text: 'Locale stupendo nel cuore di Verona. Abbiamo prenotato online, tutto facilissimo. Cena romantica perfetta, torneremo presto!',
-        textEn: 'Beautiful place in the heart of Verona. We booked online, very easy. Perfect romantic dinner, we will be back soon!'
-    },
-    {
-        name: 'Elena Conti',
-        avatar: 'EC',
-        rating: 5,
-        date: '2 mesi fa',
-        dateEn: '2 months ago',
-        text: 'Il miglior ristorante dove sia mai stata a Verona. Ogni piatto è un opera d arte. Il sommelier ci ha consigliato un vino perfetto.',
-        textEn: 'The best restaurant I have ever been to in Verona. Every dish is a work of art. The sommelier recommended a perfect wine.'
+        name: 'David Noirfalise',
+        avatar: 'DN',
+        rating: 4,
+        date: 'Recensione recente',
+        dateEn: 'Recent review',
+        text: 'Ottima accoglienza durante la nostra visita. Ottimo servizio. Grazie.',
+        textEn: 'Great welcome during our visit. Excellent service. Thank you.'
     }
 ];
 
