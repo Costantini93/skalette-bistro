@@ -1477,6 +1477,7 @@
         
         const ADMIN_PASSWORD = 'skalette2024';
         let allReservations = [];
+        let closedDates = {};
         
         // LOGIN
         window.attemptLogin = function() {
@@ -2084,7 +2085,7 @@ Ci scusiamo per il disagio.`;
                 const isClosed = closedDates && closedDates[dateStr];
                 
                 // Count reservations for this day
-                const dayReservations = reservations.filter(r => r.date === dateStr);
+                const dayReservations = allReservations.filter(r => r.date === dateStr);
                 const pendingCount = dayReservations.filter(r => r.status === 'pending').length;
                 const confirmedCount = dayReservations.filter(r => r.status === 'confirmed').length;
                 const totalCount = dayReservations.length;
@@ -2156,7 +2157,7 @@ Ci scusiamo per il disagio.`;
             const options = { weekday: 'long', day: 'numeric', month: 'long' };
             titleEl.textContent = `Prenotazioni - ${date.toLocaleDateString('it-IT', options)}`;
             
-            const dayReservations = reservations
+            const dayReservations = allReservations
                 .filter(r => r.date === dateStr)
                 .sort((a, b) => a.time.localeCompare(b.time));
             
