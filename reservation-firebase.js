@@ -158,14 +158,28 @@ function initBookingSystem() {
     dateInput.addEventListener('change', async (e) => {
         bookingData.date = e.target.value;
         
-        // Check if date is closed
-        const isClosed = await isDateClosed(bookingData.date);
-        if (isClosed) {
-            const currentLang = localStorage.getItem('skalette_language') || 'it';
-            const message = currentLang === 'en' 
-                ? `Sorry, we are closed on this date (${isClosed.reason || 'Closed'}). Please select another date.`
-                : `Siamo chiusi in questa data (${isClosed.reason || 'Chiuso'}). Seleziona un\'altra data.`;
-            alert(message);
+        // Check if date is closed immediately when selected
+        const closureInfo = await isDateClosed(bookingData.date);
+        if (closureInfo) {
+            const isItalian = document.documentElement.lang === 'it';
+            const formattedDate = formatDate(bookingData.date);
+            
+            if (isItalian) {
+                showClosedDateModal(
+                    '🔒 Locale Chiuso',
+                    `Siamo spiacenti, il giorno <strong>${formattedDate}</strong> il locale è chiuso.`,
+                    `<strong>Motivo:</strong> ${closureInfo.reason}`,
+                    'Seleziona un\'altra data per effettuare la prenotazione.'
+                );
+            } else {
+                showClosedDateModal(
+                    '🔒 Restaurant Closed',
+                    `We're sorry, on <strong>${formattedDate}</strong> the restaurant is closed.`,
+                    `<strong>Reason:</strong> ${closureInfo.reason}`,
+                    'Please select a different date to make a reservation.'
+                );
+            }
+            
             // Reset to today
             const today = new Date().toISOString().split('T')[0];
             dateInput.value = today;
@@ -192,9 +206,13 @@ function initBookingSystem() {
     const viewTablesBtn = document.getElementById('btn-view-tables');
     console.log('🔘 btn-view-tables element:', viewTablesBtn);
     if (viewTablesBtn) {
-        viewTablesBtn.addEventListener('click', () => {
+        viewTablesBtn.addEventListener('click', async () => {
             console.log('👆 View tables button clicked!');
-            showStep2();
+            try {
+                await showStep2();
+            } catch (err) {
+                console.error('❌ Error in showStep2:', err);
+            }
         });
         console.log('✅ Click listener added to btn-view-tables');
     } else {
