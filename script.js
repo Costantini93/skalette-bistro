@@ -414,69 +414,65 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===================================
-    // SCROLL ANIMATIONS - Mobile Friendly
+    // SCROLL ANIMATIONS - Simple & Reliable
     // ===================================
-    function initScrollAnimations() {
-        // Check if IntersectionObserver is supported
-        if (!('IntersectionObserver' in window)) {
-            // Fallback: show all elements immediately
-            document.querySelectorAll('.scroll-animate').forEach(el => {
-                el.classList.add('animate');
-            });
-            return;
-        }
-
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px 0px -50px 0px', // Trigger slightly before element is fully visible
-            threshold: 0.05 // Lower threshold for mobile
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        // Add scroll-animate class to elements and observe them
-        const animateSelectors = [
-            '.about-content',
-            '.about-images', 
-            '.section-header',
-            '.menu-item',
-            '.gallery-item',
-            '.feature-item',
-            '.events-content',
-            '.reservation-content'
-        ];
-
-        animateSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach((el, index) => {
-                el.classList.add('scroll-animate');
-                // Add stagger delay for items in grids
-                if (selector.includes('-item')) {
-                    el.style.transitionDelay = (index % 6) * 0.1 + 's';
-                }
-                observer.observe(el);
-            });
+    (function initScrollAnimations() {
+        // Elements to animate
+        const selectors = '.about-content, .about-images, .section-header, .menu-item, .gallery-item, .feature-item, .events-content, .reservation-content, .contact-info';
+        
+        const elements = document.querySelectorAll(selectors);
+        
+        if (elements.length === 0) return;
+        
+        // Add scroll-animate class to all elements
+        elements.forEach((el, index) => {
+            el.classList.add('scroll-animate');
+            // Add delay class for stagger effect (cycle 1-5)
+            const delayClass = 'delay-' + ((index % 5) + 1);
+            el.classList.add(delayClass);
         });
 
-        // Trigger animation for elements already in view on page load
-        setTimeout(() => {
-            document.querySelectorAll('.scroll-animate').forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    el.classList.add('animate');
+        // Function to check if element is in viewport
+        function isInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            // Element is considered in view if its top is within 85% of window height
+            return rect.top <= windowHeight * 0.85;
+        }
+
+        // Function to handle scroll and show elements
+        function handleScroll() {
+            elements.forEach(el => {
+                if (isInViewport(el) && !el.classList.contains('visible')) {
+                    el.classList.add('visible');
                 }
             });
-        }, 100);
-    }
+        }
 
-    // Initialize scroll animations
-    initScrollAnimations();
+        // Use requestAnimationFrame for smooth performance
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        // Listen to scroll events
+        window.addEventListener('scroll', onScroll, { passive: true });
+        
+        // Also trigger on resize
+        window.addEventListener('resize', onScroll, { passive: true });
+        
+        // Initial check after DOM is ready - check multiple times for mobile
+        handleScroll();
+        setTimeout(handleScroll, 100);
+        setTimeout(handleScroll, 500);
+        setTimeout(handleScroll, 1000);
+    })();
 
     // ===================================
     // RESERVATION FORM

@@ -195,24 +195,33 @@
     }
 }
 
-/* Scroll Animation Classes */
+/* Scroll Animation Classes - Simple and Reliable */
 .scroll-animate {
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
 }
 
-.scroll-animate.animate {
-    opacity: 1;
-    transform: translateY(0);
+.scroll-animate.visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
+
+/* Stagger delays for grid items */
+.scroll-animate.delay-1 { transition-delay: 0.1s; }
+.scroll-animate.delay-2 { transition-delay: 0.2s; }
+.scroll-animate.delay-3 { transition-delay: 0.3s; }
+.scroll-animate.delay-4 { transition-delay: 0.4s; }
+.scroll-animate.delay-5 { transition-delay: 0.5s; }
 
 /* Disable animations for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
     .scroll-animate {
-        opacity: 1;
-        transform: none;
-        transition: none;
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
     }
 }
 
