@@ -718,7 +718,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
+            // Use relative path for GitHub Pages compatibility
+            const swPath = window.location.hostname === 'localhost' || window.location.protocol === 'file:' 
+                ? '/service-worker.js' 
+                : './service-worker.js';
+            navigator.serviceWorker.register(swPath)
                 .then((registration) => {
                     console.log('✅ Service Worker registered:', registration.scope);
                 })
