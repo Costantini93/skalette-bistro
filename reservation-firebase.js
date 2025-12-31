@@ -137,7 +137,6 @@ if (document.readyState === 'loading') {
 }
 
 function initBookingSystem() {
-     called');
     const dateInput = document.getElementById('booking-date');
     const timeSelect = document.getElementById('booking-time');
     const guestsSelect = document.getElementById('booking-guests');
@@ -228,8 +227,6 @@ function initBookingSystem() {
     
     // Initialize guests select
     bookingData.guests = parseInt(guestsSelect.value) || 2;
-    
-     completed');
 }
 
 // ===================== TIME SLOTS =====================
@@ -302,8 +299,6 @@ function showStep1() {
 }
 
 async function showStep2() {
-     called, bookingData:', bookingData);
-    
     if (!bookingData.date || !bookingData.time) {
         // Use custom modal instead of alert (can't be blocked)
         showClosedDateModal(
