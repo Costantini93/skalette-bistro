@@ -577,10 +577,18 @@ async function handleBookingSubmit(e) {
     const result = await createReservation(formData);
     
     if (result.success) {
+        // Haptic feedback on mobile
+        if ('vibrate' in navigator) {
+            navigator.vibrate([100, 50, 100, 50, 200]); // Success pattern
+        }
+        
         // Show success
         document.getElementById('booking-step-3').style.display = 'none';
         document.getElementById('booking-success').style.display = 'block';
         document.getElementById('booking-id').textContent = result.id;
+        
+        // Confetti animation
+        showConfetti();
         
         // Send WhatsApp notification
         sendWhatsAppNotification(formData, result.id);
@@ -591,9 +599,41 @@ async function handleBookingSubmit(e) {
             unsubscribeAvailability = null;
         }
     } else {
+        // Error haptic
+        if ('vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]); // Error pattern
+        }
         alert('Errore durante la prenotazione. Riprova.');
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
+    }
+}
+
+// Confetti animation for successful booking
+function showConfetti() {
+    const colors = ['#c9a961', '#d4b87a', '#ffffff', '#0a1628'];
+    const confettiCount = 100;
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.cssText = `
+            position: fixed;
+            width: ${Math.random() * 10 + 5}px;
+            height: ${Math.random() * 10 + 5}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            left: ${Math.random() * 100}vw;
+            top: -20px;
+            opacity: ${Math.random() + 0.5};
+            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+            z-index: 100000;
+            pointer-events: none;
+            animation: confetti-fall ${Math.random() * 2 + 2}s linear forwards;
+        `;
+        document.body.appendChild(confetti);
+        
+        // Remove after animation
+        setTimeout(() => confetti.remove(), 4000);
     }
 }
 

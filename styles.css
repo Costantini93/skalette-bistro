@@ -2270,6 +2270,214 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===================================
+   GOOGLE REVIEWS SECTION
+   =================================== */
+.reviews-section {
+    padding: 80px 0;
+    background: linear-gradient(180deg, var(--navy-light) 0%, var(--navy-dark) 100%);
+}
+
+.reviews-section .section-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.reviews-section .section-subtitle {
+    text-align: center;
+    color: var(--grey-light);
+    margin-bottom: 40px;
+}
+
+.google-rating-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 3px;
+}
+
+.rating-stars .star {
+    width: 24px;
+    height: 24px;
+    color: #fbbc04;
+}
+
+.rating-stars .star.half {
+    background: linear-gradient(90deg, #fbbc04 50%, #4a4a4a 50%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.rating-score {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.rating-count {
+    color: var(--grey-light);
+    font-size: 14px;
+}
+
+.google-logo {
+    width: 24px;
+    height: 24px;
+}
+
+.reviews-slider {
+    position: relative;
+    overflow: hidden;
+    margin: 0 -20px;
+    padding: 20px;
+}
+
+.reviews-track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.5s ease;
+}
+
+.review-card {
+    flex: 0 0 calc(33.333% - 14px);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201, 169, 97, 0.15);
+    border-radius: 16px;
+    padding: 25px;
+    transition: all 0.3s;
+}
+
+.review-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(201, 169, 97, 0.1);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.review-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy-dark);
+}
+
+.review-meta {
+    flex: 1;
+}
+
+.review-name {
+    font-weight: 600;
+    color: var(--white);
+    font-size: 15px;
+}
+
+.review-date {
+    font-size: 12px;
+    color: var(--grey-light);
+}
+
+.review-stars {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 12px;
+}
+
+.review-stars svg {
+    width: 16px;
+    height: 16px;
+    color: #fbbc04;
+}
+
+.review-text {
+    color: var(--grey-light);
+    font-size: 14px;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.reviews-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.review-nav-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.review-nav-btn:hover {
+    background: var(--gold);
+    color: var(--navy-dark);
+}
+
+.review-nav-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.write-review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 40px auto 0;
+    display: flex;
+    width: fit-content;
+}
+
+.write-review-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+@media (max-width: 1024px) {
+    .review-card {
+        flex: 0 0 calc(50% - 10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .review-card {
+        flex: 0 0 100%;
+    }
+    
+    .rating-score {
+        font-size: 24px;
+    }
+}
+
+/* ===================================
    CONTACT SECTION
    =================================== */
 .contact {
@@ -3846,4 +4054,20 @@ h1, h2, h3, h4, h5, h6 {
 @keyframes pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
+}
+
+/* Confetti Animation */
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.confetti {
+    animation: confetti-fall linear forwards;
 }

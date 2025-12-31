@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Skalette Bistro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .offline-container {
+            text-align: center;
+            max-width: 500px;
+        }
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            color: #c9a961;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+        }
+        .contact-info {
+            background: rgba(201, 169, 97, 0.1);
+            border: 1px solid rgba(201, 169, 97, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .contact-info h3 {
+            color: #c9a961;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .contact-info p {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .contact-info a {
+            color: #c9a961;
+            text-decoration: none;
+        }
+        .retry-btn {
+            background: linear-gradient(135deg, #c9a961, #d4b87a);
+            color: #0a1628;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .retry-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(201, 169, 97, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>Sei Offline</h1>
+        <p>Sembra che tu non sia connesso a internet. Alcune funzionalità potrebbero non essere disponibili.</p>
+        
+        <button class="retry-btn" onclick="window.location.reload()">Riprova</button>
+        
+        <div class="contact-info">
+            <h3>📞 Contattaci Direttamente</h3>
+            <p><strong>Telefono:</strong> <a href="tel:+390123456789">+39 012 345 6789</a></p>
+            <p><strong>Indirizzo:</strong> Via Roma 123, Città</p>
+            <p><strong>Orari:</strong> Mar-Dom 12:00-15:00 / 19:00-23:00</p>
+        </div>
+    </div>
+</body>
+</html>

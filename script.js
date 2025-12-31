@@ -714,6 +714,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ===================================
+    // REGISTER SERVICE WORKER (PWA)
+    // ===================================
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('✅ Service Worker registered:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('❌ Service Worker registration failed:', error);
+                });
+        });
+    }
+
+    // ===================================
+    // PWA INSTALL PROMPT
+    // ===================================
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Show install button/banner if desired
+        console.log('📱 PWA install available');
+    });
+
+    // ===================================
     // INITIALIZE
     // ===================================
     console.log('Skalette Bistro website initialized with enhanced effects');
@@ -1749,3 +1775,126 @@ function formatDateDisplay(dateStr) {
     const lang = localStorage.getItem('skalette_language') || 'it';
     return date.toLocaleDateString(lang === 'en' ? 'en-US' : 'it-IT', options);
 }
+
+// ===================================
+// GOOGLE REVIEWS WIDGET
+// ===================================
+
+const sampleReviews = [
+    {
+        name: 'Marco Rossi',
+        avatar: 'MR',
+        rating: 5,
+        date: '2 settimane fa',
+        dateEn: '2 weeks ago',
+        text: 'Ambiente elegante e raffinato, cibo eccezionale. Il filetto di manzo era cotto alla perfezione. Servizio impeccabile. Torneremo sicuramente!',
+        textEn: 'Elegant and refined atmosphere, exceptional food. The beef fillet was cooked to perfection. Impeccable service. We will definitely come back!'
+    },
+    {
+        name: 'Giulia Bianchi',
+        avatar: 'GB',
+        rating: 5,
+        date: '3 settimane fa',
+        dateEn: '3 weeks ago',
+        text: 'Una vera esperienza gastronomica. Il risotto allo zafferano è il migliore che abbia mai mangiato. Personale gentilissimo e attento.',
+        textEn: 'A true gastronomic experience. The saffron risotto is the best I have ever had. Very kind and attentive staff.'
+    },
+    {
+        name: 'Alessandro V.',
+        avatar: 'AV',
+        rating: 5,
+        date: '1 mese fa',
+        dateEn: '1 month ago',
+        text: 'Abbiamo festeggiato il nostro anniversario qui. Location romantica, menu degustazione straordinario. Il tiramisù finale è stato il tocco perfetto.',
+        textEn: 'We celebrated our anniversary here. Romantic location, extraordinary tasting menu. The final tiramisu was the perfect touch.'
+    },
+    {
+        name: 'Francesca Marini',
+        avatar: 'FM',
+        rating: 4,
+        date: '1 mese fa',
+        dateEn: '1 month ago',
+        text: 'Ottima cucina e bella atmosfera. I prezzi sono un po alti ma la qualità è innegabile. Consiglio il branzino, delizioso!',
+        textEn: 'Excellent cuisine and nice atmosphere. Prices are a bit high but the quality is undeniable. I recommend the sea bass, delicious!'
+    },
+    {
+        name: 'Roberto Ferri',
+        avatar: 'RF',
+        rating: 5,
+        date: '2 mesi fa',
+        dateEn: '2 months ago',
+        text: 'Locale stupendo nel cuore di Verona. Abbiamo prenotato online, tutto facilissimo. Cena romantica perfetta, torneremo presto!',
+        textEn: 'Beautiful place in the heart of Verona. We booked online, very easy. Perfect romantic dinner, we will be back soon!'
+    },
+    {
+        name: 'Elena Conti',
+        avatar: 'EC',
+        rating: 5,
+        date: '2 mesi fa',
+        dateEn: '2 months ago',
+        text: 'Il miglior ristorante dove sia mai stata a Verona. Ogni piatto è un opera d arte. Il sommelier ci ha consigliato un vino perfetto.',
+        textEn: 'The best restaurant I have ever been to in Verona. Every dish is a work of art. The sommelier recommended a perfect wine.'
+    }
+];
+
+let reviewsPosition = 0;
+
+function initReviews() {
+    const track = document.getElementById('reviews-track');
+    if (!track) return;
+    
+    const lang = localStorage.getItem('skalette_language') || 'it';
+    
+    track.innerHTML = sampleReviews.map(review => `
+        <div class="review-card">
+            <div class="review-header">
+                <div class="review-avatar">${review.avatar}</div>
+                <div class="review-meta">
+                    <div class="review-name">${review.name}</div>
+                    <div class="review-date">${lang === 'en' ? review.dateEn : review.date}</div>
+                </div>
+            </div>
+            <div class="review-stars">
+                ${Array(review.rating).fill('<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>').join('')}
+            </div>
+            <div class="review-text">${lang === 'en' ? review.textEn : review.text}</div>
+        </div>
+    `).join('');
+}
+
+function moveReviews(direction) {
+    const track = document.getElementById('reviews-track');
+    if (!track) return;
+    
+    const cardWidth = track.querySelector('.review-card')?.offsetWidth || 0;
+    const gap = 20;
+    const maxPosition = Math.max(0, sampleReviews.length - 3);
+    
+    reviewsPosition += direction;
+    reviewsPosition = Math.max(0, Math.min(reviewsPosition, maxPosition));
+    
+    track.style.transform = `translateX(-${reviewsPosition * (cardWidth + gap)}px)`;
+}
+
+// Auto-scroll reviews
+let reviewsAutoScroll;
+function startReviewsAutoScroll() {
+    reviewsAutoScroll = setInterval(() => {
+        if (reviewsPosition >= sampleReviews.length - 3) {
+            reviewsPosition = -1;
+        }
+        moveReviews(1);
+    }, 5000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initReviews();
+    startReviewsAutoScroll();
+    
+    // Pause auto-scroll on hover
+    const slider = document.querySelector('.reviews-slider');
+    if (slider) {
+        slider.addEventListener('mouseenter', () => clearInterval(reviewsAutoScroll));
+        slider.addEventListener('mouseleave', startReviewsAutoScroll);
+    }
+});

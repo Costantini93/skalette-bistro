@@ -3,9 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skalette Bistro | Ristorante Elegante</title>
+    <title>Skalette Bistro | Ristorante Elegante - Cucina Italiana Raffinata</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Skalette Bistro - Ristorante di cucina italiana raffinata. Prenota il tuo tavolo online. Atmosfera elegante, piatti gourmet e servizio impeccabile.">
+    <meta name="keywords" content="ristorante, cucina italiana, bistro, gourmet, prenotazione tavolo, ristorante elegante, cena romantica">
+    <meta name="author" content="Skalette Bistro">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://costantini93.github.io/skalette-bistro/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="restaurant">
+    <meta property="og:url" content="https://costantini93.github.io/skalette-bistro/">
+    <meta property="og:title" content="Skalette Bistro | Ristorante Elegante">
+    <meta property="og:description" content="Cucina italiana raffinata in un'atmosfera elegante. Prenota il tuo tavolo online.">
+    <meta property="og:image" content="https://costantini93.github.io/skalette-bistro/logo.png">
+    <meta property="og:locale" content="it_IT">
+    <meta property="og:locale:alternate" content="en_US">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Skalette Bistro | Ristorante Elegante">
+    <meta name="twitter:description" content="Cucina italiana raffinata. Prenota il tuo tavolo online.">
+    <meta name="twitter:image" content="https://costantini93.github.io/skalette-bistro/logo.png">
+    
+    <!-- Schema.org Restaurant Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "Skalette Bistro",
+        "image": "https://costantini93.github.io/skalette-bistro/logo.png",
+        "url": "https://costantini93.github.io/skalette-bistro/",
+        "telephone": "+39 012 345 6789",
+        "priceRange": "€€€",
+        "servesCuisine": "Italian",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Via Roma 123",
+            "addressLocality": "Città",
+            "addressCountry": "IT"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 41.9028,
+            "longitude": 12.4964
+        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "12:00",
+                "closes": "15:00"
+            },
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "19:00",
+                "closes": "23:00"
+            }
+        ],
+        "acceptsReservations": "True",
+        "hasMenu": "https://costantini93.github.io/skalette-bistro/#menu"
+    }
+    </script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#c9a961">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Skalette Bistro">
+    
+    <!-- Favicon & Icons -->
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -28,6 +103,7 @@
         </div>
     </div>
 
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -48,6 +124,7 @@
                 <li><a href="#about" class="nav-link" data-i18n="nav.about">Chi Siamo</a></li>
                 <li><a href="#menu" class="nav-link">Menu</a></li>
                 <li><a href="#gallery" class="nav-link" data-i18n="nav.gallery">Galleria</a></li>
+                <li><a href="#reviews" class="nav-link" data-i18n="nav.reviews">Recensioni</a></li>
                 <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contatti</a></li>
                 <li><a href="#reservation" class="nav-link btn-reserve" data-i18n="nav.reserve">Prenota</a></li>
                 <!-- Mobile Language Toggle -->
@@ -1641,6 +1718,47 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Google Reviews Section -->
+    <section id="reviews" class="reviews-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="reviews.title">Cosa Dicono i Nostri Ospiti</h2>
+            <p class="section-subtitle" data-i18n="reviews.subtitle">Le recensioni dei clienti su Google</p>
+            
+            <div class="google-rating-summary">
+                <div class="rating-stars">
+                    <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="star half" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <span class="rating-score">4.7</span>
+                <span class="rating-count" data-i18n="reviews.based">su 127 recensioni</span>
+                <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google" class="google-logo">
+            </div>
+            
+            <div class="reviews-slider">
+                <div class="reviews-track" id="reviews-track">
+                    <!-- Reviews will be populated by JS -->
+                </div>
+            </div>
+            
+            <div class="reviews-nav">
+                <button class="review-nav-btn prev" onclick="moveReviews(-1)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="review-nav-btn next" onclick="moveReviews(1)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            
+            <a href="https://g.page/r/skalette-bistro/review" target="_blank" class="btn btn-gold write-review-btn" data-i18n="reviews.write">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Lascia una Recensione
+            </a>
         </div>
     </section>
 
