@@ -83,6 +83,8 @@ async function isDateClosed(date) {
 
 // Function to show closed date modal
 function showClosedDateModal(title, message, reason, suggestion) {
+    console.log('🔔 showClosedDateModal called:', title);
+    
     // Remove existing modal if any
     const existingModal = document.getElementById('closed-date-modal');
     if (existingModal) existingModal.remove();
@@ -95,17 +97,23 @@ function showClosedDateModal(title, message, reason, suggestion) {
                 <div class="closed-modal-icon">🔒</div>
                 <h3 class="closed-modal-title">${title}</h3>
                 <p class="closed-modal-message">${message}</p>
-                <p class="closed-modal-reason">${reason}</p>
-                <p class="closed-modal-suggestion">${suggestion}</p>
-                <button class="closed-modal-btn" onclick="closeClosedDateModal()">OK</button>
+                ${reason ? `<p class="closed-modal-reason">${reason}</p>` : ''}
+                ${suggestion ? `<p class="closed-modal-suggestion">${suggestion}</p>` : ''}
+                <button class="closed-modal-btn" id="close-modal-btn">OK</button>
             </div>
         </div>
     `;
     document.body.appendChild(modal);
+    console.log('✅ Modal appended to body');
+    
+    // Close button click
+    document.getElementById('close-modal-btn').addEventListener('click', () => {
+        modal.remove();
+    });
     
     // Close on overlay click
     modal.querySelector('.closed-modal-overlay').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) closeClosedDateModal();
+        if (e.target === e.currentTarget) modal.remove();
     });
 }
 
