@@ -2344,19 +2344,39 @@ h1, h2, h3, h4, h5, h6 {
 
 .reviews-slider {
     position: relative;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     margin: 0 -20px;
     padding: 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) rgba(255,255,255,0.1);
+}
+
+.reviews-slider::-webkit-scrollbar {
+    height: 6px;
+}
+
+.reviews-slider::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+}
+
+.reviews-slider::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 3px;
 }
 
 .reviews-track {
     display: flex;
     gap: 20px;
-    transition: transform 0.5s ease;
+    width: max-content;
+    padding-bottom: 10px;
 }
 
 .review-card {
-    flex: 0 0 calc(33.333% - 14px);
+    flex: 0 0 320px;
+    min-width: 320px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(201, 169, 97, 0.15);
     border-radius: 16px;
