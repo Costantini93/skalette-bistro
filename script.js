@@ -965,9 +965,10 @@ function initBookingSystem() {
         mealSelect.addEventListener('change', updateTimeSlots);
     }
     
-    // View tables button
+    // View tables button - Only add listener if NOT using Firebase module (file:// protocol)
+    // On HTTP/HTTPS, reservation-firebase.js handles this with closure date checking
     const viewTablesBtn = document.getElementById('btn-view-tables');
-    if (viewTablesBtn) {
+    if (viewTablesBtn && window.location.protocol === 'file:') {
         viewTablesBtn.addEventListener('click', showFloorPlan);
     }
     
