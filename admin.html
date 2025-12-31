@@ -1459,10 +1459,19 @@ Ci scusiamo per il disagio.`;
             try {
                 const docPath = `closedDates/config`;
                 const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/${docPath}`;
-                const response = await fetch(url, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
+                
+                // Build the payload - handle empty arrays properly
+                let payload;
+                if (closures.length === 0) {
+                    payload = {
+                        fields: {
+                            dates: {
+                                arrayValue: { values: [] }
+                            }
+                        }
+                    };
+                } else {
+                    payload = {
                         fields: {
                             dates: {
                                 arrayValue: {
@@ -1477,16 +1486,25 @@ Ci scusiamo per il disagio.`;
                                 }
                             }
                         }
-                    })
+                    };
+                }
+                
+                console.log('📤 Sending to Firebase:', JSON.stringify(payload, null, 2));
+                
+                const response = await fetch(url, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
                 
                 if (response.ok) {
-                    console.log('✅ Chiusure sincronizzate su Firebase:', closures);
-                    showNotification('Chiusure salvate su Firebase', 'success');
+                    const data = await response.json();
+                    console.log('✅ Chiusure sincronizzate su Firebase:', data);
+                    showNotification(closures.length === 0 ? 'Tutte le chiusure rimosse' : 'Chiusure salvate su Firebase', 'success');
                 } else {
                     const error = await response.text();
-                    console.error('❌ Errore sync Firebase:', error);
-                    showNotification('Errore sincronizzazione Firebase', 'error');
+                    console.error('❌ Errore sync Firebase:', response.status, error);
+                    showNotification('Errore sincronizzazione Firebase: ' + response.status, 'error');
                 }
             } catch (e) {
                 console.error('❌ Could not sync closures to Firebase:', e);
@@ -1544,8 +1562,12 @@ Ci scusiamo per il disagio.`;
         };
         
         window.removeClosureDate = function(date) {
+            console.log('🗑️ Removing closure date:', date);
             let closures = getClosures();
+            const before = closures.length;
             closures = closures.filter(c => c.date !== date);
+            const after = closures.length;
+            console.log(`📊 Closures: ${before} → ${after}`);
             saveClosures(closures);
             loadClosures();
         };
