@@ -1527,7 +1527,8 @@
             GOOGLE_CALENDAR_CONFIG,
             syncAllReservationsToCalendar,
             createCalendarEvent,
-            updateCalendarEvent
+            updateCalendarEvent,
+            deleteCalendarEvent
         } from './google-calendar.js';
         
         const ADMIN_PASSWORD = 'skalette2024';
@@ -1790,6 +1791,7 @@
             
             console.log('📅 Conferma prenotazione - reservation:', reservation);
             console.log('📅 calendarEventId:', reservation?.calendarEventId);
+            console.log('📅 isCalendarAuthenticated:', isCalendarAuthenticated());
             
             // Prima aggiorna lo stato
             await updateReservationStatus(id, 'confirmed');
@@ -1815,6 +1817,8 @@
                     }
                     console.log('📅 Risultato creazione:', result);
                 }
+            } else {
+                console.log('📅 SKIP: Calendar non autenticato o reservation mancante');
             }
             
             const fullDate = new Date(date).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -1863,7 +1867,20 @@ Ci scusiamo per il disagio.`;
         };
         
         window.deleteRes = async (id) => {
-            if (confirm('Eliminare?')) await deleteReservation(id);
+            if (confirm('Eliminare?')) {
+                // Trova la prenotazione per ottenere calendarEventId
+                const reservation = allReservations.find(r => r.id === id);
+                
+                // Elimina da Firebase
+                await deleteReservation(id);
+                
+                // Elimina anche da Google Calendar se connesso e ha un evento
+                if (isCalendarAuthenticated() && reservation?.calendarEventId) {
+                    console.log('📅 Eliminazione evento calendario:', reservation.calendarEventId);
+                    const result = await deleteCalendarEvent(reservation.calendarEventId);
+                    console.log('📅 Risultato eliminazione:', result);
+                }
+            }
         };
         
         // SCHEDULE
