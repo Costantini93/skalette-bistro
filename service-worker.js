@@ -11,7 +11,7 @@ const STATIC_ASSETS = [
   './translations.js',
   './manifest.json',
   './offline.html',
-  './logo.png'
+  './images/logo.png'
 ];
 
 // Install event - cache static assets

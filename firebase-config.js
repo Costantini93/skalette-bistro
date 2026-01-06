@@ -2,6 +2,25 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot, query, where, orderBy, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// Google Calendar Integration (opzionale - solo per admin)
+// Le funzioni vengono importate dinamicamente solo se necessario
+let createCalendarEvent = null;
+let updateCalendarEvent = null;
+let deleteCalendarEvent = null;
+let isCalendarAuthenticated = () => false;
+
+// Tenta di importare google-calendar.js (fallisce silenziosamente se non disponibile)
+try {
+    const gcal = await import('./google-calendar.js');
+    createCalendarEvent = gcal.createCalendarEvent;
+    updateCalendarEvent = gcal.updateCalendarEvent;
+    deleteCalendarEvent = gcal.deleteCalendarEvent;
+    isCalendarAuthenticated = gcal.isCalendarAuthenticated;
+    console.log('✅ Google Calendar module loaded');
+} catch (e) {
+    console.log('ℹ️ Google Calendar module not loaded (normal on public site)');
+}
+
 const firebaseConfig = {
     apiKey: "AIzaSyAbTQnt26Gca0sPa1RlhIyq2TIwLfKfl0s",
     authDomain: "skalette-bistro.firebaseapp.com",
@@ -183,7 +202,22 @@ async function createReservation(reservationData) {
             status: 'pending',
             createdAt: new Date().toISOString()
         });
-        return { success: true, id: docRef.id };
+        
+        // Crea evento su Google Calendar (se disponibile e autenticato)
+        let calendarEventId = null;
+        if (createCalendarEvent && isCalendarAuthenticated()) {
+            const calendarResult = await createCalendarEvent({
+                ...reservationData,
+                id: docRef.id
+            });
+            if (calendarResult.success) {
+                calendarEventId = calendarResult.eventId;
+                // Salva l'ID dell'evento calendario nella prenotazione
+                await updateDoc(docRef, { calendarEventId });
+            }
+        }
+        
+        return { success: true, id: docRef.id, calendarEventId };
     } catch (error) {
         console.error('Error creating reservation:', error);
         return { success: false, error: error.message };
@@ -218,7 +252,22 @@ async function getReservationsByDate(date) {
 async function updateReservationStatus(reservationId, status) {
     try {
         const docRef = doc(db, 'reservations', reservationId);
+        
+        // Ottieni i dati della prenotazione per aggiornare il calendario
+        const docSnap = await getDoc(docRef);
+        const reservationData = docSnap.exists() ? docSnap.data() : null;
+        
         await updateDoc(docRef, { status, updatedAt: new Date().toISOString() });
+        
+        // Aggiorna evento su Google Calendar (se disponibile)
+        if (updateCalendarEvent && reservationData && reservationData.calendarEventId && isCalendarAuthenticated()) {
+            await updateCalendarEvent(
+                reservationData.calendarEventId, 
+                { ...reservationData, id: reservationId },
+                status
+            );
+        }
+        
         return { success: true };
     } catch (error) {
         console.error('Error updating reservation:', error);
@@ -229,7 +278,19 @@ async function updateReservationStatus(reservationId, status) {
 // Elimina prenotazione
 async function deleteReservation(reservationId) {
     try {
-        await deleteDoc(doc(db, 'reservations', reservationId));
+        const docRef = doc(db, 'reservations', reservationId);
+        
+        // Ottieni i dati per eliminare l'evento calendario
+        const docSnap = await getDoc(docRef);
+        const reservationData = docSnap.exists() ? docSnap.data() : null;
+        
+        await deleteDoc(docRef);
+        
+        // Elimina evento da Google Calendar (se disponibile)
+        if (deleteCalendarEvent && reservationData && reservationData.calendarEventId && isCalendarAuthenticated()) {
+            await deleteCalendarEvent(reservationData.calendarEventId);
+        }
+        
         return { success: true };
     } catch (error) {
         console.error('Error deleting reservation:', error);
@@ -384,6 +445,18 @@ function subscribeToBlockedSlots(date, callback) {
     });
 }
 
+// Aggiorna calendarEventId di una prenotazione
+async function updateReservationCalendarEventId(reservationId, calendarEventId) {
+    try {
+        const docRef = doc(db, 'reservations', reservationId);
+        await updateDoc(docRef, { calendarEventId });
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating calendarEventId:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 // ===================== EXPORTS =====================
 
 export {
@@ -408,5 +481,6 @@ export {
     blockSlot,
     unblockSlot,
     getBlockedSlots,
-    subscribeToBlockedSlots
+    subscribeToBlockedSlots,
+    updateReservationCalendarEventId
 };

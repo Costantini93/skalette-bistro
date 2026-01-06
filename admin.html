@@ -106,6 +106,30 @@
         }
         .btn-logout:hover { border-color: var(--red); color: var(--red); }
         
+        /* Calendar Button */
+        .btn-calendar {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn-calendar:hover { 
+            background: var(--gold); 
+            color: var(--navy); 
+        }
+        .btn-calendar.connected {
+            background: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+        .btn-calendar.connected:hover {
+            background: #16a34a;
+        }
+        
         /* Tabs */
         .admin-tabs {
             display: flex;
@@ -1075,7 +1099,12 @@
     <div class="admin-panel" id="admin-panel" style="display:none;">
         <header class="admin-header">
             <h1>🍽️ Skalette Bistro - Admin</h1>
-            <button class="btn-logout" onclick="logout()">Esci</button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="btn-calendar" id="btn-connect-calendar" onclick="connectGoogleCalendar()" title="Connetti Google Calendar">
+                    📅 Connetti Calendario
+                </button>
+                <button class="btn-logout" onclick="logout()">Esci</button>
+            </div>
         </header>
         
         <nav class="admin-tabs">
@@ -1486,12 +1515,86 @@
             subscribeToReservations,
             blockSlot,
             unblockSlot,
-            getBlockedSlots
+            getBlockedSlots,
+            updateReservationCalendarEventId,
+            getAllReservations
         } from './firebase-config.js';
+        
+        import {
+            initGoogleCalendar,
+            requestCalendarAccess,
+            isCalendarAuthenticated,
+            GOOGLE_CALENDAR_CONFIG,
+            syncAllReservationsToCalendar,
+            createCalendarEvent,
+            updateCalendarEvent
+        } from './google-calendar.js';
         
         const ADMIN_PASSWORD = 'skalette2024';
         let allReservations = [];
         let closedDates = {};
+        
+        // GOOGLE CALENDAR CONNECTION
+        window.connectGoogleCalendar = async function() {
+            const btn = document.getElementById('btn-connect-calendar');
+            
+            if (isCalendarAuthenticated()) {
+                // Already connected - sync existing reservations
+                await syncReservationsWithCalendar();
+                alert('✅ Google Calendar è già connesso!\n\nPrenotazioni sincronizzate.');
+                return;
+            }
+            
+            try {
+                btn.textContent = '⏳ Connessione...';
+                await requestCalendarAccess();
+                btn.textContent = '✅ Calendario Connesso';
+                btn.classList.add('connected');
+                
+                // Sincronizza le prenotazioni esistenti
+                await syncReservationsWithCalendar();
+                
+                alert('✅ Google Calendar connesso!\n\nLe prenotazioni esistenti sono state sincronizzate.');
+            } catch (error) {
+                console.error('Errore connessione calendario:', error);
+                btn.textContent = '📅 Connetti Calendario';
+                alert('❌ Errore nella connessione a Google Calendar.\n\nAssicurati di aver configurato le credenziali in google-calendar.js');
+            }
+        };
+        
+        // Sincronizza prenotazioni esistenti con Google Calendar
+        async function syncReservationsWithCalendar() {
+            if (!isCalendarAuthenticated() || allReservations.length === 0) return;
+            
+            console.log('📅 Sincronizzazione prenotazioni con calendario...');
+            
+            const result = await syncAllReservationsToCalendar(
+                allReservations,
+                async (reservationId, calendarEventId) => {
+                    await updateReservationCalendarEventId(reservationId, calendarEventId);
+                }
+            );
+            
+            if (result.synced > 0) {
+                console.log(`✅ Sincronizzate ${result.synced} prenotazioni`);
+            }
+        }
+        
+        // Initialize Google Calendar
+        async function initCalendarConnection() {
+            try {
+                await initGoogleCalendar();
+                const btn = document.getElementById('btn-connect-calendar');
+                if (isCalendarAuthenticated()) {
+                    btn.textContent = '✅ Calendario Connesso';
+                    btn.classList.add('connected');
+                    // Auto-sync quando ci sono prenotazioni
+                    setTimeout(() => syncReservationsWithCalendar(), 2000);
+                }
+            } catch (error) {
+                console.warn('Google Calendar non inizializzato:', error);
+            }
+        }
         
         // LOGIN
         window.attemptLogin = function() {
@@ -1519,6 +1622,9 @@
         
         // INIT
         function initAdmin() {
+            // Initialize Google Calendar connection
+            initCalendarConnection();
+            
             document.querySelectorAll('.admin-tab').forEach(tab => {
                 tab.addEventListener('click', () => switchTab(tab.dataset.tab));
             });
@@ -1542,8 +1648,46 @@
             document.getElementById('filter-status').addEventListener('change', filterReservations);
             document.getElementById('schedule-date').addEventListener('change', renderScheduleGrid);
             
-            subscribeToReservations((reservations) => {
+            // Tieni traccia degli ID già visti per rilevare nuove prenotazioni
+            let knownReservationIds = new Set();
+            let isFirstLoad = true;
+            
+            subscribeToReservations(async (reservations) => {
+                // Rileva nuove prenotazioni
+                const newReservations = reservations.filter(r => !knownReservationIds.has(r.id));
+                
+                // Aggiorna gli ID conosciuti
+                reservations.forEach(r => knownReservationIds.add(r.id));
+                
+                // Aggiorna subito allReservations per avere i dati più recenti
                 allReservations = reservations;
+                
+                // Se Google Calendar è connesso e ci sono nuove prenotazioni (non al primo caricamento)
+                if (!isFirstLoad && isCalendarAuthenticated() && newReservations.length > 0) {
+                    for (const reservation of newReservations) {
+                        // Solo se non ha già un evento calendario
+                        if (!reservation.calendarEventId) {
+                            console.log('📅 Nuova prenotazione rilevata, creo evento:', reservation.name);
+                            const result = await createCalendarEvent({...reservation});
+                            if (result.success && result.eventId) {
+                                await updateReservationCalendarEventId(reservation.id, result.eventId);
+                                // Aggiorna anche l'array locale con il nuovo calendarEventId
+                                const idx = allReservations.findIndex(r => r.id === reservation.id);
+                                if (idx !== -1) {
+                                    allReservations[idx].calendarEventId = result.eventId;
+                                }
+                                console.log('✅ Evento calendario creato per:', reservation.name, 'eventId:', result.eventId);
+                            }
+                            
+                            // Mostra notifica browser
+                            if (window.showNewReservationNotification) {
+                                window.showNewReservationNotification(reservation);
+                            }
+                        }
+                    }
+                }
+                
+                isFirstLoad = false;
                 updateStats();
                 filterReservations();
             });
@@ -1641,7 +1785,38 @@
         }
         
         window.confirmRes = async (id, phone, date, time, guests, table, name) => {
+            // Trova la prenotazione corrente (con calendarEventId se presente)
+            let reservation = allReservations.find(r => r.id === id);
+            
+            console.log('📅 Conferma prenotazione - reservation:', reservation);
+            console.log('📅 calendarEventId:', reservation?.calendarEventId);
+            
+            // Prima aggiorna lo stato
             await updateReservationStatus(id, 'confirmed');
+            
+            // Aggiorna evento su Google Calendar
+            if (isCalendarAuthenticated() && reservation) {
+                if (reservation.calendarEventId) {
+                    // Aggiorna evento esistente
+                    console.log('📅 Aggiornamento evento esistente:', reservation.calendarEventId);
+                    const result = await updateCalendarEvent(reservation.calendarEventId, {...reservation, status: 'confirmed'}, 'confirmed');
+                    console.log('📅 Risultato aggiornamento:', result);
+                } else {
+                    // Se non ha evento, crealo ora come confermato
+                    console.log('📅 Creazione nuovo evento (confermato)...');
+                    const result = await createCalendarEvent({...reservation, id});
+                    if (result.success && result.eventId) {
+                        await updateReservationCalendarEventId(id, result.eventId);
+                        // Aggiorna subito a confermato
+                        await updateCalendarEvent(result.eventId, {...reservation, status: 'confirmed'}, 'confirmed');
+                        // Aggiorna anche l'array locale
+                        const idx = allReservations.findIndex(r => r.id === id);
+                        if (idx !== -1) allReservations[idx].calendarEventId = result.eventId;
+                    }
+                    console.log('📅 Risultato creazione:', result);
+                }
+            }
+            
             const fullDate = new Date(date).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             const msg = `◇ Skalette Bistro - Prenotazione CONFERMATA
 
@@ -1661,7 +1836,18 @@ Per modifiche: 045 8030500`;
         };
         
         window.rejectRes = async (id, phone, date, time, name) => {
+            // Trova la prenotazione corrente
+            const reservation = allReservations.find(r => r.id === id);
+            
             await updateReservationStatus(id, 'rejected');
+            
+            // Aggiorna evento su Google Calendar
+            if (isCalendarAuthenticated() && reservation && reservation.calendarEventId) {
+                console.log('📅 Rifiuto prenotazione - calendarEventId:', reservation.calendarEventId);
+                const result = await updateCalendarEvent(reservation.calendarEventId, {...reservation, status: 'rejected'}, 'rejected');
+                console.log('📅 Risultato aggiornamento:', result);
+            }
+            
             const fullDate = new Date(date).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             const msg = `◇ Skalette Bistro
 
@@ -2794,8 +2980,8 @@ Ci scusiamo per il disagio.`;
             try {
                 const notification = new Notification('🍽️ Skalette Bistro', {
                     body: 'Test notifica! Le notifiche funzionano correttamente.',
-                    icon: 'logo.png',
-                    badge: 'logo.png',
+                    icon: 'images/logo.png',
+                    badge: 'images/logo.png',
                     tag: 'test-' + Date.now()
                 });
                 
@@ -2822,8 +3008,8 @@ Ci scusiamo per il disagio.`;
             
             new Notification('🍽️ Nuova Prenotazione!', {
                 body: `${reservation.name}\n${formatted} alle ${reservation.time}\nTavolo ${reservation.tableName || reservation.tableId} - ${reservation.guests} ospiti`,
-                icon: 'logo.png',
-                badge: 'logo.png',
+                icon: 'images/logo.png',
+                badge: 'images/logo.png',
                 tag: 'reservation-' + reservation.id,
                 requireInteraction: true
             });
