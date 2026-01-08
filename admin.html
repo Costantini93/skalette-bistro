@@ -1673,6 +1673,39 @@
             document.getElementById('filter-status').addEventListener('change', filterReservations);
             document.getElementById('schedule-date').addEventListener('change', renderScheduleGrid);
             
+            // RICONNESSIONE AUTOMATICA per Safari/iPad
+            // Quando la pagina torna visibile, forza refresh dei dati
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    console.log('📱 Pagina tornata visibile, refresh dati...');
+                    // Forza un refresh delle prenotazioni
+                    if (typeof getAllReservations === 'function') {
+                        getAllReservations().then(reservations => {
+                            allReservations = reservations;
+                            filterReservations();
+                            updateStats();
+                            updateCalendarSyncStatus();
+                            console.log('✅ Dati aggiornati:', reservations.length, 'prenotazioni');
+                        }).catch(err => console.error('Errore refresh:', err));
+                    }
+                }
+            });
+            
+            // Polling di backup ogni 30 secondi per Safari/iOS
+            setInterval(() => {
+                if (document.visibilityState === 'visible' && typeof getAllReservations === 'function') {
+                    getAllReservations().then(reservations => {
+                        // Solo se ci sono differenze
+                        if (reservations.length !== allReservations.length) {
+                            console.log('🔄 Polling: nuove prenotazioni trovate');
+                            allReservations = reservations;
+                            filterReservations();
+                            updateStats();
+                        }
+                    }).catch(() => {});
+                }
+            }, 30000);
+            
             // Tieni traccia degli ID già visti per rilevare nuove prenotazioni
             let knownReservationIds = new Set();
             let isFirstLoad = true;
