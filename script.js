@@ -1032,9 +1032,10 @@ function initBookingSystem() {
         continueStep3Btn.addEventListener('click', showStep3);
     }
     
-    // Form submission
+    // Form submission - SOLO se siamo offline (file://) 
+    // Se online, reservation-firebase.js gestisce il form
     const finalForm = document.getElementById('booking-final-form');
-    if (finalForm) {
+    if (finalForm && window.location.protocol === 'file:') {
         finalForm.addEventListener('submit', handleBookingSubmit);
     }
 }
@@ -1526,29 +1527,29 @@ function handleBookingSubmit(e) {
 ◇ Name: ${name}
 ◇ Phone: ${phone}
 ◇ Email: ${email}
-◇ Guests: ${bookingData.guests}
+◇ Guests: ${bookingData.guests || 'N/A'}
 ◇ Date: ${dateFormatted}
-◇ Time: ${bookingData.time} (${mealLabels[bookingData.mealType]})
-◇ Table: ${bookingData.tableName}
+◇ Time: ${bookingData.time || 'N/A'} (${mealLabels[bookingData.mealType] || 'N/A'})
+◇ Table: ${bookingData.tableName || 'N/A'}
 
 ◇ Nationality: ${nationality} (${browserLang})
 ◇ Notes: ${notes || 'None'}
 
-ID: ${reservation.id}`
+ID: ${reservationId}`
         : `◇ NUOVA PRENOTAZIONE - Skalette Bistro
 
 ◇ Nome: ${name}
 ◇ Telefono: ${phone}
 ◇ Email: ${email}
-◇ Persone: ${bookingData.guests}
+◇ Persone: ${bookingData.guests || 'N/A'}
 ◇ Data: ${dateFormatted}
-◇ Orario: ${bookingData.time} (${mealLabels[bookingData.mealType]})
-◇ Tavolo: ${bookingData.tableName}
+◇ Orario: ${bookingData.time || 'N/A'} (${mealLabels[bookingData.mealType] || 'N/A'})
+◇ Tavolo: ${bookingData.tableName || 'N/A'}
 
 ◇ Nazionalità: ${nationality} (${browserLang})
 ◇ Note: ${notes || 'Nessuna'}
 
-ID: ${reservation.id}`;
+ID: ${reservationId}`;
 
     setTimeout(() => {
         window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
