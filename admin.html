@@ -1560,29 +1560,43 @@
         
         // GOOGLE CALENDAR CONNECTION
         window.connectGoogleCalendar = async function() {
-            const btn = document.getElementById('btn-connect-calendar');
+            const connectBtn = document.getElementById('btn-connect-calendar');
+            const syncBtn = document.getElementById('btn-sync-calendar');
             
             if (isCalendarAuthenticated()) {
-                // Already connected - sync existing reservations
-                await syncReservationsWithCalendar();
-                alert('✅ Google Calendar è già connesso!\n\nPrenotazioni sincronizzate.');
+                // Already connected - just update status
+                updateCalendarSyncStatus();
                 return;
             }
             
             try {
-                btn.textContent = '⏳ Connessione...';
+                connectBtn.textContent = '⏳ Connessione...';
+                connectBtn.disabled = true;
+                
                 await requestCalendarAccess();
-                btn.textContent = '✅ Calendario Connesso';
-                btn.classList.add('connected');
                 
-                // Sincronizza le prenotazioni esistenti
-                await syncReservationsWithCalendar();
+                // Connesso! Aggiorna UI immediatamente
+                connectBtn.textContent = '✅ Calendario';
+                connectBtn.classList.add('connected');
+                connectBtn.disabled = false;
                 
-                alert('✅ Google Calendar connesso!\n\nLe prenotazioni esistenti sono state sincronizzate.');
+                // Mostra sync button e aggiorna stato
+                updateCalendarSyncStatus();
+                
+                // Sincronizza in background (non blocca)
+                syncReservationsWithCalendar().then(() => {
+                    updateCalendarSyncStatus();
+                    console.log('✅ Sync completato in background');
+                });
+                
             } catch (error) {
                 console.error('Errore connessione calendario:', error);
-                btn.textContent = '📅 Connetti Calendario';
-                alert('❌ Errore nella connessione a Google Calendar.\n\nAssicurati di aver configurato le credenziali in google-calendar.js');
+                connectBtn.textContent = '📅 Connetti';
+                connectBtn.disabled = false;
+                // Solo alert per errori veri
+                if (error.message !== 'popup_closed_by_user') {
+                    alert('❌ Errore connessione Google Calendar');
+                }
             }
         };
         

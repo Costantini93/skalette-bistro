@@ -422,15 +422,22 @@ async function syncAllReservationsToCalendar(reservations, updateCallback) {
     
     console.log(`📅 Sincronizzazione: ${toSync.length} prenotazioni da sincronizzare`);
     
-    for (const reservation of toSync) {
-        const result = await createCalendarEvent(reservation);
-        if (result.success && result.eventId) {
-            synced++;
-            // Chiama il callback per aggiornare il database con l'eventId
-            if (updateCallback) {
+    if (toSync.length === 0) {
+        return { success: true, synced: 0, total: 0 };
+    }
+    
+    // Sync in parallelo con batch di 5 per velocità
+    const BATCH_SIZE = 5;
+    for (let i = 0; i < toSync.length; i += BATCH_SIZE) {
+        const batch = toSync.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(batch.map(async (reservation) => {
+            const result = await createCalendarEvent(reservation);
+            if (result.success && result.eventId && updateCallback) {
                 await updateCallback(reservation.id, result.eventId);
             }
-        }
+            return result;
+        }));
+        synced += results.filter(r => r.success).length;
     }
     
     console.log(`✅ Sincronizzazione completata: ${synced}/${toSync.length} prenotazioni`);
