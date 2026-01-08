@@ -1698,6 +1698,15 @@
                                     allReservations[idx].calendarEventId = result.eventId;
                                 }
                                 console.log('✅ Evento calendario creato per:', reservation.name, 'eventId:', result.eventId);
+                            } else if (result.needsReauth) {
+                                // Token scaduto - mostra avviso
+                                const btn = document.getElementById('btn-connect-calendar');
+                                if (btn) {
+                                    btn.textContent = '⚠️ Riconnetti Calendario';
+                                    btn.classList.remove('connected');
+                                    btn.style.borderColor = 'var(--orange)';
+                                    btn.style.color = 'var(--orange)';
+                                }
                             }
                             
                             // Mostra notifica browser
@@ -1711,9 +1720,25 @@
                 isFirstLoad = false;
                 updateStats();
                 filterReservations();
+                
+                // Controlla se ci sono prenotazioni senza evento calendario
+                updateCalendarSyncStatus();
             });
             
             renderScheduleGrid();
+        }
+        
+        // Controlla quante prenotazioni non hanno evento calendario
+        function updateCalendarSyncStatus() {
+            const unsyncedCount = allReservations.filter(r => 
+                !r.calendarEventId && r.status !== 'rejected'
+            ).length;
+            
+            const btn = document.getElementById('btn-connect-calendar');
+            if (btn && isCalendarAuthenticated() && unsyncedCount > 0) {
+                btn.textContent = `📅 Sync (${unsyncedCount})`;
+                btn.title = `${unsyncedCount} prenotazioni da sincronizzare - clicca per sincronizzare`;
+            }
         }
         
         function switchTab(tabId) {

@@ -182,8 +182,10 @@ function generateEventDescription(reservation) {
     return description;
 }
 
-// Crea evento su Google Calendar
-async function createCalendarEvent(reservation) {
+// Crea evento su Google Calendar (con retry automatico)
+async function createCalendarEvent(reservation, retryCount = 0) {
+    const MAX_RETRIES = 2;
+    
     if (!accessToken) {
         console.warn('⚠️ Google Calendar: Non autenticato, evento non creato');
         return { success: false, error: 'Non autenticato' };
@@ -231,6 +233,8 @@ async function createCalendarEvent(reservation) {
     };
     
     try {
+        console.log('📅 Tentativo creazione evento:', reservation.name, '(retry:', retryCount, ')');
+        
         const response = await fetch(
             `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR_CONFIG.calendarId)}/events`,
             {
@@ -246,6 +250,16 @@ async function createCalendarEvent(reservation) {
         if (!response.ok) {
             const error = await response.json();
             console.error('❌ Errore creazione evento:', error);
+            
+            // Se token scaduto (401), riprova dopo refresh
+            if (response.status === 401 && retryCount < MAX_RETRIES) {
+                console.log('🔄 Token scaduto, tento refresh...');
+                accessToken = null;
+                localStorage.removeItem('gcal_access_token');
+                // Il prossimo tentativo fallirà con "non autenticato"
+                return { success: false, error: 'Token scaduto - riconnetti il calendario', needsReauth: true };
+            }
+            
             return { success: false, error: error.error?.message || 'Errore sconosciuto' };
         }
         
@@ -260,6 +274,14 @@ async function createCalendarEvent(reservation) {
         
     } catch (error) {
         console.error('❌ Errore creazione evento:', error);
+        
+        // Retry su errore di rete
+        if (retryCount < MAX_RETRIES) {
+            console.log('🔄 Errore di rete, riprovo tra 2 secondi...');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return createCalendarEvent(reservation, retryCount + 1);
+        }
+        
         return { success: false, error: error.message };
     }
 }
