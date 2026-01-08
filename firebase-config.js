@@ -236,6 +236,21 @@ async function getAllReservations() {
     }
 }
 
+// Ottieni prenotazione singola per ID
+async function getReservationById(reservationId) {
+    try {
+        const docRef = doc(db, 'reservations', reservationId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return { id: docSnap.id, ...docSnap.data() };
+        }
+        return null;
+    } catch (error) {
+        console.error('Error getting reservation:', error);
+        return null;
+    }
+}
+
 // Ottieni prenotazioni per data
 async function getReservationsByDate(date) {
     try {
@@ -472,6 +487,7 @@ export {
     minutesToTime,
     createReservation,
     getAllReservations,
+    getReservationById,
     getReservationsByDate,
     updateReservationStatus,
     deleteReservation,

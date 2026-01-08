@@ -1533,6 +1533,7 @@
             getOpeningHours,
             getOccupiedSlots,
             getReservationsByDate,
+            getReservationById,
             updateReservationStatus,
             deleteReservation,
             subscribeToReservations,
@@ -1929,8 +1930,21 @@
         }
         
         window.confirmRes = async (id, phone, date, time, guests, table, name) => {
-            // Trova la prenotazione corrente (con calendarEventId se presente)
+            // Trova la prenotazione corrente - RICARICA da Firebase per avere calendarEventId aggiornato
             let reservation = allReservations.find(r => r.id === id);
+            
+            // Se non ha calendarEventId, prova a ricaricare dal database
+            if (!reservation?.calendarEventId) {
+                try {
+                    const freshReservation = await getReservationById(id);
+                    if (freshReservation?.calendarEventId) {
+                        reservation = freshReservation;
+                        console.log('📅 Ricaricato calendarEventId dal DB:', freshReservation.calendarEventId);
+                    }
+                } catch (e) {
+                    console.log('📅 Impossibile ricaricare dal DB:', e);
+                }
+            }
             
             console.log('📅 Conferma prenotazione - reservation:', reservation);
             console.log('📅 calendarEventId:', reservation?.calendarEventId);
@@ -1941,24 +1955,29 @@
             
             // Aggiorna evento su Google Calendar
             if (isCalendarAuthenticated() && reservation) {
-                if (reservation.calendarEventId) {
-                    // Aggiorna evento esistente
-                    console.log('📅 Aggiornamento evento esistente:', reservation.calendarEventId);
-                    const result = await updateCalendarEvent(reservation.calendarEventId, {...reservation, status: 'confirmed'}, 'confirmed');
-                    console.log('📅 Risultato aggiornamento:', result);
-                } else {
-                    // Se non ha evento, crealo ora come confermato
-                    console.log('📅 Creazione nuovo evento (confermato)...');
-                    const result = await createCalendarEvent({...reservation, id});
-                    if (result.success && result.eventId) {
-                        await updateReservationCalendarEventId(id, result.eventId);
-                        // Aggiorna subito a confermato
-                        await updateCalendarEvent(result.eventId, {...reservation, status: 'confirmed'}, 'confirmed');
-                        // Aggiorna anche l'array locale
-                        const idx = allReservations.findIndex(r => r.id === id);
-                        if (idx !== -1) allReservations[idx].calendarEventId = result.eventId;
+                try {
+                    if (reservation.calendarEventId) {
+                        // Aggiorna evento esistente
+                        console.log('📅 Aggiornamento evento esistente:', reservation.calendarEventId);
+                        const result = await updateCalendarEvent(reservation.calendarEventId, {...reservation, status: 'confirmed'}, 'confirmed');
+                        console.log('📅 Risultato aggiornamento:', result);
+                        if (!result.success) {
+                            console.warn('⚠️ Aggiornamento fallito:', result.error);
+                        }
+                    } else {
+                        // Se non ha evento, crealo ora come confermato
+                        console.log('📅 Nessun evento esistente, creo nuovo evento confermato...');
+                        const result = await createCalendarEvent({...reservation, id, status: 'confirmed'});
+                        if (result.success && result.eventId) {
+                            await updateReservationCalendarEventId(id, result.eventId);
+                            // Aggiorna anche l'array locale
+                            const idx = allReservations.findIndex(r => r.id === id);
+                            if (idx !== -1) allReservations[idx].calendarEventId = result.eventId;
+                            console.log('📅 Nuovo evento creato come confermato:', result.eventId);
+                        }
                     }
-                    console.log('📅 Risultato creazione:', result);
+                } catch (calError) {
+                    console.error('❌ Errore calendario:', calError);
                 }
             } else {
                 console.log('📅 SKIP: Calendar non autenticato o reservation mancante');

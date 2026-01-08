@@ -196,6 +196,9 @@ async function createCalendarEvent(reservation, retryCount = 0) {
         return { success: false, error: 'Calendar ID non configurato' };
     }
     
+    // Usa lo status della prenotazione se disponibile, altrimenti 'pending'
+    const status = reservation.status || 'pending';
+    
     const mealInfo = MEAL_LABELS[reservation.mealType] || { emoji: '🍽️', label: reservation.mealType };
     const endTime = calculateEndTime(reservation.time, reservation.mealType);
     
@@ -211,7 +214,7 @@ async function createCalendarEvent(reservation, retryCount = 0) {
     }
     
     const event = {
-        summary: generateEventTitle(reservation, 'pending'),
+        summary: generateEventTitle(reservation, status),
         description: generateEventDescription(reservation),
         location: 'Skalette Bistro',
         start: {
@@ -222,7 +225,7 @@ async function createCalendarEvent(reservation, retryCount = 0) {
             dateTime: formatDateTimeForCalendar(endDate, endTime),
             timeZone: 'Europe/Rome'
         },
-        colorId: GOOGLE_CALENDAR_CONFIG.colors.pending,
+        colorId: GOOGLE_CALENDAR_CONFIG.colors[status] || GOOGLE_CALENDAR_CONFIG.colors.pending,
         reminders: {
             useDefault: false,
             overrides: [
