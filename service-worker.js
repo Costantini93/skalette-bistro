@@ -1,5 +1,5 @@
 // Skalette Bistro - Service Worker for PWA
-const CACHE_NAME = 'skalette-bistro-v3';
+const CACHE_NAME = 'skalette-bistro-v4';
 const OFFLINE_URL = './offline.html';
 
 // Files to cache for offline use (relative paths for GitHub Pages)
