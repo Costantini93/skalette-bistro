@@ -95,16 +95,16 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'Nuova notifica da Skalette Bistro',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-72x72.png',
+    icon: './images/logo.png',
+    badge: './images/logo.png',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
       primaryKey: 1
     },
     actions: [
-      { action: 'explore', title: 'Apri', icon: '/icons/icon-72x72.png' },
-      { action: 'close', title: 'Chiudi', icon: '/icons/icon-72x72.png' }
+      { action: 'explore', title: 'Apri', icon: './images/logo.png' },
+      { action: 'close', title: 'Chiudi', icon: './images/logo.png' }
     ]
   };
 

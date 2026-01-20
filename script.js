@@ -122,24 +122,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Mobile menu toggle with body overlay
-    navToggle.addEventListener('click', function() {
-        navToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.classList.toggle('menu-open');
-    });
+    if (navToggle) {
+        navToggle.addEventListener('click', function() {
+            navToggle.classList.toggle('active');
+            if (navMenu) navMenu.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+    }
 
     // Close mobile menu on link click
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            navToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-            document.body.classList.remove('menu-open');
+    if (navLinks.length > 0) {
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (navToggle) navToggle.classList.remove('active');
+                if (navMenu) navMenu.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
         });
-    });
+    }
 
     // Close menu when clicking overlay
     document.addEventListener('click', function(e) {
         if (document.body.classList.contains('menu-open') && 
+            navMenu && navToggle &&
             !navMenu.contains(e.target) && 
             !navToggle.contains(e.target)) {
             navToggle.classList.remove('active');
@@ -771,25 +776,38 @@ const FIREBASE_PROJECT_ID = 'skalette-bistro';
 const FIREBASE_API_KEY = 'AIzaSyAbTQnt26Gca0sPa1RlhIyq2TIwLfKfl0s';
 
 // Save reservation to Firebase Firestore
+// Fallback function quando reservation-firebase.js non è disponibile (file:// protocol)
 async function saveToFirebase(data, reservationId) {
     try {
+        // Verifica che le costanti siano definite
+        if (!FIREBASE_PROJECT_ID || !FIREBASE_API_KEY) {
+            console.warn('Firebase config not available, cannot save reservation');
+            return { success: false, error: 'Firebase not configured' };
+        }
+        
+        // Valida i dati obbligatori
+        if (!data.name || !data.phone || !data.email || !data.date || !data.time) {
+            console.error('Missing required fields for reservation');
+            return { success: false, error: 'Missing required fields' };
+        }
+        
         const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/reservations?key=${FIREBASE_API_KEY}`;
         
         const firestoreData = {
             fields: {
-                name: { stringValue: data.name },
-                phone: { stringValue: data.phone },
-                email: { stringValue: data.email },
-                notes: { stringValue: data.notes || '' },
-                tableId: { stringValue: data.tableId },
-                tableName: { stringValue: data.tableName },
-                date: { stringValue: data.date },
-                time: { stringValue: data.time },
-                mealType: { stringValue: data.mealType },
-                guests: { integerValue: data.guests },
+                name: { stringValue: String(data.name || '') },
+                phone: { stringValue: String(data.phone || '') },
+                email: { stringValue: String(data.email || '') },
+                notes: { stringValue: String(data.notes || '') },
+                tableId: { stringValue: String(data.tableId || '') },
+                tableName: { stringValue: String(data.tableName || '') },
+                date: { stringValue: String(data.date || '') },
+                time: { stringValue: String(data.time || '') },
+                mealType: { stringValue: String(data.mealType || 'cena') },
+                guests: { integerValue: parseInt(data.guests) || 2 },
                 status: { stringValue: 'pending' },
-                createdAt: { stringValue: data.createdAt },
-                localId: { stringValue: reservationId }
+                createdAt: { stringValue: data.createdAt || new Date().toISOString() },
+                localId: { stringValue: String(reservationId || '') }
             }
         };
         
@@ -802,12 +820,16 @@ async function saveToFirebase(data, reservationId) {
         });
         
         if (response.ok) {
-            // Reservation saved to Firebase successfully
+            const result = await response.json();
+            return { success: true, id: result.name?.split('/').pop() || reservationId };
         } else {
-            console.error('Firebase save failed:', await response.text());
+            const errorText = await response.text();
+            console.error('Firebase save failed:', response.status, errorText);
+            return { success: false, error: `HTTP ${response.status}: ${errorText}` };
         }
     } catch (error) {
         console.error('Error saving to Firebase:', error);
+        return { success: false, error: error.message || 'Unknown error' };
     }
 }
 
@@ -1194,49 +1216,78 @@ async function renderFloorPlanAsync() {
     if (!container) return;
     
     // Show loading
-    container.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#c9a961;"><p>Caricamento tavoli...</p></div>';
+    const siteLang = localStorage.getItem('skalette_lang') || 'it';
+    const loadingText = siteLang === 'en' ? 'Loading tables...' : 'Caricamento tavoli...';
+    container.innerHTML = `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#c9a961;"><p>${loadingText}</p></div>`;
     
     // Load reservations from Firebase
     try {
+        // Verifica che bookingData.date sia definito
+        if (!bookingData.date) {
+            console.warn('No date selected for floor plan');
+            renderFloorPlan([]);
+            return;
+        }
+        
         const firebaseReservations = await getFirebaseReservations(bookingData.date);
-        renderFloorPlan(firebaseReservations);
+        renderFloorPlan(firebaseReservations || []);
     } catch (error) {
         console.error('Error loading reservations:', error);
+        // Fallback: mostra piantina senza prenotazioni invece di errore
         renderFloorPlan([]);
     }
 }
 
 // Get reservations from Firebase for a specific date
+// Fallback function quando reservation-firebase.js non è disponibile (file:// protocol)
 async function getFirebaseReservations(date) {
     try {
+        // Verifica che le costanti siano definite
+        if (!FIREBASE_PROJECT_ID || !FIREBASE_API_KEY) {
+            console.warn('Firebase config not available, returning empty reservations');
+            return [];
+        }
+        
         const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/reservations?key=${FIREBASE_API_KEY}`;
         
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error('Failed to fetch reservations');
+            // Se errore 404 o altro, restituisci array vuoto invece di lanciare errore
+            if (response.status === 404) {
+                return [];
+            }
+            throw new Error(`Failed to fetch reservations: ${response.status}`);
         }
         
         const data = await response.json();
         
-        if (!data.documents) return [];
+        if (!data.documents || !Array.isArray(data.documents)) {
+            return [];
+        }
         
         // Parse Firestore format and filter by date
         return data.documents
             .map(doc => {
-                const fields = doc.fields;
-                return {
-                    id: doc.name.split('/').pop(),
-                    tableId: fields.tableId?.stringValue || '',
-                    date: fields.date?.stringValue || '',
-                    time: fields.time?.stringValue || '',
-                    mealType: fields.mealType?.stringValue || '',
-                    status: fields.status?.stringValue || 'pending',
-                    guests: parseInt(fields.guests?.integerValue || '0')
-                };
+                try {
+                    const fields = doc.fields || {};
+                    return {
+                        id: doc.name ? doc.name.split('/').pop() : '',
+                        tableId: fields.tableId?.stringValue || '',
+                        date: fields.date?.stringValue || '',
+                        time: fields.time?.stringValue || '',
+                        mealType: fields.mealType?.stringValue || '',
+                        status: fields.status?.stringValue || 'pending',
+                        guests: parseInt(fields.guests?.integerValue || '0')
+                    };
+                } catch (e) {
+                    console.warn('Error parsing reservation document:', e);
+                    return null;
+                }
             })
-            .filter(res => res.date === date && res.status !== 'rejected');
+            .filter(res => res !== null && res.date === date && res.status !== 'rejected');
     } catch (error) {
         console.error('Error fetching Firebase reservations:', error);
+        // Restituisci array vuoto invece di propagare l'errore
         return [];
     }
 }
@@ -1467,13 +1518,34 @@ function updateSummary() {
     document.getElementById('summary-table').textContent = bookingData.tableName;
 }
 
-function handleBookingSubmit(e) {
+async function handleBookingSubmit(e) {
     e.preventDefault();
     
-    const name = document.getElementById('booking-name').value;
-    const phone = document.getElementById('booking-phone').value;
-    const email = document.getElementById('booking-email').value;
-    const notes = document.getElementById('booking-notes').value;
+    const name = document.getElementById('booking-name').value.trim();
+    const phone = document.getElementById('booking-phone').value.trim();
+    const email = document.getElementById('booking-email').value.trim();
+    const notes = document.getElementById('booking-notes').value.trim();
+    
+    // Validazione campi obbligatori
+    if (!name || !phone || !email) {
+        const siteLang = localStorage.getItem('skalette_lang') || 'it';
+        const msg = siteLang === 'en'
+            ? 'Please fill in all required fields.'
+            : 'Per favore compila tutti i campi obbligatori.';
+        showNotification(msg, 'error');
+        return;
+    }
+    
+    // Validazione email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        const siteLang = localStorage.getItem('skalette_lang') || 'it';
+        const msg = siteLang === 'en'
+            ? 'Please enter a valid email address.'
+            : 'Per favore inserisci un indirizzo email valido.';
+        showNotification(msg, 'error');
+        return;
+    }
     
     // Create reservation ID
     const reservationId = 'RES' + Date.now().toString(36).toUpperCase();
@@ -1494,13 +1566,44 @@ function handleBookingSubmit(e) {
         createdAt: new Date().toISOString()
     };
     
-    // Save to Firebase
-    saveToFirebase(reservationData, reservationId);
+    // Disabilita il pulsante durante il salvataggio
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn?.textContent || '';
+    if (submitBtn) {
+        const siteLang = localStorage.getItem('skalette_lang') || 'it';
+        submitBtn.textContent = siteLang === 'en' ? 'Saving...' : 'Salvataggio...';
+        submitBtn.disabled = true;
+    }
     
-    // Show success
-    const bookingIdEl = document.getElementById('booking-id');
-    if (bookingIdEl) bookingIdEl.textContent = reservationId;
-    goToStep(4);
+    // Save to Firebase
+    try {
+        const result = await saveToFirebase(reservationData, reservationId);
+        
+        if (result.success) {
+            // Show success
+            const bookingIdEl = document.getElementById('booking-id');
+            if (bookingIdEl) bookingIdEl.textContent = reservationId;
+            goToStep(4);
+        } else {
+            // Mostra errore ma procedi comunque (fallback a WhatsApp)
+            console.warn('Firebase save failed, proceeding with WhatsApp fallback:', result.error);
+            const bookingIdEl = document.getElementById('booking-id');
+            if (bookingIdEl) bookingIdEl.textContent = reservationId;
+            goToStep(4);
+        }
+    } catch (error) {
+        console.error('Error in handleBookingSubmit:', error);
+        // In caso di errore, mostra comunque il successo e procedi con WhatsApp
+        const bookingIdEl = document.getElementById('booking-id');
+        if (bookingIdEl) bookingIdEl.textContent = reservationId;
+        goToStep(4);
+    } finally {
+        // Riabilita il pulsante
+        if (submitBtn) {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    }
     
     // Detect site language and browser language/nationality
     const siteLang = localStorage.getItem('skalette_lang') || 'it';

@@ -9,17 +9,22 @@ let updateCalendarEvent = null;
 let deleteCalendarEvent = null;
 let isCalendarAuthenticated = () => false;
 
-// Tenta di importare google-calendar.js (fallisce silenziosamente se non disponibile)
-try {
-    const gcal = await import('./google-calendar.js');
-    createCalendarEvent = gcal.createCalendarEvent;
-    updateCalendarEvent = gcal.updateCalendarEvent;
-    deleteCalendarEvent = gcal.deleteCalendarEvent;
-    isCalendarAuthenticated = gcal.isCalendarAuthenticated;
-    console.log('✅ Google Calendar module loaded');
-} catch (e) {
-    console.log('ℹ️ Google Calendar module not loaded (normal on public site)');
+// Funzione per caricare Google Calendar in modo asincrono (evita problemi con top-level await)
+async function loadGoogleCalendar() {
+    try {
+        const gcal = await import('./google-calendar.js');
+        createCalendarEvent = gcal.createCalendarEvent;
+        updateCalendarEvent = gcal.updateCalendarEvent;
+        deleteCalendarEvent = gcal.deleteCalendarEvent;
+        isCalendarAuthenticated = gcal.isCalendarAuthenticated;
+        console.log('✅ Google Calendar module loaded');
+    } catch (e) {
+        // Silently fail - Google Calendar è opzionale
+    }
 }
+
+// Carica Google Calendar in background (non blocca l'inizializzazione)
+loadGoogleCalendar().catch(() => {});
 
 const firebaseConfig = {
     apiKey: "AIzaSyAbTQnt26Gca0sPa1RlhIyq2TIwLfKfl0s",
