@@ -1751,6 +1751,26 @@
             script.type = 'module';
             script.src = 'reservation-firebase.js';
             document.body.appendChild(script);
+            
+            // Initialize reminder service (runs in background)
+            setTimeout(async () => {
+                try {
+                    const { initReminderService } = await import('./reminder-service.js');
+                    initReminderService();
+                } catch (err) {
+                    console.log('Reminder service not available:', err);
+                }
+            }, 2000);
+            
+            // Initialize push notifications
+            setTimeout(async () => {
+                try {
+                    const { initPushNotifications } = await import('./push-notifications.js');
+                    initPushNotifications();
+                } catch (err) {
+                    console.log('Push notifications not available:', err);
+                }
+            }, 3000);
         }
     </script>
 </body>

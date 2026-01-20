@@ -432,11 +432,21 @@ function updateTableAvailability(unavailableTables) {
 
 // ===================== FLOOR PLAN RENDERING =====================
 
-function renderFloorPlan() {
+async function renderFloorPlan() {
     const container = document.getElementById('floor-plan-container');
     if (!container) return;
     
     container.innerHTML = '';
+    
+    // Check if any tables are available
+    let hasAvailableTable = false;
+    for (const table of TABLES_CONFIG) {
+        const available = await isTableAvailable(table.id, bookingData.date, bookingData.time, bookingData.mealType);
+        if (available && bookingData.guests >= table.minGuests && bookingData.guests <= table.maxGuests) {
+            hasAvailableTable = true;
+            break;
+        }
+    }
     
     // Elementi fissi con classi CSS
     const fixedElements = `
@@ -515,6 +525,23 @@ function renderFloorPlan() {
         container.appendChild(tableEl);
     });
     
+    // Check if any tables are available after rendering
+    setTimeout(async () => {
+        let hasAvailable = false;
+        for (const table of TABLES_CONFIG) {
+            const available = await isTableAvailable(table.id, bookingData.date, bookingData.time, bookingData.mealType);
+            if (available && bookingData.guests >= table.minGuests && bookingData.guests <= table.maxGuests) {
+                hasAvailable = true;
+                break;
+            }
+        }
+        
+        // If no tables available, show waitlist option
+        if (!hasAvailable) {
+            showWaitlistOption();
+        }
+    }, 500);
+    
     // Add legend
     const legend = document.createElement('div');
     legend.className = 'floor-legend';
@@ -529,6 +556,75 @@ function renderFloorPlan() {
         </span>
     `;
     container.appendChild(legend);
+}
+
+// Show waitlist option when no tables available
+async function showWaitlistOption() {
+    const container = document.getElementById('floor-plan-container');
+    if (!container) return;
+    
+    const lang = localStorage.getItem('skalette_lang') || 'it';
+    const isItalian = lang === 'it';
+    
+    const waitlistDiv = document.createElement('div');
+    waitlistDiv.id = 'waitlist-option';
+    waitlistDiv.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(10, 22, 40, 0.95);
+        border: 2px solid var(--gold);
+        border-radius: 16px;
+        padding: 30px;
+        text-align: center;
+        z-index: 100;
+        max-width: 400px;
+        width: 90%;
+    `;
+    
+    waitlistDiv.innerHTML = `
+        <h3 style="color: var(--gold); margin-bottom: 15px; font-size: 20px;">
+            ${isItalian ? '⏳ Nessun Tavolo Disponibile' : '⏳ No Tables Available'}
+        </h3>
+        <p style="color: var(--grey-light); margin-bottom: 20px; line-height: 1.6;">
+            ${isItalian 
+                ? 'Tutti i tavoli sono occupati per questo orario. Vuoi essere aggiunto alla lista d\'attesa? Ti notificheremo se un tavolo diventa disponibile.'
+                : 'All tables are booked for this time. Would you like to join the waitlist? We\'ll notify you if a table becomes available.'}
+        </p>
+        <button id="btn-join-waitlist" style="
+            background: var(--gold);
+            color: var(--navy-dark);
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+        ">${isItalian ? 'Entra in Lista d\'Attesa' : 'Join Waitlist'}</button>
+        <button id="btn-cancel-waitlist" style="
+            background: transparent;
+            border: 1px solid var(--grey);
+            color: var(--grey-light);
+            padding: 14px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+        ">${isItalian ? 'Annulla' : 'Cancel'}</button>
+    `;
+    
+    container.appendChild(waitlistDiv);
+    
+    // Handle waitlist join
+    document.getElementById('btn-join-waitlist').addEventListener('click', async () => {
+        // Move to step 3 to collect customer info
+        showStep3();
+        // Mark that we're joining waitlist
+        window.isWaitlistMode = true;
+    });
+    
+    document.getElementById('btn-cancel-waitlist').addEventListener('click', () => {
+        waitlistDiv.remove();
+    });
 }
 
 async function handleTableClick(table, element) {
@@ -567,6 +663,9 @@ async function handleBookingSubmit(e) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Invio in corso...';
     
+    // Get language preference
+    const siteLang = localStorage.getItem('skalette_lang') || 'it';
+    
     const formData = {
         tableId: selectedTable.id,
         tableName: selectedTable.name,
@@ -577,17 +676,65 @@ async function handleBookingSubmit(e) {
         name: document.getElementById('booking-name').value,
         email: document.getElementById('booking-email').value,
         phone: document.getElementById('booking-phone').value,
-        notes: document.getElementById('booking-notes').value || ''
+        notes: document.getElementById('booking-notes').value || '',
+        language: siteLang
     };
+    
+    // Check if we're in waitlist mode
+    if (window.isWaitlistMode) {
+        // Add to waitlist instead of creating reservation
+        try {
+            const { addToWaitlist } = await import('./waitlist-service.js');
+            const waitlistResult = await addToWaitlist(
+                formData,
+                bookingData.date,
+                bookingData.time,
+                bookingData.mealType,
+                bookingData.guests
+            );
+            
+            if (waitlistResult.success) {
+                // Show success message
+                document.getElementById('booking-step-3').style.display = 'none';
+                document.getElementById('booking-success').style.display = 'block';
+                document.getElementById('booking-id').textContent = `WAIT-${waitlistResult.id}`;
+                
+                const lang = localStorage.getItem('skalette_lang') || 'it';
+                const successMsg = lang === 'it'
+                    ? 'Sei stato aggiunto alla lista d\'attesa! Ti notificheremo se un tavolo diventa disponibile.'
+                    : 'You have been added to the waitlist! We\'ll notify you if a table becomes available.';
+                
+                document.querySelector('#booking-success p').textContent = successMsg;
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                window.isWaitlistMode = false;
+                return;
+            }
+        } catch (error) {
+            console.error('Waitlist error:', error);
+        }
+    }
     
     // Double check availability before submitting (con mealType per controllo durata)
     const stillAvailable = await isTableAvailable(selectedTable.id, bookingData.date, bookingData.time, bookingData.mealType);
     
     if (!stillAvailable) {
-        alert('Spiacenti, il tavolo è stato appena prenotato. Scegli un altro tavolo.');
+        // Offer waitlist instead of just error
+        const lang = localStorage.getItem('skalette_lang') || 'it';
+        const msg = lang === 'it'
+            ? 'Il tavolo è stato appena prenotato. Vuoi essere aggiunto alla lista d\'attesa?'
+            : 'The table was just booked. Would you like to join the waitlist?';
+        
+        if (confirm(msg)) {
+            window.isWaitlistMode = true;
+            showStep3();
+        } else {
+            showStep2();
+        }
+        
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
-        showStep2();
         return;
     }
     
@@ -609,6 +756,21 @@ async function handleBookingSubmit(e) {
         
         // Send WhatsApp notification
         sendWhatsAppNotification(formData, result.id);
+        
+        // Request push notification permission and show notification
+        try {
+            const { requestNotificationPermission, notifyReservationConfirmed } = await import('./push-notifications.js');
+            if (await requestNotificationPermission()) {
+                notifyReservationConfirmed({
+                    ...formData,
+                    id: result.id,
+                    date: bookingData.date,
+                    time: bookingData.time
+                });
+            }
+        } catch (err) {
+            console.log('Push notifications not available:', err);
+        }
         
         // Cleanup
         if (unsubscribeAvailability) {

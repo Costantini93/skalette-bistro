@@ -36,8 +36,9 @@ const firebaseConfig = {
     appId: "1:692167914968:web:9929ed1d221825cbcceead"
 };
 
-// Export project ID for use in other modules
+// Export project ID and API key for use in other modules
 export const PROJECT_ID = firebaseConfig.projectId;
+export const FIREBASE_API_KEY = firebaseConfig.apiKey;
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -199,12 +200,21 @@ function getOpeningHours(date) {
 
 // ===================== RESERVATIONS =====================
 
+// Generate secure token for reservation management
+function generateManageToken() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
 // Crea nuova prenotazione
 async function createReservation(reservationData) {
     try {
+        // Generate management token for customer self-service
+        const manageToken = generateManageToken();
+        
         const docRef = await addDoc(reservationsRef, {
             ...reservationData,
             status: 'pending',
+            manageToken: manageToken,
             createdAt: new Date().toISOString()
         });
         
@@ -222,10 +232,29 @@ async function createReservation(reservationData) {
             }
         }
         
-        return { success: true, id: docRef.id, calendarEventId };
+        // Send confirmation email (async, don't wait)
+        sendConfirmationEmailAsync({
+            ...reservationData,
+            id: docRef.id,
+            manageToken
+        }).catch(err => console.error('Email send error:', err));
+        
+        return { success: true, id: docRef.id, calendarEventId, manageToken };
     } catch (error) {
         console.error('Error creating reservation:', error);
         return { success: false, error: error.message };
+    }
+}
+
+// Async email sending (non-blocking)
+async function sendConfirmationEmailAsync(reservation) {
+    try {
+        // Dynamically import email service
+        const emailService = await import('./email-service.js');
+        const lang = reservation.language || 'it';
+        await emailService.sendConfirmationEmail(reservation, lang);
+    } catch (error) {
+        console.warn('Email service not available:', error);
     }
 }
 
@@ -288,10 +317,34 @@ async function updateReservationStatus(reservationId, status) {
             );
         }
         
+        // Send email notification based on status (async, non-blocking)
+        if (reservationData && reservationData.email) {
+            sendStatusEmailAsync({
+                ...reservationData,
+                id: reservationId
+            }, status).catch(err => console.error('Email send error:', err));
+        }
+        
         return { success: true };
     } catch (error) {
         console.error('Error updating reservation:', error);
         return { success: false, error: error.message };
+    }
+}
+
+// Async email sending for status updates
+async function sendStatusEmailAsync(reservation, status) {
+    try {
+        const emailService = await import('./email-service.js');
+        const lang = reservation.language || 'it';
+        
+        if (status === 'confirmed') {
+            await emailService.sendConfirmedEmail(reservation, lang);
+        } else if (status === 'rejected') {
+            await emailService.sendCancellationEmail(reservation, 'Non disponibile', lang);
+        }
+    } catch (error) {
+        console.warn('Email service not available:', error);
     }
 }
 
@@ -503,5 +556,7 @@ export {
     unblockSlot,
     getBlockedSlots,
     subscribeToBlockedSlots,
-    updateReservationCalendarEventId
+    updateReservationCalendarEventId,
+    PROJECT_ID,
+    FIREBASE_API_KEY
 };

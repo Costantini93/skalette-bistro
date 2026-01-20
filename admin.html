@@ -1849,16 +1849,76 @@
             if (tabId === 'reports') renderReports();
         }
         
-        // STATS
+        // STATS - Enhanced with advanced metrics
         function updateStats() {
             const today = new Date().toISOString().split('T')[0];
             const weekAgo = new Date();
             weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekAgoStr = weekAgo.toISOString().split('T')[0];
             
-            document.getElementById('stat-today').textContent = allReservations.filter(r => r.date === today).length;
+            // Basic stats
+            const todayReservations = allReservations.filter(r => r.date === today);
+            const weekReservations = allReservations.filter(r => r.date >= weekAgoStr);
+            
+            document.getElementById('stat-today').textContent = todayReservations.length;
             document.getElementById('stat-pending').textContent = allReservations.filter(r => r.status === 'pending').length;
             document.getElementById('stat-confirmed').textContent = allReservations.filter(r => r.status === 'confirmed').length;
-            document.getElementById('stat-week').textContent = allReservations.filter(r => r.date >= weekAgo.toISOString().split('T')[0]).length;
+            document.getElementById('stat-week').textContent = weekReservations.length;
+            
+            // Advanced stats (if elements exist)
+            updateAdvancedStats();
+        }
+        
+        // Advanced statistics
+        function updateAdvancedStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const confirmed = allReservations.filter(r => r.status === 'confirmed');
+            const todayConfirmed = confirmed.filter(r => r.date === today);
+            
+            // Calculate average guests per reservation
+            const totalGuests = confirmed.reduce((sum, r) => sum + (r.guests || 0), 0);
+            const avgGuests = confirmed.length > 0 ? (totalGuests / confirmed.length).toFixed(1) : 0;
+            
+            // Find peak day
+            const dayCounts = {};
+            confirmed.forEach(r => {
+                const day = new Date(r.date).toLocaleDateString('it-IT', { weekday: 'long' });
+                dayCounts[day] = (dayCounts[day] || 0) + 1;
+            });
+            const peakDay = Object.keys(dayCounts).reduce((a, b) => dayCounts[a] > dayCounts[b] ? a : b, '');
+            
+            // Find peak time
+            const timeCounts = {};
+            confirmed.forEach(r => {
+                const hour = r.time.split(':')[0];
+                timeCounts[hour] = (timeCounts[hour] || 0) + 1;
+            });
+            const peakTime = Object.keys(timeCounts).reduce((a, b) => timeCounts[a] > timeCounts[b] ? a : b, '');
+            
+            // Update KPI elements if they exist
+            const kpiTotal = document.getElementById('kpi-total');
+            const kpiConfirmed = document.getElementById('kpi-confirmed');
+            const kpiGuests = document.getElementById('kpi-guests');
+            const kpiAvgGuests = document.getElementById('kpi-avg-guests');
+            const kpiPeakDay = document.getElementById('kpi-peak-day');
+            const kpiPeakTime = document.getElementById('kpi-peak-time');
+            
+            if (kpiTotal) kpiTotal.textContent = allReservations.length;
+            if (kpiConfirmed) kpiConfirmed.textContent = confirmed.length;
+            if (kpiGuests) kpiGuests.textContent = totalGuests;
+            if (kpiAvgGuests) kpiAvgGuests.textContent = `Media: ${avgGuests} ospiti`;
+            if (kpiPeakDay) kpiPeakDay.textContent = peakDay || '-';
+            if (kpiPeakTime) kpiPeakTime.textContent = peakTime ? `${peakTime}:00` : '-';
+            
+            // Calculate confirmation rate
+            const totalPending = allReservations.filter(r => r.status === 'pending').length;
+            const totalProcessed = confirmed.length + allReservations.filter(r => r.status === 'rejected').length;
+            const confirmationRate = totalProcessed > 0 
+                ? ((confirmed.length / totalProcessed) * 100).toFixed(1) 
+                : 0;
+            
+            const kpiConfirmedPct = document.getElementById('kpi-confirmed-pct');
+            if (kpiConfirmedPct) kpiConfirmedPct.textContent = `${confirmationRate}% conferma`;
         }
         
         // RESERVATIONS

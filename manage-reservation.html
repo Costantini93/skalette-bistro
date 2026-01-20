@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestisci Prenotazione - Skalette Bistro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .manage-container {
+            min-height: 100vh;
+            background: var(--navy-dark);
+            padding: 100px 20px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .manage-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        .manage-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .manage-header h1 {
+            font-family: var(--font-display);
+            color: var(--gold);
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .reservation-details {
+            background: rgba(201, 169, 97, 0.1);
+            border-left: 4px solid var(--gold);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .reservation-details h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            color: var(--grey-light);
+        }
+        .detail-value {
+            color: var(--white);
+            font-weight: 500;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        .status-badge.confirmed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .btn-manage {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .btn-modify {
+            background: var(--gold);
+            color: var(--navy-dark);
+        }
+        .btn-modify:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+        .btn-cancel {
+            background: transparent;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+        }
+        .btn-cancel:hover {
+            background: #ef4444;
+            color: white;
+        }
+        .loading {
+            text-align: center;
+            color: var(--gold);
+            padding: 40px;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+            color: #22c55e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="manage-container">
+        <div class="manage-card">
+            <div id="loading" class="loading">
+                <p>Caricamento prenotazione...</p>
+            </div>
+            
+            <div id="reservation-content" style="display: none;">
+                <div class="manage-header">
+                    <h1>Gestisci Prenotazione</h1>
+                </div>
+                
+                <div id="error-message" class="error" style="display: none;"></div>
+                <div id="success-message" class="success" style="display: none;"></div>
+                
+                <div class="reservation-details">
+                    <h3>Dettagli Prenotazione</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Nome:</span>
+                        <span class="detail-value" id="res-name"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Data:</span>
+                        <span class="detail-value" id="res-date"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Orario:</span>
+                        <span class="detail-value" id="res-time"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Persone:</span>
+                        <span class="detail-value" id="res-guests"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tavolo:</span>
+                        <span class="detail-value" id="res-table"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Stato:</span>
+                        <span class="detail-value">
+                            <span class="status-badge" id="res-status"></span>
+                        </span>
+                    </div>
+                    <div class="detail-row" id="res-notes-row" style="display: none;">
+                        <span class="detail-label">Note:</span>
+                        <span class="detail-value" id="res-notes"></span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-manage btn-modify" id="btn-modify" onclick="showModifyModal()">Modifica</button>
+                    <button class="btn-manage btn-cancel" id="btn-cancel" onclick="showCancelModal()">Cancella</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modify Modal -->
+    <div id="modify-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: var(--navy); padding: 30px; border-radius: 16px; max-width: 500px; width: 90%;">
+            <h2 style="color: var(--gold); margin-bottom: 20px;">Modifica Prenotazione</h2>
+            <p style="color: var(--grey-light); margin-bottom: 20px;">Per modifiche sostanziali, ti preghiamo di contattarci direttamente.</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeModifyModal()" style="flex: 1; padding: 12px; background: transparent; border: 1px solid var(--grey); color: var(--grey-light); border-radius: 8px; cursor: pointer;">Chiudi</button>
+                <a href="tel:+390458030500" style="flex: 1; padding: 12px; background: var(--gold); color: var(--navy-dark); text-align: center; border-radius: 8px; text-decoration: none; font-weight: 600;">Chiama</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Modal -->
+    <div id="cancel-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: var(--navy); padding: 30px; border-radius: 16px; max-width: 500px; width: 90%;">
+            <h2 style="color: #ef4444; margin-bottom: 20px;">Cancella Prenotazione</h2>
+            <p style="color: var(--grey-light); margin-bottom: 20px;">Sei sicuro di voler cancellare questa prenotazione?</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeCancelModal()" style="flex: 1; padding: 12px; background: transparent; border: 1px solid var(--grey); color: var(--grey-light); border-radius: 8px; cursor: pointer;">Annulla</button>
+                <button onclick="confirmCancellation()" style="flex: 1; padding: 12px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Conferma Cancellazione</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { PROJECT_ID, FIREBASE_API_KEY } from './firebase-config.js';
+        
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const reservationId = urlParams.get('id');
+        const token = urlParams.get('token');
+        
+        let currentReservation = null;
+        
+        // Load reservation
+        async function loadReservation() {
+            if (!reservationId) {
+                showError('ID prenotazione mancante');
+                return;
+            }
+            
+            try {
+                // Fetch from Firebase
+                const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/reservations/${reservationId}?key=${FIREBASE_API_KEY}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error('Prenotazione non trovata');
+                }
+                
+                const data = await response.json();
+                const fields = data.fields;
+                
+                currentReservation = {
+                    id: reservationId,
+                    name: fields.name?.stringValue || '',
+                    date: fields.date?.stringValue || '',
+                    time: fields.time?.stringValue || '',
+                    guests: fields.guests?.integerValue || 0,
+                    tableName: fields.tableName?.stringValue || '',
+                    status: fields.status?.stringValue || 'pending',
+                    notes: fields.notes?.stringValue || '',
+                    manageToken: fields.manageToken?.stringValue || ''
+                };
+                
+                // Verify token
+                if (token && currentReservation.manageToken !== token) {
+                    showError('Token non valido');
+                    return;
+                }
+                
+                displayReservation(currentReservation);
+            } catch (error) {
+                console.error('Error loading reservation:', error);
+                showError('Errore nel caricamento della prenotazione');
+            }
+        }
+        
+        function displayReservation(res) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('reservation-content').style.display = 'block';
+            
+            document.getElementById('res-name').textContent = res.name;
+            document.getElementById('res-date').textContent = new Date(res.date).toLocaleDateString('it-IT', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('res-time').textContent = res.time;
+            document.getElementById('res-guests').textContent = res.guests;
+            document.getElementById('res-table').textContent = res.tableName;
+            
+            const statusText = {
+                'pending': 'In Attesa',
+                'confirmed': 'Confermata',
+                'rejected': 'Rifiutata',
+                'cancelled': 'Cancellata'
+            };
+            
+            const statusEl = document.getElementById('res-status');
+            statusEl.textContent = statusText[res.status] || res.status;
+            statusEl.className = `status-badge ${res.status}`;
+            
+            if (res.notes) {
+                document.getElementById('res-notes').textContent = res.notes;
+                document.getElementById('res-notes-row').style.display = 'flex';
+            }
+            
+            // Disable buttons if already cancelled/rejected
+            if (res.status === 'cancelled' || res.status === 'rejected') {
+                document.getElementById('btn-modify').disabled = true;
+                document.getElementById('btn-cancel').disabled = true;
+            }
+        }
+        
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('reservation-content').style.display = 'block';
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-message').style.display = 'block';
+        }
+        
+        function showModifyModal() {
+            document.getElementById('modify-modal').style.display = 'flex';
+        }
+        
+        function closeModifyModal() {
+            document.getElementById('modify-modal').style.display = 'none';
+        }
+        
+        function showCancelModal() {
+            document.getElementById('cancel-modal').style.display = 'flex';
+        }
+        
+        function closeCancelModal() {
+            document.getElementById('cancel-modal').style.display = 'none';
+        }
+        
+        async function confirmCancellation() {
+            try {
+                const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/reservations/${reservationId}?key=${FIREBASE_API_KEY}`;
+                
+                const updateData = {
+                    fields: {
+                        status: { stringValue: 'cancelled' },
+                        cancelledAt: { stringValue: new Date().toISOString() }
+                    }
+                };
+                
+                const response = await fetch(url, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('success-message').textContent = 'Prenotazione cancellata con successo';
+                    document.getElementById('success-message').style.display = 'block';
+                    closeCancelModal();
+                    
+                    // Reload reservation
+                    setTimeout(() => loadReservation(), 1000);
+                } else {
+                    throw new Error('Errore nella cancellazione');
+                }
+            } catch (error) {
+                showError('Errore durante la cancellazione. Riprova o contattaci direttamente.');
+                closeCancelModal();
+            }
+        }
+        
+        // Initialize
+        loadReservation();
+        
+        // Export functions for onclick handlers
+        window.showModifyModal = showModifyModal;
+        window.closeModifyModal = closeModifyModal;
+        window.showCancelModal = showCancelModal;
+        window.closeCancelModal = closeCancelModal;
+        window.confirmCancellation = confirmCancellation;
+    </script>
+</body>
+</html>
