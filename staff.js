@@ -585,28 +585,74 @@ function whatsappCustomer(id) {
     }
 }
 
-// ===================== REAL-TIME UPDATES =====================
+// ===================== REAL-TIME UPDATES (Polling) =====================
+
+let lastKnownPending = 0;
 
 function setupRealTimeListener() {
-    // Poll every 30 seconds for updates
+    // Poll every 15 seconds for updates
+    console.log('🔄 Polling attivo - controllo ogni 15 secondi');
+    
     setInterval(async () => {
         const oldPending = reservations.filter(r => r.status === 'pending').length;
         await loadReservations();
         const newPending = reservations.filter(r => r.status === 'pending').length;
         
+        // Se ci sono più prenotazioni in attesa di prima
         if (newPending > oldPending) {
-            showToast('🔔 Nuova prenotazione!', 'success');
-            playNotificationSound();
-            
-            // Send browser notification
-            if (Notification.permission === 'granted') {
-                new Notification('Skalette Staff', {
-                    body: 'Nuova prenotazione ricevuta!',
-                    icon: 'images/logo.png'
-                });
-            }
+            const newCount = newPending - oldPending;
+            showNewReservationAlert(newCount);
         }
-    }, 30000);
+    }, 15000); // 15 secondi
+}
+
+function showNewReservationAlert(count) {
+    // 1. Toast visibile
+    showToast(`🔔 ${count === 1 ? 'Nuova prenotazione!' : count + ' nuove prenotazioni!'}`, 'success');
+    
+    // 2. Suono di notifica (ripetuto per attirare attenzione)
+    playNotificationSound();
+    setTimeout(() => playNotificationSound(), 500);
+    
+    // 3. Vibrazione (se supportata)
+    if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200, 100, 200]);
+    }
+    
+    // 4. Cambia titolo pagina per attirare attenzione
+    const originalTitle = document.title;
+    document.title = `🔔 (${count}) NUOVA PRENOTAZIONE!`;
+    setTimeout(() => {
+        document.title = originalTitle;
+    }, 5000);
+    
+    // 5. Notifica browser (se permesso)
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('🍽️ Skalette Staff', {
+            body: count === 1 ? 'Nuova prenotazione ricevuta!' : `${count} nuove prenotazioni ricevute!`,
+            icon: 'images/logo.png',
+            badge: 'images/logo.png',
+            tag: 'new-reservation',
+            renotify: true
+        });
+    }
+    
+    // 6. Flash dello schermo
+    flashScreen();
+}
+
+function flashScreen() {
+    const flash = document.createElement('div');
+    flash.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(201, 169, 97, 0.3);
+        z-index: 9999;
+        pointer-events: none;
+        animation: flash 0.5s ease-out;
+    `;
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 500);
 }
 
 function playNotificationSound() {
