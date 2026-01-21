@@ -556,6 +556,5 @@ export {
     unblockSlot,
     getBlockedSlots,
     subscribeToBlockedSlots,
-    updateReservationCalendarEventId,
-    PROJECT_ID
+    updateReservationCalendarEventId
 };
