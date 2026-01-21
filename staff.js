@@ -390,11 +390,9 @@ function renderReservations() {
     let html = '';
     
     Object.keys(groups).sort().forEach(time => {
-        const icon = getTimeIcon(time);
         html += `
             <div class="time-group">
                 <div class="time-group-header">
-                    <span class="time-group-icon">${icon}</span>
                     <span>${time}</span>
                     <div class="time-group-line"></div>
                 </div>
@@ -439,13 +437,25 @@ function renderReservationCard(res) {
         cancelled: 'Cancellata'
     };
     
+    const mealTypeLabels = {
+        pranzo: 'Pranzo',
+        aperitivo: 'Aperitivo',
+        cena: 'Cena',
+        dopocena: 'Dopocena'
+    };
+    
+    const mealTypeLabel = mealTypeLabels[res.mealType] || res.mealType || 'N/D';
+    
     const showActions = res.status === 'pending';
     
     return `
         <div class="reservation-card ${statusClass}">
             <div class="card-header">
                 <div class="card-time">${res.time}</div>
-                <span class="card-status ${statusClass}">${statusLabels[statusClass]}</span>
+                <div class="card-header-right">
+                    <span class="card-meal-type">${mealTypeLabel}</span>
+                    <span class="card-status ${statusClass}">${statusLabels[statusClass]}</span>
+                </div>
             </div>
             <div class="card-info">
                 <div class="card-info-item">
@@ -484,13 +494,6 @@ function renderReservationCard(res) {
             </div>
         </div>
     `;
-}
-
-function getTimeIcon(time) {
-    const hour = parseInt(time.split(':')[0]);
-    if (hour < 15) return '☀️';
-    if (hour < 18) return '🍹';
-    return '🌙';
 }
 
 // ===================== ACTIONS =====================
