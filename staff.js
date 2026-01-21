@@ -11,6 +11,16 @@ import {
     subscribeToReservations
 } from './firebase-config.js';
 
+import {
+    initOneSignal,
+    requestNotificationPermission as requestOneSignalPermission,
+    registerAsStaff,
+    isConfigured as isOneSignalConfigured,
+    onNotificationReceived,
+    isIOS,
+    isPWA
+} from './onesignal-config.js';
+
 // ===================== CONFIGURATION =====================
 
 const STAFF_PIN = '2024'; // Change this to your desired PIN
@@ -618,10 +628,58 @@ function playNotificationSound() {
     }
 }
 
-// ===================== NOTIFICATIONS =====================
+// ===================== NOTIFICATIONS (OneSignal) =====================
+
+let oneSignalInitialized = false;
+
+async function initNotifications() {
+    // Check if OneSignal is configured
+    if (!isOneSignalConfigured()) {
+        console.warn('⚠️ OneSignal not configured - using fallback notifications');
+        // Fallback to browser notifications
+        if ('Notification' in window && Notification.permission === 'default') {
+            await Notification.requestPermission();
+        }
+        return;
+    }
+    
+    try {
+        // Initialize OneSignal
+        await initOneSignal();
+        oneSignalInitialized = true;
+        
+        // Register this device as staff
+        await registerAsStaff('staff-' + Date.now());
+        
+        // Request permission
+        await requestOneSignalPermission();
+        
+        // Handle incoming notifications
+        onNotificationReceived((notification) => {
+            showToast(`🔔 ${notification.title}`, 'success');
+            playNotificationSound();
+            loadReservations(); // Refresh list
+        });
+        
+        // Show iOS-specific message
+        if (isIOS() && isPWA()) {
+            showToast('📱 Notifiche iOS attive!', 'success');
+        }
+        
+        console.log('✅ OneSignal notifications ready');
+    } catch (error) {
+        console.error('OneSignal init failed:', error);
+        // Fallback to browser notifications
+        if ('Notification' in window && Notification.permission === 'default') {
+            await Notification.requestPermission();
+        }
+    }
+}
 
 async function requestNotificationPermission() {
-    if ('Notification' in window && Notification.permission === 'default') {
+    if (oneSignalInitialized) {
+        await requestOneSignalPermission();
+    } else if ('Notification' in window && Notification.permission === 'default') {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
             showToast('🔔 Notifiche attivate!', 'success');
@@ -650,7 +708,7 @@ function showToast(message, type = 'info') {
 
 // ===================== INITIALIZATION =====================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     initPinKeypad();
     
     // Check if already authenticated
@@ -664,4 +722,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(reg => console.log('✅ SW registered for staff app'))
             .catch(err => console.error('SW registration failed:', err));
     }
+    
+    // Initialize OneSignal notifications
+    // Delay slightly to ensure page is fully loaded
+    setTimeout(() => {
+        initNotifications();
+    }, 1000);
 });
