@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a1628">
+    <title>Skalette Staff</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest-staff.json">
+    <link rel="icon" type="image/png" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/logo.png">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #0a1628;
+            --accent: #c9a961;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #333;
+            --text-light: #666;
+            --bg: #f8f7f4;
+            --card: #ffffff;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* ==================== LOGIN SCREEN ==================== */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a2d4a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .login-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .login-subtitle {
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+        }
+        
+        .pin-display {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .pin-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            background: transparent;
+            transition: all 0.2s;
+        }
+        
+        .pin-dot.filled {
+            background: var(--accent);
+        }
+        
+        .pin-dot.error {
+            border-color: var(--danger);
+            background: var(--danger);
+            animation: shake 0.3s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .pin-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 70px);
+            gap: 15px;
+        }
+        
+        .pin-key {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+            font-size: 24px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .pin-key:hover, .pin-key:active {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+        }
+        
+        .pin-key.delete {
+            font-size: 18px;
+        }
+        
+        .pin-error {
+            color: var(--danger);
+            margin-top: 20px;
+            min-height: 24px;
+        }
+        
+        /* ==================== MAIN APP ==================== */
+        .app-container {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        .app-container.active {
+            display: flex;
+        }
+        
+        /* Header */
+        .app-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header-logo {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--accent);
+        }
+        
+        .header-date {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .notification-badge {
+            position: relative;
+        }
+        
+        .notification-badge::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notification-badge[data-count="0"]::after {
+            display: none;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .stat-value.pending {
+            color: var(--warning);
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+        
+        /* View Switcher */
+        .view-switcher {
+            display: flex;
+            background: white;
+            padding: 10px 15px;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+            overflow-x: auto;
+        }
+        
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            background: var(--bg);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Date Navigation */
+        .date-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .date-nav-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 15px;
+            color: var(--primary);
+        }
+        
+        .date-nav-current {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .date-nav-today {
+            font-size: 12px;
+            color: var(--accent);
+            cursor: pointer;
+        }
+        
+        /* Week View */
+        .week-view {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            padding: 10px 15px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .week-day {
+            text-align: center;
+            padding: 10px 5px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .week-day:hover {
+            background: var(--bg);
+        }
+        
+        .week-day.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .week-day.today {
+            border: 2px solid var(--accent);
+        }
+        
+        .week-day-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        
+        .week-day-num {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+        
+        .week-day-count {
+            font-size: 10px;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        .week-day.active .week-day-count {
+            background: white;
+        }
+        
+        /* Reservations List */
+        .reservations-container {
+            flex: 1;
+            padding: 15px;
+        }
+        
+        .time-group {
+            margin-bottom: 20px;
+        }
+        
+        .time-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .time-group-icon {
+            font-size: 16px;
+        }
+        
+        .time-group-line {
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        /* Reservation Card */
+        .reservation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--warning);
+            transition: all 0.2s;
+        }
+        
+        .reservation-card.confirmed {
+            border-left-color: var(--success);
+        }
+        
+        .reservation-card.rejected {
+            border-left-color: var(--danger);
+            opacity: 0.6;
+        }
+        
+        .reservation-card.cancelled {
+            border-left-color: #999;
+            opacity: 0.5;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .card-time {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .card-status {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .card-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .card-status.confirmed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .card-status.rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .card-status.cancelled {
+            background: #e5e5e5;
+            color: #525252;
+        }
+        
+        .card-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .card-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-info-icon {
+            font-size: 16px;
+            opacity: 0.7;
+        }
+        
+        .card-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .card-notes {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .action-btn.confirm {
+            background: var(--success);
+            color: white;
+        }
+        
+        .action-btn.reject {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .action-btn.call {
+            background: var(--bg);
+            color: var(--primary);
+        }
+        
+        .action-btn.whatsapp {
+            background: #25d366;
+            color: white;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-state-text {
+            font-size: 16px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+            border-top: 1px solid #eee;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 10px;
+            cursor: pointer;
+            padding: 5px 15px;
+            transition: all 0.2s;
+        }
+        
+        .nav-item.active {
+            color: var(--accent);
+        }
+        
+        .nav-icon {
+            font-size: 22px;
+        }
+        
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+        }
+        
+        .loading-overlay.hidden {
+            display: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--bg);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 100px;
+            left: 15px;
+            right: 15px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .toast {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideUp 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .toast.success {
+            background: var(--success);
+        }
+        
+        .toast.error {
+            background: var(--danger);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Refresh indicator */
+        .refresh-indicator {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: none;
+            z-index: 150;
+        }
+        
+        .refresh-indicator.visible {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Pull to Refresh */
+        .pull-indicator {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="login-screen">
+        <img src="images/logo.png" alt="Skalette" class="login-logo">
+        <h1 class="login-title">SKALETTE STAFF</h1>
+        <p class="login-subtitle">Inserisci il PIN per accedere</p>
+        
+        <div class="pin-display" id="pin-display">
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+        </div>
+        
+        <div class="pin-keypad">
+            <button class="pin-key" data-key="1">1</button>
+            <button class="pin-key" data-key="2">2</button>
+            <button class="pin-key" data-key="3">3</button>
+            <button class="pin-key" data-key="4">4</button>
+            <button class="pin-key" data-key="5">5</button>
+            <button class="pin-key" data-key="6">6</button>
+            <button class="pin-key" data-key="7">7</button>
+            <button class="pin-key" data-key="8">8</button>
+            <button class="pin-key" data-key="9">9</button>
+            <button class="pin-key" data-key=""></button>
+            <button class="pin-key" data-key="0">0</button>
+            <button class="pin-key delete" data-key="delete">⌫</button>
+        </div>
+        
+        <p class="pin-error" id="pin-error"></p>
+    </div>
+    
+    <!-- Main App -->
+    <div class="app-container" id="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <img src="images/logo.png" alt="Skalette" class="header-logo">
+                <div>
+                    <div class="header-title">SKALETTE</div>
+                    <div class="header-date" id="header-date"></div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn notification-badge" data-count="0" id="notifications-btn">🔔</button>
+                <button class="header-btn" id="logout-btn">🚪</button>
+            </div>
+        </header>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Prenotazioni</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value pending" id="stat-pending">0</div>
+                <div class="stat-label">In Attesa</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-guests">0</div>
+                <div class="stat-label">Coperti</div>
+            </div>
+        </div>
+        
+        <!-- View Switcher -->
+        <div class="view-switcher">
+            <button class="view-btn active" data-view="today">📅 Oggi</button>
+            <button class="view-btn" data-view="pending">⏳ In Attesa</button>
+            <button class="view-btn" data-view="week">📆 Settimana</button>
+            <button class="view-btn" data-view="all">📋 Tutte</button>
+        </div>
+        
+        <!-- Date Navigation -->
+        <div class="date-nav" id="date-nav">
+            <button class="date-nav-btn" id="prev-day">‹</button>
+            <div style="text-align: center;">
+                <div class="date-nav-current" id="current-date-display"></div>
+                <div class="date-nav-today" id="go-today">Vai a oggi</div>
+            </div>
+            <button class="date-nav-btn" id="next-day">›</button>
+        </div>
+        
+        <!-- Week View (hidden by default) -->
+        <div class="week-view" id="week-view" style="display: none;"></div>
+        
+        <!-- Reservations List -->
+        <div class="reservations-container" id="reservations-container">
+            <div class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-tab="reservations">
+                <span class="nav-icon">📋</span>
+                <span>Prenotazioni</span>
+            </button>
+            <button class="nav-item" data-tab="calendar">
+                <span class="nav-icon">📅</span>
+                <span>Calendario</span>
+            </button>
+            <button class="nav-item" data-tab="tables">
+                <span class="nav-icon">🪑</span>
+                <span>Tavoli</span>
+            </button>
+            <button class="nav-item" data-tab="settings">
+                <span class="nav-icon">⚙️</span>
+                <span>Impostazioni</span>
+            </button>
+        </nav>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Refresh Indicator -->
+    <div class="refresh-indicator" id="refresh-indicator">
+        <div class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>
+        Aggiornamento...
+    </div>
+    
+    <!-- Load Scripts -->
+    <script type="module" src="staff.js"></script>
+</body>
+</html>

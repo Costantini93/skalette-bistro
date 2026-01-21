@@ -557,6 +557,5 @@ export {
     getBlockedSlots,
     subscribeToBlockedSlots,
     updateReservationCalendarEventId,
-    PROJECT_ID,
-    FIREBASE_API_KEY
+    PROJECT_ID
 };

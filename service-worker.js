@@ -1,5 +1,5 @@
 // Skalette Bistro - Service Worker for PWA
-const CACHE_NAME = 'skalette-bistro-v7';
+const CACHE_NAME = 'skalette-bistro-v8';
 const OFFLINE_URL = './offline.html';
 
 // Files to cache for offline use (relative paths for GitHub Pages)
@@ -11,7 +11,10 @@ const STATIC_ASSETS = [
   './translations.js',
   './manifest.json',
   './offline.html',
-  './images/logo.png'
+  './images/logo.png',
+  './staff.html',
+  './staff.js',
+  './manifest-staff.json'
 ];
 
 // Install event - cache static assets
