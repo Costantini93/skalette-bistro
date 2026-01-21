@@ -27,6 +27,10 @@ export function initOneSignal() {
                             enable: false // We'll use our own UI
                         },
                         allowLocalhostAsSecureOrigin: true, // For testing
+                        // Path to service worker for GitHub Pages subdirectory
+                        path: '/skalette-bistro/',
+                        serviceWorkerParam: { scope: '/skalette-bistro/' },
+                        serviceWorkerPath: '/skalette-bistro/OneSignalSDKWorker.js',
                         welcomeNotification: {
                             title: "Skalette Staff",
                             message: "Notifiche attivate! Riceverai avvisi per nuove prenotazioni."
