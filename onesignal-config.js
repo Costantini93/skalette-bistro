@@ -3,8 +3,8 @@
 
 // ==================== CONFIGURATION ====================
 // Replace these with your OneSignal credentials
-const ONESIGNAL_APP_ID = 'YOUR_ONESIGNAL_APP_ID'; // Get from OneSignal dashboard
-const ONESIGNAL_SAFARI_WEB_ID = 'YOUR_SAFARI_WEB_ID'; // For iOS Safari
+const ONESIGNAL_APP_ID = '18dac128-99ba-439e-a5ba-5bd2bd4e1593';
+const ONESIGNAL_SAFARI_WEB_ID = null; // Optional for Safari
 
 // ==================== INITIALIZATION ====================
 
