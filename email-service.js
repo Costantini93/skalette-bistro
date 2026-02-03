@@ -3,14 +3,14 @@
 
 const EMAIL_SERVICE_CONFIG = {
     // EmailJS configuration (free tier available)
-    serviceId: 'service_skalette',
+    serviceId: 'service_e181nsr',
     templateId: {
         confirmation: 'template_confirmation',
-        reminder: 'template_reminder',
-        feedback: 'template_feedback',
+        reminder: 'template_confirmation',
+        feedback: 'template_confirmation',
         cancellation: 'template_cancellation'
     },
-    publicKey: 'YOUR_EMAILJS_PUBLIC_KEY' // Replace with your EmailJS key
+    publicKey: 'WwFgEnjUKyRiytSzv'
 };
 
 // Alternative: Firebase Cloud Functions endpoint
