@@ -304,6 +304,8 @@ export async function sendConfirmationEmail(reservation, lang = 'it') {
         : `Skalette Bistro - Reservation Received #${reservation.id}`;
     
     const html = getConfirmationEmailHTML(reservation, lang);
+    console.log('📧 Sending confirmation email to:', reservation.email);
+    console.log('📧 HTML length:', html ? html.length : 'null');
     return await sendEmail(reservation.email, subject, html, 'confirmation');
 }
 
