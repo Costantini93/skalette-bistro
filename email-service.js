@@ -25,7 +25,8 @@ function getConfirmationEmailHTML(reservation, lang = 'it') {
         { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
     );
     
-    const manageLink = `${window.location.origin}/manage-reservation.html?id=${reservation.id}&token=${reservation.manageToken}`;
+    const siteUrl = 'https://skalette-bistro.web.app';
+    const manageLink = `${siteUrl}/manage-reservation.html?id=${reservation.id}&token=${reservation.manageToken}`;
     
     return `
 <!DOCTYPE html>
@@ -80,7 +81,8 @@ function getConfirmedEmailHTML(reservation, lang = 'it') {
         { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
     );
     
-    const manageLink = `${window.location.origin}/manage-reservation.html?id=${reservation.id}&token=${reservation.manageToken}`;
+    const siteUrl = 'https://skalette-bistro.web.app';
+    const manageLink = `${siteUrl}/manage-reservation.html?id=${reservation.id}&token=${reservation.manageToken}`;
     
     return `
 <!DOCTYPE html>
@@ -118,7 +120,11 @@ function getConfirmedEmailHTML(reservation, lang = 'it') {
             <p><strong>${isItalian ? 'Ti aspettiamo!' : 'We look forward to seeing you!'}</strong></p>
             <p>${isItalian ? 'Via Pellicciai, 12 - Verona' : 'Via Pellicciai, 12 - Verona'}</p>
             
-            <a href="${manageLink}" class="button">${isItalian ? 'Gestisci Prenotazione' : 'Manage Reservation'}</a>
+            <p style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 5px;">
+                ${isItalian 
+                    ? 'Per modificare o cancellare la prenotazione contattare <strong>3428691832</strong> su WhatsApp.' 
+                    : 'To modify or cancel the reservation, contact <strong>3428691832</strong> on WhatsApp.'}
+            </p>
         </div>
         <div class="footer">
             <p>Skalette Bistro | Via Pellicciai, 12 - Verona | 045 8030500</p>
@@ -135,7 +141,8 @@ function getReminderEmailHTML(reservation, hoursBefore, lang = 'it') {
         { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
     );
     
-    const manageLink = `${window.location.origin}/manage-reservation.html?id=${reservation.id}&token=${reservation.manageToken}`;
+    const siteUrl = 'https://skalette-bistro.web.app';
+    const manageLink = `${siteUrl}/manage-reservation.html?id=${reservation.id}&token=${reservation.manageToken}`;
     
     return `
 <!DOCTYPE html>
@@ -183,7 +190,8 @@ function getReminderEmailHTML(reservation, hoursBefore, lang = 'it') {
 
 function getFeedbackEmailHTML(reservation, lang = 'it') {
     const isItalian = lang === 'it';
-    const feedbackLink = `${window.location.origin}/feedback.html?id=${reservation.id}&token=${reservation.manageToken}`;
+    const siteUrl = 'https://skalette-bistro.web.app';
+    const feedbackLink = `${siteUrl}/feedback.html?id=${reservation.id}&token=${reservation.manageToken}`;
     
     return `
 <!DOCTYPE html>
@@ -311,8 +319,8 @@ export async function sendConfirmationEmail(reservation, lang = 'it') {
 
 export async function sendConfirmedEmail(reservation, lang = 'it') {
     const subject = lang === 'it'
-        ? `✅ Skalette Bistro - Prenotazione Confermata #${reservation.id}`
-        : `✅ Skalette Bistro - Reservation Confirmed #${reservation.id}`;
+        ? `✅ Prenotazione Confermata - Skalette Bistro`
+        : `✅ Reservation Confirmed - Skalette Bistro`;
     
     const html = getConfirmedEmailHTML(reservation, lang);
     return await sendEmail(reservation.email, subject, html, 'confirmation');

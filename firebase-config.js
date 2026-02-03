@@ -232,12 +232,7 @@ async function createReservation(reservationData) {
             }
         }
         
-        // Send confirmation email (async, don't wait)
-        sendConfirmationEmailAsync({
-            ...reservationData,
-            id: docRef.id,
-            manageToken
-        }).catch(err => console.error('Email send error:', err));
+        // NON inviamo email alla creazione - solo quando admin conferma/rifiuta
         
         return { success: true, id: docRef.id, calendarEventId, manageToken };
     } catch (error) {
