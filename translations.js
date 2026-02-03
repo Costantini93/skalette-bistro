@@ -45,6 +45,7 @@ const translations = {
         'menu.tabs.wines': 'Vini',
         'menu.download': 'Scarica Menu Completo',
         'menu.desserts': 'Dolci',
+        'menu.sformatinoDesc': 'Tortino dal cuore fondente, servito caldo con gelato alla vaniglia.',
         'menu.whites': 'Bianchi',
         'menu.reds': 'Rossi',
         'menu.sparkling': 'Bollicine',
@@ -242,6 +243,7 @@ const translations = {
         'menu.whites': 'White Wines',
         'menu.reds': 'Red Wines',
         'menu.sparkling': 'Sparkling',
+        'menu.sformatinoDesc': 'Warm chocolate cake with a molten center, served with vanilla ice cream.',
         
         // Menu Tags
         'tag.vegetarian': 'Vegetarian',
