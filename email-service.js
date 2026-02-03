@@ -238,15 +238,14 @@ async function sendEmailViaEmailJS(to, subject, htmlContent, templateType) {
         const templateParams = {
             to_email: to,
             subject: subject,
-            message: htmlContent,
+            message_html: htmlContent,
             to_name: to.split('@')[0]
         };
         
         await emailjs.send(
             EMAIL_SERVICE_CONFIG.serviceId,
             EMAIL_SERVICE_CONFIG.templateId[templateType],
-            templateParams,
-            EMAIL_SERVICE_CONFIG.publicKey
+            templateParams
         );
         
         return { success: true };
@@ -283,16 +282,17 @@ async function sendEmailViaFirebase(to, subject, htmlContent) {
     }
 }
 
-// Main email sending function (tries Firebase first, then EmailJS)
+// Main email sending function (uses EmailJS)
 export async function sendEmail(to, subject, htmlContent, templateType = 'confirmation') {
-    // Try Firebase Functions first
-    let result = await sendEmailViaFirebase(to, subject, htmlContent);
+    // Try EmailJS first
+    let result = await sendEmailViaEmailJS(to, subject, htmlContent, templateType);
     
-    // Fallback to EmailJS if Firebase fails
+    // Fallback to Firebase Functions if EmailJS fails
     if (!result.success) {
-        result = await sendEmailViaEmailJS(to, subject, htmlContent, templateType);
+        result = await sendEmailViaFirebase(to, subject, htmlContent);
     }
     
+    console.log('Email send result:', result);
     return result;
 }
 
