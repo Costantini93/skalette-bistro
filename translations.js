@@ -557,7 +557,8 @@ const menuNames = {
     
     // Dolci
     "Tiramisù della Casa": "House Tiramisù",
-    "Crema Catalana": "Crème Brûlée",
+    "Sformatino al Cioccolato": "Chocolate Lava Cake",
+    "Tortino dal cuore fondente, servito caldo con gelato alla vaniglia.": "Warm chocolate cake with a molten center, served with vanilla ice cream.",
     "Sbrisolona e Grappa": "Sbrisolona & Grappa",
     
     // Bevande
