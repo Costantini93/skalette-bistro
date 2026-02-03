@@ -87,7 +87,10 @@ const TABLES_CONFIG = [
 
 // Converti orario in minuti dalla mezzanotte
 function timeToMinutes(time) {
-    const [hours, mins] = time.split(':').map(Number);
+    if (!time || typeof time !== 'string') return 0;
+    const parts = time.split(':');
+    if (parts.length < 2) return 0;
+    const [hours, mins] = parts.map(Number);
     return hours * 60 + mins;
 }
 
@@ -410,6 +413,12 @@ async function isTableAvailable(tableId, date, time, mealType = 'cena') {
 
 // Listener real-time per disponibilità tavoli (con durata prenotazioni)
 function subscribeToTableAvailability(date, time, callback, mealType = 'cena') {
+    // Se non c'è un orario valido, ritorna tutti i tavoli come non disponibili
+    if (!time || !date) {
+        callback([]);
+        return () => {}; // Return empty unsubscribe function
+    }
+    
     // Ascolta tutte le prenotazioni della data
     const reservationsQuery = query(
         reservationsRef,

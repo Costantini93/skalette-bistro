@@ -465,8 +465,8 @@ h1, h2, h3, h4, h5, h6 {
     width: auto;
     margin-bottom: 20px;
     animation: preloaderPulse 2s ease-in-out infinite;
-    filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(10deg) brightness(0.75);
-    mix-blend-mode: lighten;
+    /* Filtro per colore gold #c9a961 */
+    filter: brightness(0) saturate(100%) invert(72%) sepia(29%) saturate(531%) hue-rotate(7deg) brightness(92%) contrast(86%);
 }
 
 @keyframes preloaderPulse {
@@ -545,8 +545,8 @@ h1, h2, h3, h4, h5, h6 {
 .logo-icon {
     height: 130px;
     width: auto;
-    filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(10deg) brightness(0.75);
-    mix-blend-mode: lighten;
+    /* Filtro per colore gold #c9a961 */
+    filter: brightness(0) saturate(100%) invert(72%) sepia(29%) saturate(531%) hue-rotate(7deg) brightness(92%) contrast(86%);
 }
 
 .logo-text-wrap {

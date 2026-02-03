@@ -190,7 +190,7 @@ function initBookingSystem() {
     
     timeSelect.addEventListener('change', (e) => {
         bookingData.time = e.target.value;
-        updateMealType();
+        // Non auto-cambiare il tipo di pasto quando si cambia orario
     });
     
     guestsSelect.addEventListener('change', (e) => {
@@ -199,6 +199,7 @@ function initBookingSystem() {
     
     mealSelect.addEventListener('change', (e) => {
         bookingData.mealType = e.target.value;
+        updateTimeSlotsForMealType(); // Aggiorna orari per il tipo selezionato
     });
     
     // Button handlers
@@ -261,6 +262,67 @@ function updateTimeSlots() {
     if (timeSelect.options.length > 0) {
         bookingData.time = timeSelect.options[0].value;
         updateMealType();
+    }
+}
+
+// Orari fissi per tipo di pasto (come in script.js)
+const MEAL_TIME_RANGES = {
+    pranzo: { start: 10 * 60 + 30, end: 15 * 60 },     // 10:30 - 15:00
+    aperitivo: { start: 15 * 60, end: 18 * 60 + 30 },  // 15:00 - 18:30
+    cena: { start: 16 * 60 + 30, end: 21 * 60 + 30 },  // 16:30 - 21:30
+    dopocena: { start: 21 * 60 + 30, end: 24 * 60 + 30 } // 21:30 - 00:30
+};
+
+// Aggiorna orari disponibili in base al tipo di pasto selezionato
+function updateTimeSlotsForMealType() {
+    const timeSelect = document.getElementById('booking-time');
+    if (!timeSelect || !bookingData.date || !bookingData.mealType) return;
+    
+    const range = MEAL_TIME_RANGES[bookingData.mealType];
+    if (!range) return;
+    
+    const now = new Date();
+    const selectedDate = new Date(bookingData.date);
+    const isToday = selectedDate.toDateString() === now.toDateString();
+    
+    timeSelect.innerHTML = '';
+    
+    for (let mins = range.start; mins <= range.end; mins += 30) {
+        const hours = Math.floor(mins / 60) % 24;
+        const minutes = mins % 60;
+        const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        
+        // Se è oggi, nascondi gli orari passati
+        if (isToday) {
+            const slotTime = new Date(selectedDate);
+            slotTime.setHours(hours, minutes, 0, 0);
+            if (slotTime <= now) continue;
+        }
+        
+        const option = document.createElement('option');
+        option.value = timeStr;
+        option.textContent = timeStr;
+        timeSelect.appendChild(option);
+    }
+    
+    // Se non ci sono orari disponibili per oggi, mostra messaggio
+    if (timeSelect.options.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = '-- Nessun orario disponibile --';
+        option.disabled = true;
+        timeSelect.appendChild(option);
+        bookingData.time = '';
+        
+        // Disabilita il pulsante "Vedi Tavoli"
+        const viewTablesBtn = document.getElementById('btn-view-tables');
+        if (viewTablesBtn) viewTablesBtn.disabled = true;
+    } else {
+        bookingData.time = timeSelect.options[0].value;
+        
+        // Abilita il pulsante "Vedi Tavoli"
+        const viewTablesBtn = document.getElementById('btn-view-tables');
+        if (viewTablesBtn) viewTablesBtn.disabled = false;
     }
 }
 
@@ -348,7 +410,8 @@ async function showStep2() {
     document.getElementById('selected-table-info').style.display = 'none';
     document.getElementById('btn-continue-step3').disabled = true;
     
-    renderFloorPlan();
+    // Prima renderizza i tavoli, POI attiva il listener
+    await renderFloorPlan();
     setupRealtimeAvailability();
 }
 
@@ -374,9 +437,18 @@ function showStep3() {
 // ===================== REAL-TIME AVAILABILITY =====================
 
 function setupRealtimeAvailability() {
+    console.log('🔌 setupRealtimeAvailability chiamata');
+    console.log('📅 date:', bookingData.date, 'time:', bookingData.time, 'mealType:', bookingData.mealType);
+    
     // Cleanup previous listener
     if (unsubscribeAvailability) {
         unsubscribeAvailability();
+    }
+    
+    // Verifica che ci sia un orario valido
+    if (!bookingData.time) {
+        console.log('⚠️ Nessun orario valido, tavoli restano grigi');
+        return;
     }
     
     // Subscribe to real-time updates (passa anche mealType per calcolo durata)
@@ -384,6 +456,7 @@ function setupRealtimeAvailability() {
         bookingData.date,
         bookingData.time,
         (unavailableTables) => {
+            console.log('📡 Callback ricevuta da Firebase');
             updateTableAvailability(unavailableTables);
         },
         bookingData.mealType
@@ -391,17 +464,26 @@ function setupRealtimeAvailability() {
 }
 
 function updateTableAvailability(unavailableTables) {
+    console.log('🔄 updateTableAvailability chiamata, tavoli occupati:', unavailableTables);
+    console.log('📊 bookingData:', JSON.stringify(bookingData));
+    
     const tables = document.querySelectorAll('.floor-table');
+    console.log('📋 Tavoli trovati nel DOM:', tables.length);
     
     tables.forEach(tableEl => {
         const tableId = tableEl.dataset.tableId;
         const table = TABLES_CONFIG.find(t => t.id === tableId);
         
-        if (!table) return;
+        if (!table) {
+            console.log('⚠️ Tavolo non trovato in config:', tableId);
+            return;
+        }
         
         const isUnavailable = unavailableTables.includes(tableId);
         const guestsOk = bookingData.guests >= table.minGuests && bookingData.guests <= table.maxGuests;
         const isAvailable = !isUnavailable && guestsOk;
+        
+        console.log(`🪑 ${tableId}: unavailable=${isUnavailable}, guestsOk=${guestsOk}, available=${isAvailable}`);
         
         // Update classes
         tableEl.classList.remove('available', 'unavailable');
@@ -628,11 +710,14 @@ async function showWaitlistOption() {
 }
 
 async function handleTableClick(table, element) {
-    // Check availability first
-    const available = await isTableAvailable(table.id, bookingData.date, bookingData.time);
+    // Check if table has 'available' class (already verified by real-time listener)
+    const hasAvailableClass = element.classList.contains('available');
     const guestsOk = bookingData.guests >= table.minGuests && bookingData.guests <= table.maxGuests;
     
-    if (!available || !guestsOk) {
+    console.log('Table click:', table.id, 'hasAvailableClass:', hasAvailableClass, 'guestsOk:', guestsOk);
+    
+    if (!hasAvailableClass || !guestsOk) {
+        console.log('Table not clickable:', table.id);
         return; // Table not available
     }
     
