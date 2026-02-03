@@ -437,9 +437,6 @@ function showStep3() {
 // ===================== REAL-TIME AVAILABILITY =====================
 
 function setupRealtimeAvailability() {
-    console.log('🔌 setupRealtimeAvailability chiamata');
-    console.log('📅 date:', bookingData.date, 'time:', bookingData.time, 'mealType:', bookingData.mealType);
-    
     // Cleanup previous listener
     if (unsubscribeAvailability) {
         unsubscribeAvailability();
@@ -447,7 +444,6 @@ function setupRealtimeAvailability() {
     
     // Verifica che ci sia un orario valido
     if (!bookingData.time) {
-        console.log('⚠️ Nessun orario valido, tavoli restano grigi');
         return;
     }
     
@@ -456,7 +452,6 @@ function setupRealtimeAvailability() {
         bookingData.date,
         bookingData.time,
         (unavailableTables) => {
-            console.log('📡 Callback ricevuta da Firebase');
             updateTableAvailability(unavailableTables);
         },
         bookingData.mealType
@@ -464,26 +459,17 @@ function setupRealtimeAvailability() {
 }
 
 function updateTableAvailability(unavailableTables) {
-    console.log('🔄 updateTableAvailability chiamata, tavoli occupati:', unavailableTables);
-    console.log('📊 bookingData:', JSON.stringify(bookingData));
-    
     const tables = document.querySelectorAll('.floor-table');
-    console.log('📋 Tavoli trovati nel DOM:', tables.length);
     
     tables.forEach(tableEl => {
         const tableId = tableEl.dataset.tableId;
         const table = TABLES_CONFIG.find(t => t.id === tableId);
         
-        if (!table) {
-            console.log('⚠️ Tavolo non trovato in config:', tableId);
-            return;
-        }
+        if (!table) return;
         
         const isUnavailable = unavailableTables.includes(tableId);
         const guestsOk = bookingData.guests >= table.minGuests && bookingData.guests <= table.maxGuests;
         const isAvailable = !isUnavailable && guestsOk;
-        
-        console.log(`🪑 ${tableId}: unavailable=${isUnavailable}, guestsOk=${guestsOk}, available=${isAvailable}`);
         
         // Update classes
         tableEl.classList.remove('available', 'unavailable');
@@ -714,10 +700,7 @@ async function handleTableClick(table, element) {
     const hasAvailableClass = element.classList.contains('available');
     const guestsOk = bookingData.guests >= table.minGuests && bookingData.guests <= table.maxGuests;
     
-    console.log('Table click:', table.id, 'hasAvailableClass:', hasAvailableClass, 'guestsOk:', guestsOk);
-    
     if (!hasAvailableClass || !guestsOk) {
-        console.log('Table not clickable:', table.id);
         return; // Table not available
     }
     
