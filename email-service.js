@@ -465,35 +465,74 @@ export async function sendFeedbackEmail(reservation, lang = 'it') {
 export async function sendCancellationEmail(reservation, reason, lang = 'it') {
     const isItalian = lang === 'it';
     const subject = isItalian
-        ? `Skalette Bistro - Prenotazione Cancellata`
-        : `Skalette Bistro - Reservation Cancelled`;
+        ? `❌ Skalette Bistro - Prenotazione Cancellata`
+        : `❌ Skalette Bistro - Reservation Cancelled`;
+    
+    const logoUrl = 'https://skalette-bistro.web.app/images/logo.png';
     
     const html = `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: #ef4444; color: white; padding: 30px; text-align: center; }
-        .content { background: #f8f7f4; padding: 30px; }
-        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #333; margin: 0; padding: 0; background-color: #f5f5f5; }
+        .wrapper { background-color: #f5f5f5; padding: 40px 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #0a1628 0%, #1a2d4a 100%); padding: 50px 30px; text-align: center; }
+        .logo { width: 80px; height: auto; }
+        .header h1 { color: #c9a961; font-size: 22px; margin: 0; font-weight: 600; letter-spacing: 2px; }
+        .status-badge { display: inline-block; background: #ef4444; color: white; padding: 12px 30px; border-radius: 30px; font-size: 14px; font-weight: 600; letter-spacing: 1px; margin-top: 25px; }
+        .content { padding: 40px 30px; }
+        .greeting { font-size: 18px; color: #0a1628; margin-bottom: 20px; }
+        .reason-box { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 20px; margin: 25px 0; border-radius: 12px; border-left: 4px solid #ef4444; }
+        .reason-box p { margin: 0; color: #991b1b; }
+        .divider { height: 1px; background: linear-gradient(to right, transparent, #e0d5c7, transparent); margin: 30px 0; }
+        .cta { text-align: center; margin: 30px 0; }
+        .button { display: inline-block; background: linear-gradient(135deg, #c9a961 0%, #a8893e 100%); color: #0a1628; padding: 14px 35px; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        .footer { background: #0a1628; padding: 30px; text-align: center; }
+        .footer p { color: #888; font-size: 12px; margin: 5px 0; }
+        .footer .brand { color: #c9a961; font-weight: 600; font-size: 14px; }
+        .social-links { margin-top: 15px; }
+        .social-links a { display: inline-block; margin: 0 8px; color: #c9a961; text-decoration: none; font-size: 13px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>${isItalian ? 'PRENOTAZIONE CANCELLATA' : 'RESERVATION CANCELLED'}</h1>
-        </div>
-        <div class="content">
-            <p>${isItalian ? `Gentile ${reservation.name},` : `Dear ${reservation.name},`}</p>
-            <p>${isItalian ? 'La tua prenotazione è stata cancellata.' : 'Your reservation has been cancelled.'}</p>
-            ${reason ? `<p><strong>${isItalian ? 'Motivo:' : 'Reason:'}</strong> ${reason}</p>` : ''}
-            <p>${isItalian ? 'Speriamo di vederti presto!' : 'We hope to see you soon!'}</p>
-        </div>
-        <div class="footer">
-            <p>Skalette Bistro | Via Pellicciai, 12 - Verona | 045 8030500</p>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header">
+                <img src="${logoUrl}" alt="Skalette Bistro" class="logo">
+                <h1>${isItalian ? 'PRENOTAZIONE' : 'RESERVATION'}</h1>
+                <div class="status-badge">❌ ${isItalian ? 'CANCELLATA' : 'CANCELLED'}</div>
+            </div>
+            <div class="content">
+                <p class="greeting">${isItalian ? `Gentile ${reservation.name},` : `Dear ${reservation.name},`}</p>
+                <p>${isItalian ? 'Ci dispiace comunicarti che la tua prenotazione è stata cancellata.' : 'We regret to inform you that your reservation has been cancelled.'}</p>
+                
+                ${reason ? `
+                <div class="reason-box">
+                    <p><strong>${isItalian ? '📝 Motivo:' : '📝 Reason:'}</strong> ${reason}</p>
+                </div>
+                ` : ''}
+                
+                <div class="divider"></div>
+                
+                <p style="text-align: center;">${isItalian ? 'Speriamo di vederti presto!' : 'We hope to see you soon!'}</p>
+                
+                <div class="cta">
+                    <a href="https://skalette-bistro.web.app/#prenota" class="button">${isItalian ? '📅 Prenota di Nuovo' : '📅 Book Again'}</a>
+                </div>
+            </div>
+            <div class="footer">
+                <p class="brand">SKALETTE BISTRO</p>
+                <p>Via Pellicciai, 12 - 37121 Verona</p>
+                <p>📞 045 8030500</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/skalettebistro/">Instagram</a> |
+                    <a href="https://www.facebook.com/skalettebistro/">Facebook</a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
