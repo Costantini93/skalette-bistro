@@ -819,6 +819,9 @@ async function handleBookingSubmit(e) {
         document.getElementById('booking-success').style.display = 'block';
         document.getElementById('booking-id').textContent = result.id;
         
+        // Scroll to success message
+        document.getElementById('booking-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
         // Confetti animation
         showConfetti();
         
