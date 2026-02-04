@@ -96,10 +96,11 @@ function getConfirmedEmailHTML(reservation, lang = 'it') {
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #333; margin: 0; padding: 0; background-color: #f5f5f5; }
         .wrapper { background-color: #f5f5f5; padding: 40px 20px; }
         .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #0a1628 0%, #1a2d4a 100%); padding: 40px 30px; text-align: center; }
-        .logo { width: 120px; height: auto; margin-bottom: 20px; }
-        .header h1 { color: #c9a961; font-size: 24px; margin: 0; font-weight: 600; letter-spacing: 1px; }
-        .header .checkmark { display: inline-block; width: 60px; height: 60px; background: #22c55e; border-radius: 50%; line-height: 60px; font-size: 32px; color: white; margin-bottom: 15px; }
+        .header { background: linear-gradient(135deg, #0a1628 0%, #1a2d4a 100%); padding: 50px 30px; text-align: center; }
+        .logo { width: 80px; height: auto; }
+        .header h1 { color: #c9a961; font-size: 22px; margin: 0; font-weight: 600; letter-spacing: 2px; }
+        .status-badge { display: inline-block; background: #22c55e; color: white; padding: 12px 30px; border-radius: 30px; font-size: 14px; font-weight: 600; letter-spacing: 1px; margin-top: 25px; }
+        .status-badge .check { margin-right: 8px; }
         .content { padding: 40px 30px; }
         .greeting { font-size: 18px; color: #0a1628; margin-bottom: 20px; }
         .details { background: linear-gradient(135deg, #faf9f6 0%, #f0ede6 100%); padding: 25px; margin: 25px 0; border-radius: 12px; border-left: 4px solid #c9a961; }
@@ -125,8 +126,8 @@ function getConfirmedEmailHTML(reservation, lang = 'it') {
         <div class="container">
             <div class="header">
                 <img src="${logoUrl}" alt="Skalette Bistro" class="logo">
-                <div class="checkmark">✓</div>
-                <h1>${isItalian ? 'PRENOTAZIONE CONFERMATA' : 'RESERVATION CONFIRMED'}</h1>
+                <h1>${isItalian ? 'PRENOTAZIONE' : 'RESERVATION'}</h1>
+                <div class="status-badge"><span class="check">✓</span>${isItalian ? 'CONFERMATA' : 'CONFIRMED'}</div>
             </div>
             <div class="content">
                 <p class="greeting">${isItalian ? `Gentile ${reservation.name},` : `Dear ${reservation.name},`}</p>
