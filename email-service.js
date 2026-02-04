@@ -81,6 +81,20 @@ function getConfirmedEmailHTML(reservation, lang = 'it') {
         { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
     );
     
+    // Calcola orario di fine in base al tipo di pasto
+    const mealDurations = {
+        pranzo: 90,
+        aperitivo: 90,
+        cena: 120,
+        dopocena: 120
+    };
+    const duration = mealDurations[reservation.mealType] || 90;
+    const [startHours, startMins] = reservation.time.split(':').map(Number);
+    const endTotalMins = startHours * 60 + startMins + duration;
+    const endHours = Math.floor(endTotalMins / 60) % 24;
+    const endMins = endTotalMins % 60;
+    const endTime = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
+    
     const siteUrl = 'https://skalette-bistro.web.app';
     const manageLink = `${siteUrl}/manage-reservation.html?id=${reservation.id}&token=${reservation.manageToken}`;
     
@@ -136,9 +150,14 @@ function getConfirmedEmailHTML(reservation, lang = 'it') {
                 <div class="details">
                     <h3>${isItalian ? '📋 Dettagli Prenotazione' : '📋 Reservation Details'}</h3>
                     <p><strong>${isItalian ? '📅 Data:' : '📅 Date:'}</strong> ${dateFormatted}</p>
-                    <p><strong>${isItalian ? '🕐 Orario:' : '🕐 Time:'}</strong> <span class="highlight">${reservation.time}</span></p>
+                    <p><strong>${isItalian ? '🕐 Orario:' : '🕐 Time:'}</strong> <span class="highlight">${reservation.time}</span> - <span class="highlight">${endTime}</span></p>
                     <p><strong>${isItalian ? '👥 Persone:' : '👥 Guests:'}</strong> ${reservation.guests}</p>
                     <p><strong>${isItalian ? '🪑 Tavolo:' : '🪑 Table:'}</strong> ${reservation.tableName}</p>
+                    <p style="font-size: 13px; color: #666; margin-top: 15px; font-style: italic;">
+                        ${isItalian 
+                            ? '💡 Se il tavolo è libero dopo il tuo orario, la permanenza può essere prolungata.' 
+                            : '💡 If the table is available after your slot, your stay can be extended.'}
+                    </p>
                 </div>
                 
                 <div class="divider"></div>
