@@ -88,7 +88,18 @@ function getConfirmedEmailHTML(reservation, lang = 'it') {
         cena: 120,
         dopocena: 120
     };
-    const duration = mealDurations[reservation.mealType] || 90;
+    
+    // Se mealType non è definito, derivalo dall'orario
+    let mealType = reservation.mealType;
+    if (!mealType && reservation.time) {
+        const [hours] = reservation.time.split(':').map(Number);
+        if (hours < 15) mealType = 'pranzo';
+        else if (hours < 18) mealType = 'aperitivo';
+        else if (hours < 22) mealType = 'cena';
+        else mealType = 'dopocena';
+    }
+    
+    const duration = mealDurations[mealType] || 90;
     const [startHours, startMins] = reservation.time.split(':').map(Number);
     const endTotalMins = startHours * 60 + startMins + duration;
     const endHours = Math.floor(endTotalMins / 60) % 24;
